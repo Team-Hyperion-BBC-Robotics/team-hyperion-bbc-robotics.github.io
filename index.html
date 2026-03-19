@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Team Hyperion — Brisbane Boys' College · RoboCup Junior</title>
+  <link rel="stylesheet" href="assets/shared.css"/>
+  <style>
+    /* ── HERO ── */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 120px 24px 100px;
+      z-index: 1;
+    }
+    #hero::after {
+      content: '';
+      position: absolute;
+      width: 700px; height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,114,63,0.13) 0%, transparent 68%);
+      animation: orb 8s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes orb {
+      0%, 100% { transform: scale(1) translateY(0); opacity: 0.7; }
+      50% { transform: scale(1.1) translateY(-20px); opacity: 1; }
+    }
+    .hero-school {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 28px; opacity: 0;
+      animation: fadeUp 0.7s 0.1s forwards;
+    }
+    .hero-school-logo {
+      height: 52px; width: auto;
+      filter: brightness(1.1) drop-shadow(0 0 10px rgba(0,114,63,0.4));
+    }
+    .hero-school-text { text-align: left; }
+    .hero-school-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem; letter-spacing: 0.15em;
+      color: var(--white); line-height: 1;
+    }
+    .hero-school-sub {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.18em;
+      color: var(--green-bright); text-transform: uppercase; margin-top: 3px;
+    }
+    .hero-eyebrow {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.8rem; letter-spacing: 0.3em;
+      color: var(--green-bright); text-transform: uppercase;
+      margin-bottom: 16px; opacity: 0;
+      animation: fadeUp 0.7s 0.25s forwards;
+    }
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(5.5rem, 16vw, 13rem);
+      line-height: 0.88; letter-spacing: 0.04em;
+      color: var(--white);
+      text-shadow: 0 0 80px rgba(0,114,63,0.25), 0 0 160px rgba(0,114,63,0.1);
+      opacity: 0; animation: fadeUp 0.7s 0.45s forwards;
+    }
+    .hero-title .green { color: var(--green-bright); }
+    .hero-divider {
+      width: 100px; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--green-bright), transparent);
+      margin: 22px auto; opacity: 0;
+      animation: fadeUp 0.7s 0.65s forwards;
+    }
+    .hero-tagline {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.9rem; color: rgba(240,255,244,0.55);
+      letter-spacing: 0.1em; opacity: 0;
+      animation: fadeUp 0.7s 0.8s forwards;
+    }
+    .hero-cta {
+      display: flex; gap: 14px; margin-top: 36px;
+      flex-wrap: wrap; justify-content: center;
+      opacity: 0; animation: fadeUp 0.7s 1s forwards;
+    }
+
+    /* ── INTRO SECTION ── */
+    #intro { position: relative; z-index: 1; padding: 100px 48px; }
+    .intro-grid {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 1.1fr 0.9fr;
+      gap: 72px; align-items: start;
+    }
+    .intro-text p { color: rgba(240,255,244,0.72); font-size: 1.05rem; line-height: 1.85; margin-bottom: 18px; }
+    .intro-text p strong { color: var(--white); font-weight: 600; }
+    .intro-link {
+      color: var(--green-bright); text-decoration: none;
+      border-bottom: 1px solid rgba(0,200,90,0.3); transition: border-color 0.2s;
+    }
+    .intro-link:hover { border-color: var(--green-bright); }
+
+    /* ── BBC PANEL ── */
+    .bbc-panel {
+      background: var(--card-bg); border: 1px solid var(--border);
+      padding: 36px 30px; position: relative; overflow: hidden;
+    }
+    .bbc-panel::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--green), var(--green-bright), transparent);
+    }
+    .bbc-logo-large {
+      width: 90px; height: auto; display: block;
+      margin: 0 auto 20px;
+      filter: brightness(1.1) drop-shadow(0 0 14px rgba(0,114,63,0.35));
+    }
+    .bbc-panel-title {
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem;
+      letter-spacing: 0.12em; color: var(--white); text-align: center; margin-bottom: 6px;
+    }
+    .bbc-panel-sub {
+      font-family: 'Share Tech Mono', monospace; font-size: 0.65rem;
+      letter-spacing: 0.18em; color: var(--green-bright); text-align: center;
+      text-transform: uppercase; margin-bottom: 24px;
+    }
+    .bbc-facts { display: flex; flex-direction: column; gap: 10px; }
+    .bbc-fact { display: flex; align-items: flex-start; gap: 10px; font-size: 0.88rem; color: rgba(240,255,244,0.65); line-height: 1.5; }
+    .bbc-fact-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--green-bright); flex-shrink: 0; margin-top: 6px;
+      box-shadow: 0 0 6px var(--green-bright);
+    }
+
+    /* ── QUICK STATS ── */
+    #stats {
+      position: relative; z-index: 1;
+      background: var(--black2);
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      padding: 70px 48px;
+    }
+    .stats-grid {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;
+    }
+    .stat-box {
+      background: var(--card-bg); border: 1px solid var(--border);
+      padding: 30px 24px; text-align: center; transition: border-color 0.3s;
+    }
+    .stat-box:hover { border-color: rgba(0,114,63,0.5); }
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif; font-size: 3.2rem;
+      color: var(--green-bright); line-height: 1; text-shadow: 0 0 20px var(--green-glow);
+    }
+    .stat-label {
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--grey); margin-top: 8px;
+    }
+
+    /* ════ JOURNEY MAP ════ */
+    #journey {
+      position: relative; z-index: 1;
+      padding: 100px 48px;
+      background: var(--black2);
+      border-top: 1px solid var(--border);
+      overflow: hidden;
+    }
+    #journey::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 50%, rgba(0,114,63,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .journey-inner { max-width: 1200px; margin: 0 auto; }
+    .journey-map-wrap {
+      position: relative; margin-top: 48px;
+      background: var(--card-bg); border: 1px solid var(--border);
+      overflow: hidden; min-height: 420px;
+    }
+    .journey-map-wrap::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--green-bright), transparent);
+    }
+    #journey-svg-wrap { position: relative; width: 100%; padding-bottom: 52%; }
+    #journey-svg-wrap svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .journey-pin { cursor: pointer; }
+    .journey-pin circle.pulse-ring {
+      animation: ping 2s cubic-bezier(0,0,0.2,1) infinite;
+      transform-origin: center;
+    }
+    @keyframes ping {
+      0% { transform: scale(1); opacity: 0.8; }
+      100% { transform: scale(2.4); opacity: 0; }
+    }
+    .journey-pin:nth-child(2) circle.pulse-ring { animation-delay: 0.6s; }
+    .journey-pin:nth-child(3) circle.pulse-ring { animation-delay: 1.2s; }
+    .flight-path { stroke-dasharray: 6 5; animation: dashMove 3s linear infinite; }
+    @keyframes dashMove { to { stroke-dashoffset: -44; } }
+    .journey-cards {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 2px; border-top: 1px solid var(--border);
+    }
+    .journey-card {
+      padding: 28px 24px; border-right: 1px solid var(--border);
+      cursor: pointer; transition: background 0.2s;
+      position: relative; overflow: hidden;
+    }
+    .journey-card:last-child { border-right: none; }
+    .journey-card::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--green-bright), transparent);
+      opacity: 0; transition: opacity 0.2s;
+    }
+    .journey-card:hover { background: rgba(0,114,63,0.05); }
+    .journey-card:hover::after { opacity: 1; }
+    .journey-card.active { background: rgba(0,114,63,0.08); }
+    .journey-card.active::after { opacity: 1; }
+    .jc-num { font-family: 'Bebas Neue',sans-serif; font-size: 2.8rem; line-height: 1; color: rgba(0,200,90,0.18); margin-bottom: 4px; }
+    .jc-city { font-family: 'Bebas Neue',sans-serif; font-size: 1.4rem; letter-spacing: 0.08em; color: var(--white); margin-bottom: 2px; }
+    .jc-country { font-family: 'Share Tech Mono',monospace; font-size: 0.62rem; letter-spacing: 0.16em; color: var(--green-bright); text-transform: uppercase; margin-bottom: 10px; }
+    .jc-desc { font-size: 0.83rem; color: rgba(240,255,244,0.55); line-height: 1.6; }
+    .jc-badge { display: inline-block; margin-top: 10px; font-family: 'Share Tech Mono',monospace; font-size: 0.58rem; letter-spacing: 0.12em; color: var(--green-bright); border: 1px solid rgba(0,200,90,0.3); padding: 3px 8px; text-transform: uppercase; }
+
+    /* ── NAV TILES ── */
+    #pages { position: relative; z-index: 1; padding: 100px 48px; }
+    .pages-grid {
+      max-width: 1200px; margin: 40px auto 0;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+    }
+    .page-tile {
+      background: var(--card-bg); border: 1px solid var(--border);
+      padding: 40px 30px; text-decoration: none; display: block;
+      position: relative; overflow: hidden; transition: all 0.3s;
+    }
+    .page-tile::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--green-bright), transparent);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .page-tile:hover { border-color: rgba(0,114,63,0.45); transform: translateY(-3px); }
+    .page-tile:hover::after { opacity: 1; }
+    .tile-icon { font-size: 2.2rem; margin-bottom: 14px; display: block; }
+    .tile-title { font-family: 'Bebas Neue',sans-serif; font-size: 2rem; letter-spacing: 0.08em; color: var(--white); margin-bottom: 10px; }
+    .tile-desc { font-size: 0.9rem; color: var(--grey); line-height: 1.6; }
+    .tile-arrow { display: inline-block; margin-top: 20px; font-family: 'Share Tech Mono',monospace; font-size: 0.68rem; letter-spacing: 0.15em; color: var(--green-bright); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 1000px) {
+      .intro-grid { grid-template-columns: 1fr; gap: 40px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .pages-grid { grid-template-columns: 1fr; }
+      .journey-cards { grid-template-columns: 1fr; }
+      .journey-card { border-right: none; border-bottom: 1px solid var(--border); }
+    }
+    @media (max-width: 600px) {
+      #intro, #stats, #pages, #journey { padding: 70px 20px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════ TERMINAL BOOT SEQUENCE ════ -->
+<div id="boot-screen" style="position:fixed;inset:0;background:#000;z-index:9999;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:48px 64px;font-family:'Share Tech Mono',monospace;overflow:hidden;transition:opacity 0.6s ease,visibility 0.6s ease;">
+  <div style="position:absolute;inset:0;background:repeating-linear-gradient(to bottom,transparent 0px,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);pointer-events:none;z-index:1;"></div>
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(0,114,63,0.06) 0%,transparent 70%);pointer-events:none;"></div>
+  <div id="boot-lines" style="position:relative;z-index:2;width:100%;max-width:800px;"></div>
+  <button onclick="skipBoot()" style="position:absolute;bottom:32px;right:48px;z-index:3;font-family:'Share Tech Mono',monospace;font-size:0.7rem;letter-spacing:0.15em;color:rgba(0,200,90,0.5);background:none;border:1px solid rgba(0,200,90,0.2);padding:6px 14px;cursor:pointer;text-transform:uppercase;">[ SKIP ]</button>
+</div>
+<style>
+  #boot-screen.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+  .boot-line{display:block;font-size:clamp(0.72rem,1.4vw,0.92rem);line-height:1.7;color:#00c85a;opacity:0;white-space:nowrap;overflow:hidden;}
+  .boot-line.dim{color:rgba(0,200,90,0.45);}.boot-line.white{color:rgba(255,255,255,0.85);}.boot-line.warn{color:#f0e060;}
+  .boot-line.big{font-size:clamp(1.4rem,3.5vw,2.2rem);color:#00ff6a;letter-spacing:0.18em;text-shadow:0 0 20px rgba(0,255,106,0.6),0 0 40px rgba(0,255,106,0.3);margin:6px 0;}
+  .boot-cursor{display:inline-block;width:10px;height:1.1em;background:#00c85a;vertical-align:text-bottom;animation:blink 0.7s step-end infinite;margin-left:2px;}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+</style>
+
+<!-- HERO -->
+<section id="hero" style="background-image:url('assets/teamphoto.jpg');background-size:cover;background-position:center;background-repeat:no-repeat;">
+  <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(5,10,5,0.45) 0%,rgba(5,10,5,0.8) 100%);z-index:0;"></div>
+  <div class="hero-school" style="position:relative;z-index:1;">
+    <img src="assets/schoolLogo.png" alt="Brisbane Boys' College" class="hero-school-logo"/>
+    <div class="hero-school-text">
+      <div class="hero-school-name">Brisbane Boys' College</div>
+      <div class="hero-school-sub">Queensland, Australia</div>
+    </div>
+  </div>
+  <p class="hero-eyebrow" style="position:relative;z-index:1;">RoboCup Junior International Soccer Squad</p>
+  <h1 class="hero-title" style="position:relative;z-index:1;">
+    <span class="glitch" data-text="TEAM">TEAM</span><br/>
+    <span class="green">HYPERION</span>
+  </h1>
+  <div class="hero-divider" style="position:relative;z-index:1;"></div>
+  <p class="hero-tagline" style="position:relative;z-index:1;">Green. White. Black. Representing Australia.</p>
+  <div class="hero-cta" style="position:relative;z-index:1;">
+    <a href="robot.html" class="btn-primary">Our Robot</a>
+    <a href="team.html" class="btn-outline">Meet the Team</a>
+    <a href="achievements.html" class="btn-outline">Achievements</a>
+    <a href="campaign2025.html" class="btn-outline">2025 Campaign</a>
+    <a href="campaign2026.html" class="btn-outline">2026 Campaign</a>
+    <a href="resources.html" class="btn-outline">Resources</a>
+    <a href="emulator.html" class="btn-outline">Emulator</a>
+  </div>
+</section>
+
+<!-- INTRO -->
+<section id="intro">
+  <div class="intro-grid">
+    <div class="intro-text">
+      <div class="bbc-stripe">Brisbane Boys' College · RoboCup Junior</div>
+      <p class="section-label">Our Background</p>
+      <h2 class="section-title">BUILT TO <span class="accent">COMPETE</span></h2>
+      <div class="green-line"></div>
+      <p>Team Hyperion is a passionate group of high school students from <strong>Brisbane Boys' College</strong>, located in Queensland, Australia. After a successful 1.5 years in the Lightweight division, we were proud to represent Australia at the <strong>2025 RoboCup Junior International Competition</strong> in Salvador, Brazil.</p>
+      <p>In Salvador, we achieved outstanding results — placing <strong>14th individually</strong> and earning <strong>1st place in the Lightweight SuperTeam</strong> division. We then returned home and remained <strong>undefeated at the 2025 Australian National Competition</strong>, reclaiming Australia's qualification spot for 2026.</p>
+      <p>We are now preparing to represent our school, our community, and our country at the <strong>2026 RoboCup Junior International Competition in Incheon, South Korea</strong> — our most ambitious challenge yet.</p>
+      <a href="achievements.html" class="intro-link">→ See our full achievements &amp; history</a>
+    </div>
+    <div class="bbc-panel">
+      <img src="assets/schoolLogo.png" alt="Brisbane Boys' College" class="bbc-logo-large"/>
+      <div class="bbc-panel-title">Brisbane Boys' College</div>
+      <div class="bbc-panel-sub">Est. 1902 · Toowong, Queensland</div>
+      <div class="bbc-facts">
+        <div class="bbc-fact"><div class="bbc-fact-dot"></div><span>Presbyterian and Methodist school for boys in Brisbane's inner west</span></div>
+        <div class="bbc-fact"><div class="bbc-fact-dot"></div><span>Strong tradition of academic excellence and innovation</span></div>
+        <div class="bbc-fact"><div class="bbc-fact-dot"></div><span>Home of Team Hyperion — representing BBC on the world stage</span></div>
+        <div class="bbc-fact"><div class="bbc-fact-dot"></div><span>RoboCup Junior team active since 2021 in multiple divisions</span></div>
+        <div class="bbc-fact"><div class="bbc-fact-dot"></div><span>2025 International representatives · 2026 International qualifiers</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section id="stats">
+  <div style="max-width:1200px;margin:0 auto;">
+    <p class="section-label">Our Statistics</p>
+    <h2 class="section-title">HYPERION <span class="accent">BY THE NUMBERS</span></h2>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-box"><div class="stat-num">5+</div><div class="stat-label">Years at RoboCup Junior</div></div>
+    <div class="stat-box"><div class="stat-num">5×</div><div class="stat-label">RoboCup Junior Campaigns</div></div>
+    <div class="stat-box"><div class="stat-num">8×</div><div class="stat-label">Total Podium Finishes</div></div>
+    <div class="stat-box"><div class="stat-num">1ST</div><div class="stat-label">2025 Worlds SuperTeam</div></div>
+    <div class="stat-box"><div class="stat-num">14TH</div><div class="stat-label">2025 Worlds Individual</div></div>
+    <div class="stat-box"><div class="stat-num">1×</div><div class="stat-label">International Appearances</div></div>
+    <div class="stat-box"><div class="stat-num">2×</div><div class="stat-label">National Appearances</div></div>
+    <div class="stat-box"><div class="stat-num">0</div><div class="stat-label">Losses at 2025 Nationals</div></div>
+  </div>
+</section>
+
+<!-- YOUTUBE EMBED -->
+<section id="watch" style="position:relative;z-index:1;padding:80px 48px 0;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <p class="section-label">In Action</p>
+    <h2 class="section-title">WATCH US <span class="accent">COMPETE</span></h2>
+    <div style="margin-top:32px;display:grid;grid-template-columns:1fr 1fr;gap:2px;align-items:start;">
+      <div style="position:relative;overflow:hidden;background:var(--card-bg);border:1px solid var(--border);aspect-ratio:16/9;">
+        <iframe src="https://www.youtube.com/embed/ycFrGBrWPew?si=heSMPku8nT6jJXTU" title="Team Hyperion — 2025 Nationals Gameplay" style="position:absolute;inset:0;width:100%;height:100%;border:none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div style="position:absolute;top:10px;left:10px;width:18px;height:18px;border-top:2px solid var(--green-bright);border-left:2px solid var(--green-bright);z-index:1;pointer-events:none;"></div>
+        <div style="position:absolute;top:10px;right:10px;width:18px;height:18px;border-top:2px solid var(--green-bright);border-right:2px solid var(--green-bright);z-index:1;pointer-events:none;"></div>
+        <div style="position:absolute;bottom:10px;left:10px;width:18px;height:18px;border-bottom:2px solid var(--green-bright);border-left:2px solid var(--green-bright);z-index:1;pointer-events:none;"></div>
+        <div style="position:absolute;bottom:10px;right:10px;width:18px;height:18px;border-bottom:2px solid var(--green-bright);border-right:2px solid var(--green-bright);z-index:1;pointer-events:none;"></div>
+      </div>
+      <div style="padding:8px 0 0 32px;display:flex;flex-direction:column;justify-content:center;">
+        <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;color:var(--green-bright);text-transform:uppercase;margin-bottom:12px;">2025 Australian Nationals</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:0.06em;color:var(--white);line-height:1;margin-bottom:16px;">Hyperion in the Field</div>
+        <p style="font-size:0.95rem;color:rgba(240,255,244,0.65);line-height:1.75;margin-bottom:20px;">Watch Team Hyperion compete at the 2025 RoboCup Junior Australian National Championship — the tournament where we went undefeated and secured Australia's qualification spot for the 2026 World Championship in Incheon, South Korea.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          <span style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;color:var(--green-bright);border:1px solid rgba(0,114,63,0.35);padding:4px 10px;text-transform:uppercase;">Undefeated</span>
+          <span style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;color:var(--green-bright);border:1px solid rgba(0,114,63,0.35);padding:4px 10px;text-transform:uppercase;">1st Nationally</span>
+          <span style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;color:var(--green-bright);border:1px solid rgba(0,114,63,0.35);padding:4px 10px;text-transform:uppercase;">Lightweight Soccer</span>
+        </div>
+        <a href="https://www.youtube.com/@hyperion-bbcrobotics" target="_blank" rel="noopener" style="display:inline-block;margin-top:24px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.88rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--black);background:var(--green-bright);padding:12px 24px;text-decoration:none;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));transition:all 0.2s;">
+          → More on YouTube
+        </a>
+      </div>
+    </div>
+  </div><br><br>
+</section>
+
+<!-- JOURNEY MAP -->
+<section id="journey">
+  <div class="journey-inner">
+    <p class="section-label">Our Journey</p>
+    <h2 class="section-title">HYPERION <span class="accent">ON THE MAP</span></h2>
+    <p style="color:rgba(240,255,244,0.5);font-family:'Share Tech Mono',monospace;font-size:0.78rem;letter-spacing:0.12em;margin-top:8px;">Brisbane → Salvador → Brisbane → Incheon</p>
+    <div class="journey-map-wrap">
+      <div id="journey-svg-wrap">
+        <svg viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg" style="background:rgba(0,0,0,0);">
+          <g stroke="rgba(0,114,63,0.08)" stroke-width="0.5">
+            <line x1="0" y1="130" x2="1000" y2="130"/><line x1="0" y1="260" x2="1000" y2="260"/>
+            <line x1="0" y1="390" x2="1000" y2="390"/><line x1="250" y1="0" x2="250" y2="520"/>
+            <line x1="500" y1="0" x2="500" y2="520"/><line x1="750" y1="0" x2="750" y2="520"/>
+          </g>
+          <line x1="0" y1="260" x2="1000" y2="260" stroke="rgba(0,200,90,0.12)" stroke-width="1" stroke-dasharray="4 6"/>
+          <path d="M 108,60 L 135,55 L 175,68 L 200,85 L 215,100 L 220,120 L 210,135 L 195,150 L 180,165 L 165,190 L 150,210 L 135,225 L 120,215 L 105,195 L 95,170 L 88,145 L 85,120 L 88,95 L 95,75 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
+          <path d="M 155,215 L 165,225 L 160,240 L 150,245 L 140,238 L 138,228 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
+          <path d="M 195,255 L 220,248 L 255,258 L 275,280 L 278,310 L 270,340 L 255,370 L 235,400 L 215,415 L 198,405 L 182,385 L 172,355 L 168,320 L 170,290 L 178,268 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
+          <path d="M 460,80 L 485,72 L 510,75 L 525,88 L 520,105 L 505,118 L 488,122 L 470,115 L 455,100 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
+          <path d="M 468,140 L 495,130 L 525,138 L 545,158 L 552,185 L 548,215 L 535,245 L 515,270 L 495,285 L 475,278 L 458,258 L 448,228 L 445,198 L 450,168 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
+          <path d="M 530,118 L 560,110 L 585,120 L 595,138 L 580,155 L 555,158 L 535,148 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
+          <path d="M 580,55 L 640,45 L 710,50 L 760,58 L 790,75 L 800,95 L 790,118 L 765,135 L 735,148 L 700,155 L 665,148 L 635,138 L 608,125 L 590,108 L 578,88 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
+          <path d="M 740,158 L 770,148 L 795,158 L 810,175 L 805,192 L 785,198 L 760,188 L 745,172 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
+          <path d="M 760,330 L 800,318 L 840,322 L 862,340 L 868,362 L 858,385 L 835,400 L 808,405 L 782,395 L 762,375 L 752,352 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
+          <path id="path-bne-sal" d="M 790,378 Q 900,180 700,260 Q 560,310 227,305" fill="none" stroke="rgba(0,200,90,0.5)" stroke-width="1.5" stroke-dasharray="1000" stroke-dashoffset="1000">
+            <animate attributeName="stroke-dashoffset" from="1000" to="0" dur="2.5s" begin="0.5s" fill="freeze"/>
+          </path>
+          <path id="path-sal-bne" d="M 227,305 Q 560,420 700,340 Q 860,250 790,378" fill="none" stroke="rgba(0,200,90,0.2)" stroke-width="1" stroke-dasharray="4 5"/>
+          <path id="path-bne-inc" d="M 790,378 Q 820,280 790,200 Q 770,165 760,168" fill="none" stroke="rgba(0,255,120,0.7)" stroke-width="1.8" stroke-dasharray="1000" stroke-dashoffset="1000">
+            <animate attributeName="stroke-dashoffset" from="1000" to="0" dur="1.8s" begin="3s" fill="freeze"/>
+          </path>
+          <path d="M 790,378 Q 820,280 790,200 Q 770,165 760,168" fill="none" stroke="rgba(0,255,120,0.4)" stroke-width="1" stroke-dasharray="6 5" class="flight-path"/>
+          <g class="journey-pin" onclick="selectCity(0)" id="pin-brisbane">
+            <circle cx="790" cy="378" r="22" fill="rgba(0,114,63,0.08)" class="pulse-ring" stroke="rgba(0,200,90,0.4)" stroke-width="1"/>
+            <circle cx="790" cy="378" r="8" fill="rgba(0,40,20,0.9)" stroke="#00c85a" stroke-width="2"/>
+            <circle cx="790" cy="378" r="3" fill="#00ff6a"/>
+            <text x="790" y="400" text-anchor="middle" font-family="'Share Tech Mono',monospace" font-size="11" fill="rgba(240,255,244,0.8)" letter-spacing="1">BRISBANE</text>
+          </g>
+          <g class="journey-pin" onclick="selectCity(1)" id="pin-salvador">
+            <circle cx="227" cy="305" r="22" fill="rgba(0,114,63,0.08)" class="pulse-ring" stroke="rgba(0,200,90,0.4)" stroke-width="1"/>
+            <circle cx="227" cy="305" r="8" fill="rgba(0,40,20,0.9)" stroke="#00c85a" stroke-width="2"/>
+            <circle cx="227" cy="305" r="3" fill="#00ff6a"/>
+            <text x="227" y="326" text-anchor="middle" font-family="'Share Tech Mono',monospace" font-size="11" fill="rgba(240,255,244,0.8)" letter-spacing="1">SALVADOR</text>
+          </g>
+          <g class="journey-pin" onclick="selectCity(2)" id="pin-incheon">
+            <circle cx="760" cy="168" r="22" fill="rgba(0,200,90,0.15)" class="pulse-ring" stroke="rgba(0,255,120,0.6)" stroke-width="1.5"/>
+            <circle cx="760" cy="168" r="8" fill="rgba(0,40,20,0.9)" stroke="#00ff6a" stroke-width="2.5"/>
+            <circle cx="760" cy="168" r="3" fill="#fff"/>
+            <text x="760" y="145" text-anchor="middle" font-family="monospace" font-size="14" fill="#00ff6a">★</text>
+            <text x="760" y="192" text-anchor="middle" font-family="'Share Tech Mono',monospace" font-size="11" fill="rgba(240,255,244,0.9)" letter-spacing="1">INCHEON</text>
+          </g>
+          <g transform="translate(20, 450)">
+            <line x1="0" y1="6" x2="22" y2="6" stroke="rgba(0,200,90,0.5)" stroke-width="1.5"/>
+            <text x="28" y="10" font-family="'Share Tech Mono',monospace" font-size="9" fill="rgba(240,255,244,0.4)">COMPLETED</text>
+            <line x1="140" y1="6" x2="162" y2="6" stroke="rgba(0,255,120,0.7)" stroke-width="1.8"/>
+            <text x="168" y="10" font-family="'Share Tech Mono',monospace" font-size="9" fill="rgba(240,255,244,0.4)">UPCOMING 2026</text>
+            <text x="320" y="10" font-family="'Share Tech Mono',monospace" font-size="9" fill="rgba(240,255,244,0.25)">★ NEXT DESTINATION</text>
+          </g>
+        </svg>
+      </div>
+      <div class="journey-cards">
+        <div class="journey-card active" id="card-0" onclick="selectCity(0)">
+          <div class="jc-num">01</div>
+          <div class="jc-city">Brisbane</div>
+          <div class="jc-country"> Queensland, Australia</div>
+          <div class="jc-desc">Our home. Where Hyperion was built, trained, and launched into international competition from Brisbane Boys' College, Toowong.</div>
+          <span class="jc-badge">Base of Operations</span>
+        </div>
+        <div class="journey-card" id="card-1" onclick="selectCity(1)">
+          <div class="jc-num">02</div>
+          <div class="jc-city">Salvador</div>
+          <div class="jc-country"> Bahia, Brazil</div>
+          <div class="jc-desc">2025 RoboCup Junior Worlds. We placed 14th individually and claimed 1st in the Lightweight SuperTeam — a historic result for BBC robotics.</div>
+          <span class="jc-badge">2025 · 1st SuperTeam</span>
+        </div>
+        <div class="journey-card" id="card-2" onclick="selectCity(2)">
+          <div class="jc-num">03</div>
+          <div class="jc-city">Incheon</div>
+          <div class="jc-country"> South Korea</div>
+          <div class="jc-desc">Our next challenge. The 2026 RoboCup Junior World Championship. We're going back stronger — with upgraded hardware, refined strategy, and a point to prove.</div>
+          <span class="jc-badge" style="color:#00ff6a;border-color:rgba(0,255,120,0.4);">2026 · Upcoming ★</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAGE TILES -->
+<section id="pages">
+  <div style="max-width:1200px;margin:0 auto;">
+    <p class="section-label">Explore</p>
+    <h2 class="section-title">DIVE <span class="accent">DEEPER</span></h2>
+  </div>
+  <div class="pages-grid">
+    <a href="team.html" class="page-tile"><span class="tile-icon"></span><div class="tile-title">The Team</div><p class="tile-desc">Meet Sam, Matthew, Luke, and Thomas — the four prodigies behind Team Hyperion.</p><span class="tile-arrow">→ MEET THE SQUAD</span></a>
+    <a href="robot.html" class="page-tile"><span class="tile-icon"></span><div class="tile-title">Our Robot</div><p class="tile-desc">Explore the electronics, software, and mechanical engineering behind our competition robot.</p><span class="tile-arrow">→ SEE THE MACHINE</span></a>
+    <a href="achievements.html" class="page-tile"><span class="tile-icon"></span><div class="tile-title">Achievements</div><p class="tile-desc">Our full competition history — from local qualifiers to Brazil and beyond to South Korea.</p><span class="tile-arrow">→ VIEW ACHIEVEMENTS</span></a>
+    <a href="campaign2025.html" class="page-tile"><span class="tile-icon"></span><div class="tile-title">2025 Campaign</div><p class="tile-desc">Read our 2025 International Experience at the RoboCup Junior Competition in Salvador.</p><span class="tile-arrow">→ VIEW 25' CAMPAIGN</span></a>
+    <a href="campaign2026.html" class="page-tile"><span class="tile-icon"></span><div class="tile-title">2026 Campaign</div><p class="tile-desc">Join us in our 2026 journey to Incheon, South Korea.</p><span class="tile-arrow">→ VIEW 26' CAMPAIGN</span></a>
+    <a href="resources.html" class="page-tile"><span class="tile-icon"></span><div class="tile-title">Resources</div><p class="tile-desc">Have a look at some of the resources that we use to design our robot!</p><span class="tile-arrow">→ VIEW RESOURCES</span></a>
+    <a href="emulator.html" class="page-tile"><span class="tile-icon"></span><div class="tile-title">Interactive Robot Emulator</div><p class="tile-desc">Check out our cool emulator for how we want our robot to perform!</p><span class="tile-arrow">→ VIEW EMULATOR</span></a>
+  </div>
+</section>
+
+<script>
+/* ── TERMINAL BOOT ── */
+const bootLines=[
+  {text:"HYPERION OS v3.2.0 — INITIALISING...",delay:0,cls:""},
+  {text:"[ OK ] Booting kernel modules...",delay:280,cls:"dim"},
+  {text:"[ OK ] Loading sensor array: IR × 8, LIDAR × 1, CAM × 2",delay:520,cls:"dim"},
+  {text:"[ OK ] Motor controllers online — 4× omnidirectional",delay:760,cls:"dim"},
+  {text:"[ OK ] Communication bus: I²C / SPI — active",delay:980,cls:"dim"},
+  {text:"[ !! ] Checking competition firmware... valid ✓",delay:1200,cls:"warn"},
+  {text:"────────────────────────────────────────────────────────────",delay:1400,cls:"dim"},
+  {text:"SCHOOL      : Brisbane Boys' College, Queensland AUS",delay:1540,cls:"white"},
+  {text:"DIVISION    : RoboCup Junior · Lightweight Soccer",delay:1680,cls:"white"},
+  {text:"SEASON      : 2026 — Incheon, South Korea",delay:1820,cls:"white"},
+  {text:"RECORD      : 8× podiums · 1st SuperTeam 2025 · Undefeated Nationals",delay:1960,cls:"white"},
+  {text:"────────────────────────────────────────────────────────────",delay:2100,cls:"dim"},
+  {text:"[ OK ] Strategy engine loaded",delay:2250,cls:"dim"},
+  {text:"[ OK ] Ball tracking algorithm: ACTIVE",delay:2400,cls:"dim"},
+  {text:"[ OK ] All systems nominal. Ready to compete.",delay:2680,cls:""},
+  {text:"────────────────────────────────────────────────────────────",delay:2820,cls:"dim"},
+  {text:"TEAM  HYPERION",delay:3000,cls:"big"},
+  {text:"GREEN.  WHITE.  BLACK.  REPRESENTING AUSTRALIA.",delay:3200,cls:""},
+  {text:"",delay:3400,cls:""},
+  {text:"> LAUNCHING MISSION CONTROL...",delay:3600,cls:""},
+];
+const bootContainer=document.getElementById('boot-lines');
+let bootDone=false;
+function runBoot(){
+  bootLines.forEach((line,i)=>{
+    setTimeout(()=>{
+      if(bootDone)return;
+      const el=document.createElement('span');
+      el.className='boot-line '+(line.cls||'');
+      el.textContent=line.text||'\u00A0';
+      el.style.opacity='0';
+      bootContainer.appendChild(el);
+      requestAnimationFrame(()=>{el.style.transition='opacity 0.18s';el.style.opacity='1';});
+    },line.delay);
+  });
+  setTimeout(()=>{if(bootDone)return;const cur=document.createElement('span');cur.className='boot-line';cur.innerHTML='> <span class="boot-cursor"></span>';cur.style.opacity='1';bootContainer.appendChild(cur);},3800);
+  setTimeout(()=>{if(!bootDone)dismissBoot();},5200);
+}
+function dismissBoot(){bootDone=true;document.getElementById('boot-screen').classList.add('hidden');}
+function skipBoot(){dismissBoot();}
+if(!sessionStorage.getItem('booted')){sessionStorage.setItem('booted','1');runBoot();}
+else{document.getElementById('boot-screen').style.display='none';}
+
+/* ── JOURNEY MAP ── */
+function selectCity(idx){
+  document.querySelectorAll('.journey-card').forEach((c,i)=>c.classList.toggle('active',i===idx));
+  const pins=['pin-brisbane','pin-salvador','pin-incheon'];
+  pins.forEach((id,i)=>{const pin=document.getElementById(id);if(pin){const dot=pin.querySelectorAll('circle')[1];if(dot)dot.setAttribute('stroke',i===idx?'#00ff6a':'#00c85a');}});
+}
+
+/* ── SCROLL ANIMATIONS ── */
+const observer=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}});},{threshold:0.1});
+document.querySelectorAll('.stat-box,.page-tile,.bbc-panel,.journey-card,.journey-map-wrap').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(18px)';el.style.transition='opacity 0.5s ease,transform 0.5s ease';observer.observe(el);});
+</script>
+
+<script src="assets/nav-component.js"></script>
+</body>
+</html>
