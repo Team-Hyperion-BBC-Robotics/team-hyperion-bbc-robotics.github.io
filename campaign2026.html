@@ -18,6 +18,103 @@
     .hero-sub { font-family: 'Share Tech Mono', monospace; font-size: 0.9rem; color: rgba(240,255,244,0.5); letter-spacing: 0.1em; opacity: 0; animation: fadeUp 0.7s 0.75s forwards; }
     @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
 
+    /* ── COUNTDOWN ── */
+    .countdown-wrap {
+      position: relative; z-index: 1;
+      margin-top: 36px;
+      opacity: 0;
+      animation: fadeUp 0.7s 1s forwards;
+    }
+    .countdown-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.28em;
+      color: rgba(0,255,106,0.55);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .countdown {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      align-items: flex-end;
+    }
+    .cd-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: rgba(0,0,0,0.45);
+      border: 1px solid rgba(0,255,106,0.18);
+      padding: 14px 18px 10px;
+      position: relative;
+      overflow: hidden;
+      min-width: 72px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: border-color 0.3s;
+    }
+    .cd-block::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0,255,106,0.05) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .cd-block::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(0,255,106,0.6), transparent);
+    }
+    .cd-block:hover { border-color: rgba(0,255,106,0.45); }
+    .cd-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      color: #00ff6a;
+      line-height: 1;
+      text-shadow: 0 0 24px rgba(0,255,106,0.55), 0 0 60px rgba(0,255,106,0.2);
+      letter-spacing: 0.04em;
+      transition: transform 0.2s ease, opacity 0.15s ease;
+    }
+    .cd-num.flip {
+      transform: translateY(-6px) scaleY(0.85);
+      opacity: 0.4;
+    }
+    .cd-unit {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.5rem;
+      letter-spacing: 0.22em;
+      color: rgba(0,255,106,0.45);
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+    .cd-sep {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.2rem;
+      color: rgba(0,255,106,0.3);
+      line-height: 1;
+      margin-bottom: 14px;
+      user-select: none;
+      animation: blink 1.2s step-start infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.15} }
+
+    .countdown-sublabel {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.22em;
+      color: rgba(240,255,244,0.28);
+      text-transform: uppercase;
+      margin-top: 14px;
+    }
+
+    @media (max-width: 500px) {
+      .cd-block { min-width: 56px; padding: 10px 12px 8px; }
+      .cd-sep { font-size: 1.6rem; margin-bottom: 10px; }
+    }
+
+    /* ── Rest of page ── */
     .campaign-section { position: relative; z-index: 1; padding: 100px 48px; }
     .campaign-section-inner { max-width: 1200px; margin: 0 auto; }
     .campaign-section.stripe { background: var(--black2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
@@ -42,7 +139,6 @@
     .timeline-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 0.08em; color: var(--white); margin-bottom: 8px; }
     .timeline-body { font-size: 0.9rem; color: var(--grey); line-height: 1.65; max-width: 640px; }
 
-    /* Upcoming badge / glow effect */
     .upcoming-badge {
       display: inline-block;
       font-family: 'Share Tech Mono', monospace;
@@ -55,7 +151,6 @@
       opacity: 0; animation: fadeUp 0.7s 0.05s forwards;
     }
 
-    /* Info card */
     .info-panel {
       background: var(--card-bg); border: 1px solid var(--border);
       padding: 36px 30px; position: relative; overflow: hidden;
@@ -96,6 +191,33 @@
   <h1 class="hero-title" style="position:relative;z-index:1;">The Road to<br/><span class="green">Incheon</span></h1>
   <div class="hero-divider" style="position:relative;z-index:1;"></div>
   <p class="hero-sub" style="position:relative;z-index:1;">2026 RoboCup Junior World Championship · Lightweight Soccer</p>
+
+  <!-- COUNTDOWN TIMER -->
+  <div class="countdown-wrap">
+    <div class="countdown-label">Opening Ceremony — 30 June 2026</div>
+    <div class="countdown" id="countdown">
+      <div class="cd-block">
+        <div class="cd-num" id="cd-days">000</div>
+        <div class="cd-unit">Days</div>
+      </div>
+      <div class="cd-sep">:</div>
+      <div class="cd-block">
+        <div class="cd-num" id="cd-hours">00</div>
+        <div class="cd-unit">Hours</div>
+      </div>
+      <div class="cd-sep">:</div>
+      <div class="cd-block">
+        <div class="cd-num" id="cd-mins">00</div>
+        <div class="cd-unit">Mins</div>
+      </div>
+      <div class="cd-sep">:</div>
+      <div class="cd-block">
+        <div class="cd-num" id="cd-secs">00</div>
+        <div class="cd-unit">Secs</div>
+      </div>
+    </div>
+    <div class="countdown-sublabel">Songdo Convensia · Incheon · South Korea</div>
+  </div>
 </section>
 
 <!-- INTRO / OVERVIEW -->
@@ -262,14 +384,59 @@
 </section>
 
 <script>
-/* Timeline scroll animation */
+/* ── COUNTDOWN TIMER ── */
+(function() {
+  // Opening Ceremony: 30 June 2026, 09:00 KST (UTC+9) = 00:00 UTC
+  const TARGET = new Date('2026-06-30T00:00:00Z').getTime();
+
+  const elDays  = document.getElementById('cd-days');
+  const elHours = document.getElementById('cd-hours');
+  const elMins  = document.getElementById('cd-mins');
+  const elSecs  = document.getElementById('cd-secs');
+
+  function pad(n, len) { return String(n).padStart(len, '0'); }
+
+  function flash(el) {
+    el.classList.add('flip');
+    setTimeout(() => el.classList.remove('flip'), 220);
+  }
+
+  let prevSecs = -1, prevMins = -1, prevHours = -1, prevDays = -1;
+
+  function tick() {
+    const now  = Date.now();
+    const diff = Math.max(0, TARGET - now);
+
+    const totalSecs  = Math.floor(diff / 1000);
+    const secs       = totalSecs % 60;
+    const totalMins  = Math.floor(totalSecs / 60);
+    const mins       = totalMins % 60;
+    const totalHours = Math.floor(totalMins / 60);
+    const hours      = totalHours % 24;
+    const days       = Math.floor(totalHours / 24);
+
+    if (secs  !== prevSecs)  { flash(elSecs);  elSecs.textContent  = pad(secs, 2);  prevSecs  = secs;  }
+    if (mins  !== prevMins)  { flash(elMins);  elMins.textContent  = pad(mins, 2);  prevMins  = mins;  }
+    if (hours !== prevHours) { flash(elHours); elHours.textContent = pad(hours, 2); prevHours = hours; }
+    if (days  !== prevDays)  { flash(elDays);  elDays.textContent  = pad(days, 3);  prevDays  = days;  }
+
+    if (diff === 0) {
+      document.querySelector('.countdown-label').textContent = '🎉 The Opening Ceremony is NOW';
+    }
+  }
+
+  tick();
+  setInterval(tick, 1000);
+})();
+
+/* ── Timeline scroll animation ── */
 const items = document.querySelectorAll('.timeline-item');
 const obs = new IntersectionObserver((entries) => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
 }, { threshold: 0.15 });
 items.forEach(el => obs.observe(el));
 
-/* Scroll fade-in for cards */
+/* ── Scroll fade-in for cards ── */
 const cardObs = new IntersectionObserver((entries) => {
   entries.forEach(e => {
     if (e.isIntersecting) { e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; }

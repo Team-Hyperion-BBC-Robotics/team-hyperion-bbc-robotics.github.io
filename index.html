@@ -6,278 +6,353 @@
   <title>Team Hyperion — Brisbane Boys' College · RoboCup Junior</title>
   <link rel="stylesheet" href="assets/shared.css"/>
   <style>
-    /* ── HERO ── */
+    /* ══════════════════════════════════════════
+       STATS TICKER
+       — sits BELOW the 64px nav bar
+    ══════════════════════════════════════════ */
+    #ticker {
+      position: fixed; top: 64px; left: 0; right: 0; z-index: 999;
+      height: 26px; overflow: hidden;
+      display: flex; align-items: center;
+      background: rgba(5,10,5,0.97);
+      border-bottom: 1px solid rgba(0,200,90,0.18);
+      border-top: 1px solid rgba(0,200,90,0.1);
+    }
+    /* Subtle scanline texture on the ticker */
+    #ticker::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background: repeating-linear-gradient(to bottom, transparent 0px, transparent 1px, rgba(0,200,90,0.03) 1px, rgba(0,200,90,0.03) 2px);
+    }
+    .ticker-label {
+      flex-shrink: 0; height: 100%;
+      background: var(--green-bright, #00c85a); color: #001a0e;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.72rem; letter-spacing: 0.25em;
+      padding: 0 14px; display: flex; align-items: center; gap: 7px;
+      border-right: 1px solid rgba(0,0,0,0.25); z-index: 1; position: relative;
+    }
+    /* Blinking live dot on the label */
+    .ticker-label::before {
+      content: ''; width: 5px; height: 5px; border-radius: 50%;
+      background: #001a0e; animation: blink-dot 1.4s step-end infinite; flex-shrink: 0;
+    }
+    @keyframes blink-dot { 0%,100%{opacity:1} 50%{opacity:0.15} }
+    .ticker-track { flex: 1; overflow: hidden; position: relative; height: 100%; }
+    .ticker-inner {
+      display: flex; gap: 0; height: 100%;
+      animation: ticker-scroll 50s linear infinite;
+      white-space: nowrap; will-change: transform;
+    }
+    .ticker-inner:hover { animation-play-state: paused; }
+    .ticker-item {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 0 24px; height: 100%; flex-shrink: 0;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.6rem; letter-spacing: 0.1em;
+      color: rgba(240,255,244,0.55);
+      border-right: 1px solid rgba(0,200,90,0.08);
+    }
+    .ticker-item .ti-tag {
+      font-size: 0.48rem; letter-spacing: 0.18em; text-transform: uppercase;
+      background: rgba(0,200,90,0.12); border: 1px solid rgba(0,200,90,0.2);
+      padding: 1px 6px; color: var(--green-bright, #00c85a); flex-shrink: 0;
+    }
+    /* Gold tag variant for podium results */
+    .ticker-item .ti-tag.gold {
+      background: rgba(212,160,23,0.1); border-color: rgba(212,160,23,0.25);
+      color: #d4a017;
+    }
+    .ticker-sep {
+      width: 1px; height: 10px;
+      background: rgba(0,200,90,0.2); flex-shrink: 0;
+    }
+    @keyframes ticker-scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ══════════════════════════════════════════
+       BOOT SCREEN CUSTOMISER
+    ══════════════════════════════════════════ */
+    #boot-screen {
+      position: fixed; inset: 0; background: #000; z-index: 9999;
+      display: flex; flex-direction: column; justify-content: center;
+      align-items: flex-start; padding: 48px 64px;
+      font-family: 'Share Tech Mono', monospace;
+      overflow: hidden; transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+    #boot-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+    .boot-scanlines {
+      position: absolute; inset: 0; pointer-events: none; z-index: 1;
+      background: repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);
+    }
+    .boot-glow {
+      position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(ellipse at 50% 50%, rgba(0,114,63,0.06) 0%, transparent 70%);
+    }
+    #boot-lines { position: relative; z-index: 2; width: 100%; max-width: 820px; }
+    .boot-line {
+      display: block; font-size: clamp(0.7rem, 1.3vw, 0.88rem);
+      line-height: 1.75; color: #00c85a; opacity: 0; white-space: nowrap; overflow: hidden;
+    }
+    .boot-line.dim { color: rgba(0,200,90,0.4); }
+    .boot-line.white { color: rgba(255,255,255,0.85); }
+    .boot-line.warn { color: #f0e060; }
+    .boot-line.big { font-size: clamp(1.4rem,3.5vw,2.2rem); color: #00ff6a; letter-spacing: 0.18em; text-shadow: 0 0 20px rgba(0,255,106,0.6), 0 0 40px rgba(0,255,106,0.3); margin: 6px 0; }
+    .boot-cursor { display: inline-block; width: 10px; height: 1.1em; background: #00c85a; vertical-align: text-bottom; animation: blink 0.7s step-end infinite; margin-left: 2px; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+    .boot-name-highlight { color: #00ff6a; font-weight: bold; text-shadow: 0 0 8px rgba(0,255,106,0.5); }
+
+    /* Operator name prompt */
+    #boot-name-prompt {
+      position: absolute; bottom: 80px; right: 64px; z-index: 4;
+      background: rgba(0,20,10,0.95); border: 1px solid rgba(0,200,90,0.3);
+      padding: 18px 22px; width: 320px;
+    }
+    #boot-name-prompt .bnp-title {
+      font-size: 0.6rem; letter-spacing: 0.2em; color: var(--gb, #00c85a);
+      text-transform: uppercase; margin-bottom: 10px;
+    }
+    #boot-name-prompt .bnp-row { display: flex; gap: 8px; align-items: center; }
+    #boot-name-prompt input {
+      flex: 1; background: rgba(0,0,0,0.6); border: 1px solid rgba(0,200,90,0.4);
+      color: #00ff6a; font-family: 'Share Tech Mono', monospace;
+      font-size: 0.75rem; padding: 7px 10px; outline: none;
+      letter-spacing: 0.08em;
+    }
+    #boot-name-prompt input::placeholder { color: rgba(0,200,90,0.3); }
+    #boot-name-prompt input:focus { border-color: #00c85a; }
+    #boot-name-prompt button {
+      background: var(--green, #00723f); color: #fff; border: none;
+      font-family: 'Share Tech Mono', monospace; font-size: 0.6rem;
+      letter-spacing: 0.12em; padding: 7px 12px; cursor: pointer;
+      text-transform: uppercase; transition: background 0.2s;
+    }
+    #boot-name-prompt button:hover { background: #00c85a; }
+    #boot-name-prompt .bnp-skip {
+      margin-top: 10px; font-size: 0.52rem; color: rgba(0,200,90,0.4);
+      letter-spacing: 0.12em; cursor: pointer; text-align: right;
+    }
+    #boot-name-prompt .bnp-skip:hover { color: rgba(0,200,90,0.7); }
+
+    /* ══════════════════════════════════════════
+       HERO
+    ══════════════════════════════════════════ */
     #hero {
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 120px 24px 100px;
-      z-index: 1;
+      position: relative; min-height: 100vh;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      text-align: center; padding: 160px 24px 100px; z-index: 1;
     }
     #hero::after {
-      content: '';
-      position: absolute;
-      width: 700px; height: 700px;
-      border-radius: 50%;
+      content: ''; position: absolute; width: 700px; height: 700px; border-radius: 50%;
       background: radial-gradient(circle, rgba(0,114,63,0.13) 0%, transparent 68%);
-      animation: orb 8s ease-in-out infinite;
-      pointer-events: none;
+      animation: orb 8s ease-in-out infinite; pointer-events: none;
     }
-    @keyframes orb {
-      0%, 100% { transform: scale(1) translateY(0); opacity: 0.7; }
-      50% { transform: scale(1.1) translateY(-20px); opacity: 1; }
-    }
-    .hero-school {
-      display: flex; align-items: center; gap: 14px;
-      margin-bottom: 28px; opacity: 0;
-      animation: fadeUp 0.7s 0.1s forwards;
-    }
-    .hero-school-logo {
-      height: 52px; width: auto;
-      filter: brightness(1.1) drop-shadow(0 0 10px rgba(0,114,63,0.4));
-    }
-    .hero-school-text { text-align: left; }
-    .hero-school-name {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.1rem; letter-spacing: 0.15em;
-      color: var(--white); line-height: 1;
-    }
-    .hero-school-sub {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.65rem; letter-spacing: 0.18em;
-      color: var(--green-bright); text-transform: uppercase; margin-top: 3px;
-    }
-    .hero-eyebrow {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.8rem; letter-spacing: 0.3em;
-      color: var(--green-bright); text-transform: uppercase;
-      margin-bottom: 16px; opacity: 0;
-      animation: fadeUp 0.7s 0.25s forwards;
-    }
-    .hero-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(5.5rem, 16vw, 13rem);
-      line-height: 0.88; letter-spacing: 0.04em;
-      color: var(--white);
-      text-shadow: 0 0 80px rgba(0,114,63,0.25), 0 0 160px rgba(0,114,63,0.1);
-      opacity: 0; animation: fadeUp 0.7s 0.45s forwards;
-    }
-    .hero-title .green { color: var(--green-bright); }
-    .hero-divider {
-      width: 100px; height: 2px;
-      background: linear-gradient(90deg, transparent, var(--green-bright), transparent);
-      margin: 22px auto; opacity: 0;
-      animation: fadeUp 0.7s 0.65s forwards;
-    }
-    .hero-tagline {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.9rem; color: rgba(240,255,244,0.55);
-      letter-spacing: 0.1em; opacity: 0;
-      animation: fadeUp 0.7s 0.8s forwards;
-    }
-    .hero-cta {
-      display: flex; gap: 14px; margin-top: 36px;
-      flex-wrap: wrap; justify-content: center;
-      opacity: 0; animation: fadeUp 0.7s 1s forwards;
-    }
+    @keyframes orb { 0%,100%{transform:scale(1) translateY(0);opacity:0.7} 50%{transform:scale(1.1) translateY(-20px);opacity:1} }
+    .hero-school { display:flex;align-items:center;gap:14px;margin-bottom:28px;opacity:0;animation:fadeUp 0.7s 0.1s forwards; }
+    .hero-school-logo { height:52px;width:auto;filter:brightness(1.1) drop-shadow(0 0 10px rgba(0,114,63,0.4)); }
+    .hero-school-text { text-align:left; }
+    .hero-school-name { font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:0.15em;color:var(--white);line-height:1; }
+    .hero-school-sub { font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.18em;color:var(--green-bright);text-transform:uppercase;margin-top:3px; }
+    .hero-eyebrow { font-family:'Share Tech Mono',monospace;font-size:0.8rem;letter-spacing:0.3em;color:var(--green-bright);text-transform:uppercase;margin-bottom:16px;opacity:0;animation:fadeUp 0.7s 0.25s forwards; }
+    .hero-title { font-family:'Bebas Neue',sans-serif;font-size:clamp(5.5rem,16vw,13rem);line-height:0.88;letter-spacing:0.04em;color:var(--white);text-shadow:0 0 80px rgba(0,114,63,0.25),0 0 160px rgba(0,114,63,0.1);opacity:0;animation:fadeUp 0.7s 0.45s forwards; }
+    .hero-title .green { color:var(--green-bright); }
+    .hero-divider { width:100px;height:2px;background:linear-gradient(90deg,transparent,var(--green-bright),transparent);margin:22px auto;opacity:0;animation:fadeUp 0.7s 0.65s forwards; }
+    .hero-tagline { font-family:'Share Tech Mono',monospace;font-size:0.9rem;color:rgba(240,255,244,0.55);letter-spacing:0.1em;opacity:0;animation:fadeUp 0.7s 0.8s forwards; }
+    .hero-greeting { font-family:'Share Tech Mono',monospace;font-size:0.7rem;letter-spacing:0.18em;color:var(--green-bright);opacity:0;animation:fadeUp 0.7s 0.9s forwards;margin-top:10px;min-height:1.2em; }
+    .hero-cta { display:flex;gap:14px;margin-top:36px;flex-wrap:wrap;justify-content:center;opacity:0;animation:fadeUp 0.7s 1s forwards; }
 
-    /* ── INTRO SECTION ── */
-    #intro { position: relative; z-index: 1; padding: 100px 48px; }
-    .intro-grid {
-      max-width: 1200px; margin: 0 auto;
-      display: grid; grid-template-columns: 1.1fr 0.9fr;
-      gap: 72px; align-items: start;
-    }
-    .intro-text p { color: rgba(240,255,244,0.72); font-size: 1.05rem; line-height: 1.85; margin-bottom: 18px; }
-    .intro-text p strong { color: var(--white); font-weight: 600; }
-    .intro-link {
-      color: var(--green-bright); text-decoration: none;
-      border-bottom: 1px solid rgba(0,200,90,0.3); transition: border-color 0.2s;
-    }
-    .intro-link:hover { border-color: var(--green-bright); }
+    /* ══════════════════════════════════════════
+       JOURNEY MAP (Interactive Globe-style)
+    ══════════════════════════════════════════ */
+    #journey { position:relative;z-index:1;padding:100px 48px;background:var(--black2);border-top:1px solid var(--border);overflow:hidden; }
+    #journey::before { content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(0,114,63,0.05) 0%,transparent 70%);pointer-events:none; }
+    .journey-inner { max-width:1200px;margin:0 auto; }
+    .journey-map-wrap { position:relative;margin-top:48px;background:var(--card-bg);border:1px solid var(--border);overflow:hidden; }
+    .journey-map-wrap::before { content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green-bright),transparent); }
+    #journey-canvas-wrap { position:relative;width:100%;padding-bottom:52%; }
+    #journey-canvas-wrap svg { position:absolute;inset:0;width:100%;height:100%; }
 
-    /* ── BBC PANEL ── */
-    .bbc-panel {
-      background: var(--card-bg); border: 1px solid var(--border);
-      padding: 36px 30px; position: relative; overflow: hidden;
+    /* Clickable city popups */
+    .city-popup {
+      position: absolute; pointer-events: none; opacity: 0;
+      background: rgba(5,10,5,0.97); border: 1px solid var(--green-bright);
+      padding: 14px 18px; width: 200px; z-index: 10;
+      transition: opacity 0.2s; font-family: 'Share Tech Mono', monospace;
     }
-    .bbc-panel::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-      background: linear-gradient(90deg, var(--green), var(--green-bright), transparent);
-    }
-    .bbc-logo-large {
-      width: 90px; height: auto; display: block;
-      margin: 0 auto 20px;
-      filter: brightness(1.1) drop-shadow(0 0 14px rgba(0,114,63,0.35));
-    }
-    .bbc-panel-title {
-      font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem;
-      letter-spacing: 0.12em; color: var(--white); text-align: center; margin-bottom: 6px;
-    }
-    .bbc-panel-sub {
-      font-family: 'Share Tech Mono', monospace; font-size: 0.65rem;
-      letter-spacing: 0.18em; color: var(--green-bright); text-align: center;
-      text-transform: uppercase; margin-bottom: 24px;
-    }
-    .bbc-facts { display: flex; flex-direction: column; gap: 10px; }
-    .bbc-fact { display: flex; align-items: flex-start; gap: 10px; font-size: 0.88rem; color: rgba(240,255,244,0.65); line-height: 1.5; }
-    .bbc-fact-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--green-bright); flex-shrink: 0; margin-top: 6px;
-      box-shadow: 0 0 6px var(--green-bright);
-    }
+    .city-popup.visible { opacity: 1; pointer-events: auto; }
+    .cp-city { font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:0.08em;color:var(--white); }
+    .cp-country { font-size:0.58rem;letter-spacing:0.16em;color:var(--green-bright);text-transform:uppercase;margin-bottom:8px; }
+    .cp-desc { font-size:0.7rem;color:rgba(240,255,244,0.6);line-height:1.6; }
+    .cp-badge { display:inline-block;margin-top:8px;font-size:0.56rem;letter-spacing:0.1em;color:var(--green-bright);border:1px solid rgba(0,200,90,0.3);padding:2px 7px;text-transform:uppercase; }
+    .journey-cards { display:grid;grid-template-columns:repeat(3,1fr);gap:2px;border-top:1px solid var(--border); }
+    .journey-card { padding:28px 24px;border-right:1px solid var(--border);cursor:pointer;transition:background 0.2s;position:relative;overflow:hidden; }
+    .journey-card:last-child { border-right:none; }
+    .journey-card::after { content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green-bright),transparent);opacity:0;transition:opacity 0.2s; }
+    .journey-card:hover { background:rgba(0,114,63,0.05); }
+    .journey-card:hover::after,.journey-card.active::after { opacity:1; }
+    .journey-card.active { background:rgba(0,114,63,0.08); }
+    .jc-num { font-family:'Bebas Neue',sans-serif;font-size:2.8rem;line-height:1;color:rgba(0,200,90,0.18);margin-bottom:4px; }
+    .jc-city { font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.08em;color:var(--white);margin-bottom:2px; }
+    .jc-country { font-family:'Share Tech Mono',monospace;font-size:0.62rem;letter-spacing:0.16em;color:var(--green-bright);text-transform:uppercase;margin-bottom:10px; }
+    .jc-desc { font-size:0.83rem;color:rgba(240,255,244,0.55);line-height:1.6; }
+    .jc-badge { display:inline-block;margin-top:10px;font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;color:var(--green-bright);border:1px solid rgba(0,200,90,0.3);padding:3px 8px;text-transform:uppercase; }
 
-    /* ── QUICK STATS ── */
-    #stats {
-      position: relative; z-index: 1;
-      background: var(--black2);
-      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-      padding: 70px 48px;
+    /* ══════════════════════════════════════════
+       TIMELINE SECTION (replaces old stats)
+    ══════════════════════════════════════════ */
+    #timeline {
+      position:relative;z-index:1;background:var(--black2);
+      border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+      padding:80px 48px;
     }
-    .stats-grid {
-      max-width: 1200px; margin: 0 auto;
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;
+    .tl-inner { max-width:1200px;margin:0 auto; }
+    .tl-controls { display:flex;align-items:center;gap:12px;margin:32px 0 20px; }
+    .tl-track-bg { flex:1;height:3px;background:var(--border);border-radius:2px;position:relative;cursor:pointer; }
+    .tl-track-fill { height:3px;background:linear-gradient(90deg,var(--green),var(--green-bright));border-radius:2px;position:absolute;top:0;left:0;transition:width 0.3s; }
+    .tl-nodes { position:absolute;top:-7px;left:0;right:0;display:flex;justify-content:space-between; }
+    .tl-node { width:17px;height:17px;border-radius:50%;background:var(--black2);border:2px solid var(--border);cursor:pointer;transition:all 0.2s;position:relative;flex-shrink:0; }
+    .tl-node.active { background:var(--green-bright);border-color:var(--green-bright);box-shadow:0 0 0 3px rgba(0,200,90,0.2); }
+    .tl-node.future { border-color:var(--green-bright);border-style:dashed; }
+    .tl-node-year { position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:rgba(240,255,244,0.4);white-space:nowrap; }
+    .tl-node.active .tl-node-year { color:var(--green-bright); }
+    .tl-btn { font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:6px 14px;border:1px solid var(--border);background:transparent;color:rgba(240,255,244,0.5);cursor:pointer;transition:all 0.15s; }
+    .tl-btn:hover { border-color:var(--green-bright);color:var(--green-bright); }
+    .tl-card { background:var(--card-bg);border:1px solid var(--border);padding:30px;position:relative;overflow:hidden; }
+    .tl-card::before { content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--green-bright);transition:background 0.3s; }
+    .tl-card.future::before { background:rgba(0,255,120,0.8); }
+    .tl-year { font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--green-bright);margin-bottom:6px; }
+    .tl-event { font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.06em;color:var(--white);margin-bottom:4px; }
+    .tl-location { font-size:0.85rem;color:rgba(240,255,244,0.45);margin-bottom:14px;font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.1em; }
+    .tl-badges { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px; }
+    .tl-badge { font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;padding:3px 9px;border:1px solid; }
+    .tl-badge.gold { color:#d4a017;border-color:rgba(212,160,23,0.4);background:rgba(212,160,23,0.06); }
+    .tl-badge.green { color:var(--green-bright);border-color:rgba(0,200,90,0.35);background:rgba(0,200,90,0.06); }
+    .tl-badge.future { color:#00ff6a;border-color:rgba(0,255,120,0.4);background:rgba(0,255,120,0.06); }
+    .tl-badge.grey { color:rgba(240,255,244,0.4);border-color:var(--border); }
+    .tl-desc { font-size:0.92rem;color:rgba(240,255,244,0.6);line-height:1.75; }
+    input[type=range].tl-range {
+      width:100%; appearance:none; height:3px; background:transparent;
+      outline:none; cursor:pointer; margin-top:16px;
     }
-    .stat-box {
-      background: var(--card-bg); border: 1px solid var(--border);
-      padding: 30px 24px; text-align: center; transition: border-color 0.3s;
-    }
-    .stat-box:hover { border-color: rgba(0,114,63,0.5); }
-    .stat-num {
-      font-family: 'Bebas Neue', sans-serif; font-size: 3.2rem;
-      color: var(--green-bright); line-height: 1; text-shadow: 0 0 20px var(--green-glow);
-    }
-    .stat-label {
-      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.14em;
-      text-transform: uppercase; color: var(--grey); margin-top: 8px;
-    }
+    input[type=range].tl-range::-webkit-slider-thumb { appearance:none;width:14px;height:14px;border-radius:50%;background:var(--green-bright);cursor:pointer;box-shadow:0 0 6px rgba(0,200,90,0.4); }
 
-    /* ════ JOURNEY MAP ════ */
-    #journey {
-      position: relative; z-index: 1;
-      padding: 100px 48px;
-      background: var(--black2);
-      border-top: 1px solid var(--border);
-      overflow: hidden;
+    /* ══════════════════════════════════════════
+       EMULATOR EMBED
+    ══════════════════════════════════════════ */
+    #emulator-embed { position:relative;z-index:1;padding:100px 48px; }
+    .emu-inner { max-width:1200px;margin:0 auto; }
+    .emu-frame-wrap {
+      margin-top:32px;position:relative;
+      border:1px solid var(--border);background:var(--card-bg);overflow:hidden;
     }
-    #journey::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse at 50% 50%, rgba(0,114,63,0.05) 0%, transparent 70%);
-      pointer-events: none;
+    .emu-frame-wrap::before { content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green-bright),transparent);z-index:1; }
+    .emu-overlay {
+      position:absolute;inset:0;background:rgba(5,10,5,0.92);z-index:5;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      gap:18px;transition:opacity 0.4s;cursor:pointer;
     }
-    .journey-inner { max-width: 1200px; margin: 0 auto; }
-    .journey-map-wrap {
-      position: relative; margin-top: 48px;
-      background: var(--card-bg); border: 1px solid var(--border);
-      overflow: hidden; min-height: 420px;
+    .emu-overlay.hidden { opacity:0;pointer-events:none; }
+    .emu-overlay-icon { font-size:3rem;opacity:0.6; }
+    .emu-overlay-title { font-family:'Bebas Neue',sans-serif;font-size:2.5rem;letter-spacing:0.1em;color:var(--white); }
+    .emu-overlay-sub { font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.16em;color:var(--green-bright);text-transform:uppercase; }
+    .emu-launch-btn {
+      font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.9rem;letter-spacing:0.14em;
+      text-transform:uppercase;color:var(--black);background:var(--green-bright);
+      padding:14px 28px;border:none;cursor:pointer;
+      clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
+      transition:all 0.2s;
     }
-    .journey-map-wrap::before {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, transparent, var(--green-bright), transparent);
-    }
-    #journey-svg-wrap { position: relative; width: 100%; padding-bottom: 52%; }
-    #journey-svg-wrap svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-    .journey-pin { cursor: pointer; }
-    .journey-pin circle.pulse-ring {
-      animation: ping 2s cubic-bezier(0,0,0.2,1) infinite;
-      transform-origin: center;
-    }
-    @keyframes ping {
-      0% { transform: scale(1); opacity: 0.8; }
-      100% { transform: scale(2.4); opacity: 0; }
-    }
-    .journey-pin:nth-child(2) circle.pulse-ring { animation-delay: 0.6s; }
-    .journey-pin:nth-child(3) circle.pulse-ring { animation-delay: 1.2s; }
-    .flight-path { stroke-dasharray: 6 5; animation: dashMove 3s linear infinite; }
-    @keyframes dashMove { to { stroke-dashoffset: -44; } }
-    .journey-cards {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 2px; border-top: 1px solid var(--border);
-    }
-    .journey-card {
-      padding: 28px 24px; border-right: 1px solid var(--border);
-      cursor: pointer; transition: background 0.2s;
-      position: relative; overflow: hidden;
-    }
-    .journey-card:last-child { border-right: none; }
-    .journey-card::after {
-      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, transparent, var(--green-bright), transparent);
-      opacity: 0; transition: opacity 0.2s;
-    }
-    .journey-card:hover { background: rgba(0,114,63,0.05); }
-    .journey-card:hover::after { opacity: 1; }
-    .journey-card.active { background: rgba(0,114,63,0.08); }
-    .journey-card.active::after { opacity: 1; }
-    .jc-num { font-family: 'Bebas Neue',sans-serif; font-size: 2.8rem; line-height: 1; color: rgba(0,200,90,0.18); margin-bottom: 4px; }
-    .jc-city { font-family: 'Bebas Neue',sans-serif; font-size: 1.4rem; letter-spacing: 0.08em; color: var(--white); margin-bottom: 2px; }
-    .jc-country { font-family: 'Share Tech Mono',monospace; font-size: 0.62rem; letter-spacing: 0.16em; color: var(--green-bright); text-transform: uppercase; margin-bottom: 10px; }
-    .jc-desc { font-size: 0.83rem; color: rgba(240,255,244,0.55); line-height: 1.6; }
-    .jc-badge { display: inline-block; margin-top: 10px; font-family: 'Share Tech Mono',monospace; font-size: 0.58rem; letter-spacing: 0.12em; color: var(--green-bright); border: 1px solid rgba(0,200,90,0.3); padding: 3px 8px; text-transform: uppercase; }
+    .emu-launch-btn:hover { background:#00ff6a; }
+    #emu-iframe { width:100%;height:680px;border:none;display:block; }
+    .emu-preview-stats { display:grid;grid-template-columns:repeat(3,1fr);gap:2px;border-top:1px solid var(--border); }
+    .emu-stat { padding:18px 20px;border-right:1px solid var(--border);text-align:center; }
+    .emu-stat:last-child { border-right:none; }
+    .emu-stat-num { font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--green-bright);text-shadow:0 0 16px rgba(0,200,90,0.3); }
+    .emu-stat-lbl { font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(240,255,244,0.4);margin-top:4px; }
 
-    /* ── NAV TILES ── */
-    #pages { position: relative; z-index: 1; padding: 100px 48px; }
-    .pages-grid {
-      max-width: 1200px; margin: 40px auto 0;
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
-    }
-    .page-tile {
-      background: var(--card-bg); border: 1px solid var(--border);
-      padding: 40px 30px; text-decoration: none; display: block;
-      position: relative; overflow: hidden; transition: all 0.3s;
-    }
-    .page-tile::after {
-      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, transparent, var(--green-bright), transparent);
-      opacity: 0; transition: opacity 0.3s;
-    }
-    .page-tile:hover { border-color: rgba(0,114,63,0.45); transform: translateY(-3px); }
-    .page-tile:hover::after { opacity: 1; }
-    .tile-icon { font-size: 2.2rem; margin-bottom: 14px; display: block; }
-    .tile-title { font-family: 'Bebas Neue',sans-serif; font-size: 2rem; letter-spacing: 0.08em; color: var(--white); margin-bottom: 10px; }
-    .tile-desc { font-size: 0.9rem; color: var(--grey); line-height: 1.6; }
-    .tile-arrow { display: inline-block; margin-top: 20px; font-family: 'Share Tech Mono',monospace; font-size: 0.68rem; letter-spacing: 0.15em; color: var(--green-bright); }
+    /* ══════════════════════════════════════════
+       INTRO SECTION
+    ══════════════════════════════════════════ */
+    #intro { position:relative;z-index:1;padding:100px 48px; }
+    .intro-grid { max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.1fr 0.9fr;gap:72px;align-items:start; }
+    .intro-text p { color:rgba(240,255,244,0.72);font-size:1.05rem;line-height:1.85;margin-bottom:18px; }
+    .intro-text p strong { color:var(--white);font-weight:600; }
+    .intro-link { color:var(--green-bright);text-decoration:none;border-bottom:1px solid rgba(0,200,90,0.3);transition:border-color 0.2s; }
+    .intro-link:hover { border-color:var(--green-bright); }
+    .bbc-panel { background:var(--card-bg);border:1px solid var(--border);padding:36px 30px;position:relative;overflow:hidden; }
+    .bbc-panel::before { content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--green),var(--green-bright),transparent); }
+    .bbc-logo-large { width:90px;height:auto;display:block;margin:0 auto 20px;filter:brightness(1.1) drop-shadow(0 0 14px rgba(0,114,63,0.35)); }
+    .bbc-panel-title { font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:0.12em;color:var(--white);text-align:center;margin-bottom:6px; }
+    .bbc-panel-sub { font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.18em;color:var(--green-bright);text-align:center;text-transform:uppercase;margin-bottom:24px; }
+    .bbc-facts { display:flex;flex-direction:column;gap:10px; }
+    .bbc-fact { display:flex;align-items:flex-start;gap:10px;font-size:0.88rem;color:rgba(240,255,244,0.65);line-height:1.5; }
+    .bbc-fact-dot { width:6px;height:6px;border-radius:50%;background:var(--green-bright);flex-shrink:0;margin-top:6px;box-shadow:0 0 6px var(--green-bright); }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
+    /* ══════════════════════════════════════════
+       NAV TILES
+    ══════════════════════════════════════════ */
+    #pages { position:relative;z-index:1;padding:100px 48px; }
+    .pages-grid { max-width:1200px;margin:40px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:2px; }
+    .page-tile { background:var(--card-bg);border:1px solid var(--border);padding:40px 30px;text-decoration:none;display:block;position:relative;overflow:hidden;transition:all 0.3s; }
+    .page-tile::after { content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green-bright),transparent);opacity:0;transition:opacity 0.3s; }
+    .page-tile:hover { border-color:rgba(0,114,63,0.45);transform:translateY(-3px); }
+    .page-tile:hover::after { opacity:1; }
+    .tile-icon { font-size:2.2rem;margin-bottom:14px;display:block; }
+    .tile-title { font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.08em;color:var(--white);margin-bottom:10px; }
+    .tile-desc { font-size:0.9rem;color:var(--grey);line-height:1.6; }
+    .tile-arrow { display:inline-block;margin-top:20px;font-family:'Share Tech Mono',monospace;font-size:0.68rem;letter-spacing:0.15em;color:var(--green-bright); }
+
+    /* ══════════════════════════════════════════
+       YOUTUBE EMBED
+    ══════════════════════════════════════════ */
+    #watch { position:relative;z-index:1;padding:80px 48px 0; }
+
+    /* ══════════════════════════════════════════
+       SHARED ANIMATIONS
+    ══════════════════════════════════════════ */
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+    @media(max-width:1000px) {
+      .intro-grid { grid-template-columns:1fr;gap:40px; }
+      .pages-grid { grid-template-columns:1fr; }
+      .journey-cards { grid-template-columns:1fr; }
+      .journey-card { border-right:none;border-bottom:1px solid var(--border); }
+      .emu-preview-stats { grid-template-columns:1fr; }
     }
-    @media (max-width: 1000px) {
-      .intro-grid { grid-template-columns: 1fr; gap: 40px; }
-      .stats-grid { grid-template-columns: repeat(2, 1fr); }
-      .pages-grid { grid-template-columns: 1fr; }
-      .journey-cards { grid-template-columns: 1fr; }
-      .journey-card { border-right: none; border-bottom: 1px solid var(--border); }
-    }
-    @media (max-width: 600px) {
-      #intro, #stats, #pages, #journey { padding: 70px 20px; }
-      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    @media(max-width:600px) {
+      #intro,#pages,#journey,#timeline,#emulator-embed,#watch { padding:70px 20px; }
+      .tl-controls { flex-direction:column;align-items:stretch; }
     }
   </style>
 </head>
 <body>
 
-<!-- ════ TERMINAL BOOT SEQUENCE ════ -->
-<div id="boot-screen" style="position:fixed;inset:0;background:#000;z-index:9999;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:48px 64px;font-family:'Share Tech Mono',monospace;overflow:hidden;transition:opacity 0.6s ease,visibility 0.6s ease;">
-  <div style="position:absolute;inset:0;background:repeating-linear-gradient(to bottom,transparent 0px,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);pointer-events:none;z-index:1;"></div>
-  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(0,114,63,0.06) 0%,transparent 70%);pointer-events:none;"></div>
-  <div id="boot-lines" style="position:relative;z-index:2;width:100%;max-width:800px;"></div>
-  <button onclick="skipBoot()" style="position:absolute;bottom:32px;right:48px;z-index:3;font-family:'Share Tech Mono',monospace;font-size:0.7rem;letter-spacing:0.15em;color:rgba(0,200,90,0.5);background:none;border:1px solid rgba(0,200,90,0.2);padding:6px 14px;cursor:pointer;text-transform:uppercase;">[ SKIP ]</button>
+<!-- ════ STATS TICKER ════ -->
+<div id="ticker">
+  <div class="ticker-label">LIVE</div>
+  <div class="ticker-track">
+    <div class="ticker-inner" id="ticker-inner"></div>
+  </div>
 </div>
-<style>
-  #boot-screen.hidden{opacity:0;visibility:hidden;pointer-events:none;}
-  .boot-line{display:block;font-size:clamp(0.72rem,1.4vw,0.92rem);line-height:1.7;color:#00c85a;opacity:0;white-space:nowrap;overflow:hidden;}
-  .boot-line.dim{color:rgba(0,200,90,0.45);}.boot-line.white{color:rgba(255,255,255,0.85);}.boot-line.warn{color:#f0e060;}
-  .boot-line.big{font-size:clamp(1.4rem,3.5vw,2.2rem);color:#00ff6a;letter-spacing:0.18em;text-shadow:0 0 20px rgba(0,255,106,0.6),0 0 40px rgba(0,255,106,0.3);margin:6px 0;}
-  .boot-cursor{display:inline-block;width:10px;height:1.1em;background:#00c85a;vertical-align:text-bottom;animation:blink 0.7s step-end infinite;margin-left:2px;}
-  @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-</style>
+
+<!-- ════ BOOT SCREEN WITH CUSTOMISER ════ -->
+<div id="boot-screen">
+  <div class="boot-scanlines"></div>
+  <div class="boot-glow"></div>
+  <div id="boot-lines"></div>
+
+  <!-- Operator name prompt — shown before boot starts -->
+  <div id="boot-name-prompt">
+    <div class="bnp-title">[ OPERATOR IDENTIFICATION ]</div>
+    <div class="bnp-row">
+      <input type="text" id="operator-input" placeholder="Enter your name..." maxlength="24" autocomplete="off"/>
+      <button onclick="startBoot()">LOGIN</button>
+    </div>
+    <div class="bnp-skip" onclick="startBoot()">[ skip → boot as GUEST ]</div>
+  </div>
+</div>
 
 <!-- HERO -->
 <section id="hero" style="background-image:url('assets/teamphoto.jpg');background-size:cover;background-position:center;background-repeat:no-repeat;">
@@ -296,14 +371,11 @@
   </h1>
   <div class="hero-divider" style="position:relative;z-index:1;"></div>
   <p class="hero-tagline" style="position:relative;z-index:1;">Green. White. Black. Representing Australia.</p>
+  <p class="hero-greeting" id="hero-greeting" style="position:relative;z-index:1;"></p>
   <div class="hero-cta" style="position:relative;z-index:1;">
     <a href="robot.html" class="btn-primary">Our Robot</a>
     <a href="team.html" class="btn-outline">Meet the Team</a>
     <a href="achievements.html" class="btn-outline">Achievements</a>
-    <a href="campaign2025.html" class="btn-outline">2025 Campaign</a>
-    <a href="campaign2026.html" class="btn-outline">2026 Campaign</a>
-    <a href="resources.html" class="btn-outline">Resources</a>
-    <a href="emulator.html" class="btn-outline">Emulator</a>
   </div>
 </section>
 
@@ -335,26 +407,34 @@
   </div>
 </section>
 
-<!-- STATS -->
-<section id="stats">
-  <div style="max-width:1200px;margin:0 auto;">
-    <p class="section-label">Our Statistics</p>
-    <h2 class="section-title">HYPERION <span class="accent">BY THE NUMBERS</span></h2>
-  </div>
-  <div class="stats-grid">
-    <div class="stat-box"><div class="stat-num">5+</div><div class="stat-label">Years at RoboCup Junior</div></div>
-    <div class="stat-box"><div class="stat-num">5×</div><div class="stat-label">RoboCup Junior Campaigns</div></div>
-    <div class="stat-box"><div class="stat-num">8×</div><div class="stat-label">Total Podium Finishes</div></div>
-    <div class="stat-box"><div class="stat-num">1ST</div><div class="stat-label">2025 Worlds SuperTeam</div></div>
-    <div class="stat-box"><div class="stat-num">14TH</div><div class="stat-label">2025 Worlds Individual</div></div>
-    <div class="stat-box"><div class="stat-num">1×</div><div class="stat-label">International Appearances</div></div>
-    <div class="stat-box"><div class="stat-num">2×</div><div class="stat-label">National Appearances</div></div>
-    <div class="stat-box"><div class="stat-num">0</div><div class="stat-label">Losses at 2025 Nationals</div></div>
+<!-- ════ COMPETITION TIMELINE (replaces old stats strip) ════ -->
+<section id="timeline">
+  <div class="tl-inner">
+    <p class="section-label">Competition History</p>
+    <h2 class="section-title">HYPERION <span class="accent">TIMELINE</span></h2>
+
+    <div class="tl-controls">
+      <button class="tl-btn" id="tl-prev" onclick="tlMove(-1)">← PREV</button>
+      <div class="tl-track-bg" id="tl-track" onclick="tlClickTrack(event)">
+        <div class="tl-track-fill" id="tl-fill"></div>
+        <div class="tl-nodes" id="tl-nodes"></div>
+      </div>
+      <button class="tl-btn" id="tl-next" onclick="tlMove(1)">NEXT →</button>
+    </div>
+    <input type="range" class="tl-range" id="tl-slider" min="0" max="4" step="1" value="0" oninput="tlSet(+this.value)"/>
+
+    <div class="tl-card" id="tl-card">
+      <div class="tl-year" id="tl-year"></div>
+      <div class="tl-event" id="tl-event"></div>
+      <div class="tl-location" id="tl-loc"></div>
+      <div class="tl-badges" id="tl-badges"></div>
+      <div class="tl-desc" id="tl-desc"></div>
+    </div>
   </div>
 </section>
 
-<!-- YOUTUBE EMBED -->
-<section id="watch" style="position:relative;z-index:1;padding:80px 48px 0;">
+<!-- ════ YOUTUBE ════ -->
+<section id="watch">
   <div style="max-width:1200px;margin:0 auto;">
     <p class="section-label">In Action</p>
     <h2 class="section-title">WATCH US <span class="accent">COMPETE</span></h2>
@@ -383,88 +463,159 @@
   </div><br><br>
 </section>
 
-<!-- JOURNEY MAP -->
+<!-- ════ INTERACTIVE JOURNEY MAP ════ -->
 <section id="journey">
   <div class="journey-inner">
     <p class="section-label">Our Journey</p>
     <h2 class="section-title">HYPERION <span class="accent">ON THE MAP</span></h2>
-    <p style="color:rgba(240,255,244,0.5);font-family:'Share Tech Mono',monospace;font-size:0.78rem;letter-spacing:0.12em;margin-top:8px;">Brisbane → Salvador → Brisbane → Incheon</p>
+    <p style="color:rgba(240,255,244,0.5);font-family:'Share Tech Mono',monospace;font-size:0.78rem;letter-spacing:0.12em;margin-top:8px;">Click any city pin to explore · Brisbane → Salvador → Incheon</p>
+
     <div class="journey-map-wrap">
-      <div id="journey-svg-wrap">
-        <svg viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg" style="background:rgba(0,0,0,0);">
+      <!-- City popup overlay -->
+      <div class="city-popup" id="city-popup">
+        <div class="cp-city" id="cp-city"></div>
+        <div class="cp-country" id="cp-country"></div>
+        <div class="cp-desc" id="cp-desc"></div>
+        <span class="cp-badge" id="cp-badge"></span>
+        <div style="margin-top:10px;font-family:'Share Tech Mono',monospace;font-size:0.5rem;color:rgba(0,200,90,0.4);cursor:pointer;" onclick="closePopup()">[ CLOSE ×]</div>
+      </div>
+
+      <div id="journey-canvas-wrap">
+        <svg viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg" id="journey-svg" style="background:rgba(0,0,0,0);cursor:default;">
+          <!-- Grid -->
           <g stroke="rgba(0,114,63,0.08)" stroke-width="0.5">
             <line x1="0" y1="130" x2="1000" y2="130"/><line x1="0" y1="260" x2="1000" y2="260"/>
             <line x1="0" y1="390" x2="1000" y2="390"/><line x1="250" y1="0" x2="250" y2="520"/>
             <line x1="500" y1="0" x2="500" y2="520"/><line x1="750" y1="0" x2="750" y2="520"/>
           </g>
           <line x1="0" y1="260" x2="1000" y2="260" stroke="rgba(0,200,90,0.12)" stroke-width="1" stroke-dasharray="4 6"/>
-          <path d="M 108,60 L 135,55 L 175,68 L 200,85 L 215,100 L 220,120 L 210,135 L 195,150 L 180,165 L 165,190 L 150,210 L 135,225 L 120,215 L 105,195 L 95,170 L 88,145 L 85,120 L 88,95 L 95,75 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
-          <path d="M 155,215 L 165,225 L 160,240 L 150,245 L 140,238 L 138,228 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
-          <path d="M 195,255 L 220,248 L 255,258 L 275,280 L 278,310 L 270,340 L 255,370 L 235,400 L 215,415 L 198,405 L 182,385 L 172,355 L 168,320 L 170,290 L 178,268 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
-          <path d="M 460,80 L 485,72 L 510,75 L 525,88 L 520,105 L 505,118 L 488,122 L 470,115 L 455,100 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
-          <path d="M 468,140 L 495,130 L 525,138 L 545,158 L 552,185 L 548,215 L 535,245 L 515,270 L 495,285 L 475,278 L 458,258 L 448,228 L 445,198 L 450,168 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
-          <path d="M 530,118 L 560,110 L 585,120 L 595,138 L 580,155 L 555,158 L 535,148 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
-          <path d="M 580,55 L 640,45 L 710,50 L 760,58 L 790,75 L 800,95 L 790,118 L 765,135 L 735,148 L 700,155 L 665,148 L 635,138 L 608,125 L 590,108 L 578,88 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
-          <path d="M 740,158 L 770,148 L 795,158 L 810,175 L 805,192 L 785,198 L 760,188 L 745,172 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
+
+          <!-- Continents (simplified) -->
+          <!-- Australia -->
           <path d="M 760,330 L 800,318 L 840,322 L 862,340 L 868,362 L 858,385 L 835,400 L 808,405 L 782,395 L 762,375 L 752,352 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
+          <!-- South America -->
+          <path d="M 195,255 L 220,248 L 255,258 L 275,280 L 278,310 L 270,340 L 255,370 L 235,400 L 215,415 L 198,405 L 182,385 L 172,355 L 168,320 L 170,290 L 178,268 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
+          <!-- North America -->
+          <path d="M 108,60 L 135,55 L 175,68 L 200,85 L 215,100 L 220,120 L 210,135 L 195,150 L 180,165 L 165,190 L 150,210 L 135,225 L 120,215 L 105,195 L 95,170 L 88,145 L 85,120 L 88,95 L 95,75 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
+          <!-- Europe -->
+          <path d="M 460,80 L 485,72 L 510,75 L 525,88 L 520,105 L 505,118 L 488,122 L 470,115 L 455,100 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
+          <!-- Africa -->
+          <path d="M 468,140 L 495,130 L 525,138 L 545,158 L 552,185 L 548,215 L 535,245 L 515,270 L 495,285 L 475,278 L 458,258 L 448,228 L 445,198 L 450,168 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
+          <!-- Asia -->
+          <path d="M 580,55 L 640,45 L 710,50 L 760,58 L 790,75 L 800,95 L 790,118 L 765,135 L 735,148 L 700,155 L 665,148 L 635,138 L 608,125 L 590,108 L 578,88 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
+          <!-- Korea peninsula -->
+          <path d="M 740,158 L 770,148 L 795,158 L 810,175 L 805,192 L 785,198 L 760,188 L 745,172 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
+
+          <!-- Flight paths -->
+          <!-- Brisbane → Salvador (completed) -->
           <path id="path-bne-sal" d="M 790,378 Q 900,180 700,260 Q 560,310 227,305" fill="none" stroke="rgba(0,200,90,0.5)" stroke-width="1.5" stroke-dasharray="1000" stroke-dashoffset="1000">
             <animate attributeName="stroke-dashoffset" from="1000" to="0" dur="2.5s" begin="0.5s" fill="freeze"/>
           </path>
-          <path id="path-sal-bne" d="M 227,305 Q 560,420 700,340 Q 860,250 790,378" fill="none" stroke="rgba(0,200,90,0.2)" stroke-width="1" stroke-dasharray="4 5"/>
-          <path id="path-bne-inc" d="M 790,378 Q 820,280 790,200 Q 770,165 760,168" fill="none" stroke="rgba(0,255,120,0.7)" stroke-width="1.8" stroke-dasharray="1000" stroke-dashoffset="1000">
+          <!-- Salvador → Brisbane (return, faint) -->
+          <path d="M 227,305 Q 560,420 700,340 Q 860,250 790,378" fill="none" stroke="rgba(0,200,90,0.15)" stroke-width="1" stroke-dasharray="4 5"/>
+          <!-- Brisbane → Incheon (upcoming, animated dash) -->
+          <path id="path-bne-inc" d="M 790,378 Q 820,280 790,200 Q 770,165 762,172" fill="none" stroke="rgba(0,255,120,0.7)" stroke-width="1.8" stroke-dasharray="1000" stroke-dashoffset="1000">
             <animate attributeName="stroke-dashoffset" from="1000" to="0" dur="1.8s" begin="3s" fill="freeze"/>
           </path>
-          <path d="M 790,378 Q 820,280 790,200 Q 770,165 760,168" fill="none" stroke="rgba(0,255,120,0.4)" stroke-width="1" stroke-dasharray="6 5" class="flight-path"/>
-          <g class="journey-pin" onclick="selectCity(0)" id="pin-brisbane">
-            <circle cx="790" cy="378" r="22" fill="rgba(0,114,63,0.08)" class="pulse-ring" stroke="rgba(0,200,90,0.4)" stroke-width="1"/>
-            <circle cx="790" cy="378" r="8" fill="rgba(0,40,20,0.9)" stroke="#00c85a" stroke-width="2"/>
-            <circle cx="790" cy="378" r="3" fill="#00ff6a"/>
+          <!-- Moving dot along Incheon path -->
+          <circle r="4" fill="#00ff6a" opacity="0.85" id="travel-dot">
+            <animateMotion dur="4s" begin="3.5s" repeatCount="indefinite" path="M 790,378 Q 820,280 790,200 Q 770,165 762,172"/>
+          </circle>
+
+          <!-- CITY PINS — clickable -->
+          <!-- Brisbane -->
+          <g class="journey-pin" id="pin-brisbane" onclick="showCity(0,790,378)" style="cursor:pointer;">
+            <circle cx="790" cy="378" r="22" fill="rgba(0,114,63,0.08)" stroke="rgba(0,200,90,0.4)" stroke-width="1" class="pulse-ring"/>
+            <circle cx="790" cy="378" r="9" fill="rgba(0,40,20,0.95)" stroke="#00c85a" stroke-width="2.5"/>
+            <circle cx="790" cy="378" r="3.5" fill="#00ff6a"/>
             <text x="790" y="400" text-anchor="middle" font-family="'Share Tech Mono',monospace" font-size="11" fill="rgba(240,255,244,0.8)" letter-spacing="1">BRISBANE</text>
           </g>
-          <g class="journey-pin" onclick="selectCity(1)" id="pin-salvador">
-            <circle cx="227" cy="305" r="22" fill="rgba(0,114,63,0.08)" class="pulse-ring" stroke="rgba(0,200,90,0.4)" stroke-width="1"/>
-            <circle cx="227" cy="305" r="8" fill="rgba(0,40,20,0.9)" stroke="#00c85a" stroke-width="2"/>
-            <circle cx="227" cy="305" r="3" fill="#00ff6a"/>
+          <!-- Salvador -->
+          <g class="journey-pin" id="pin-salvador" onclick="showCity(1,227,305)" style="cursor:pointer;">
+            <circle cx="227" cy="305" r="22" fill="rgba(0,114,63,0.08)" stroke="rgba(0,200,90,0.4)" stroke-width="1" class="pulse-ring"/>
+            <circle cx="227" cy="305" r="9" fill="rgba(0,40,20,0.95)" stroke="#00c85a" stroke-width="2.5"/>
+            <circle cx="227" cy="305" r="3.5" fill="#00ff6a"/>
             <text x="227" y="326" text-anchor="middle" font-family="'Share Tech Mono',monospace" font-size="11" fill="rgba(240,255,244,0.8)" letter-spacing="1">SALVADOR</text>
           </g>
-          <g class="journey-pin" onclick="selectCity(2)" id="pin-incheon">
-            <circle cx="760" cy="168" r="22" fill="rgba(0,200,90,0.15)" class="pulse-ring" stroke="rgba(0,255,120,0.6)" stroke-width="1.5"/>
-            <circle cx="760" cy="168" r="8" fill="rgba(0,40,20,0.9)" stroke="#00ff6a" stroke-width="2.5"/>
-            <circle cx="760" cy="168" r="3" fill="#fff"/>
-            <text x="760" y="145" text-anchor="middle" font-family="monospace" font-size="14" fill="#00ff6a">★</text>
-            <text x="760" y="192" text-anchor="middle" font-family="'Share Tech Mono',monospace" font-size="11" fill="rgba(240,255,244,0.9)" letter-spacing="1">INCHEON</text>
+          <!-- Incheon -->
+          <g class="journey-pin" id="pin-incheon" onclick="showCity(2,762,172)" style="cursor:pointer;">
+            <circle cx="762" cy="172" r="24" fill="rgba(0,200,90,0.15)" stroke="rgba(0,255,120,0.6)" stroke-width="1.5" class="pulse-ring"/>
+            <circle cx="762" cy="172" r="9" fill="rgba(0,40,20,0.95)" stroke="#00ff6a" stroke-width="2.5"/>
+            <circle cx="762" cy="172" r="3.5" fill="#fff"/>
+            <text x="762" y="150" text-anchor="middle" font-family="monospace" font-size="14" fill="#00ff6a">★</text>
+            <text x="762" y="195" text-anchor="middle" font-family="'Share Tech Mono',monospace" font-size="11" fill="rgba(240,255,244,0.9)" letter-spacing="1">INCHEON</text>
           </g>
-          <g transform="translate(20, 450)">
+
+          <!-- Legend -->
+          <g transform="translate(20,458)">
             <line x1="0" y1="6" x2="22" y2="6" stroke="rgba(0,200,90,0.5)" stroke-width="1.5"/>
             <text x="28" y="10" font-family="'Share Tech Mono',monospace" font-size="9" fill="rgba(240,255,244,0.4)">COMPLETED</text>
             <line x1="140" y1="6" x2="162" y2="6" stroke="rgba(0,255,120,0.7)" stroke-width="1.8"/>
             <text x="168" y="10" font-family="'Share Tech Mono',monospace" font-size="9" fill="rgba(240,255,244,0.4)">UPCOMING 2026</text>
-            <text x="320" y="10" font-family="'Share Tech Mono',monospace" font-size="9" fill="rgba(240,255,244,0.25)">★ NEXT DESTINATION</text>
+            <text x="310" y="10" font-family="'Share Tech Mono',monospace" font-size="9" fill="rgba(240,255,244,0.25)">★ NEXT DESTINATION  · CLICK PINS FOR DETAILS</text>
           </g>
         </svg>
       </div>
+
+      <!-- Info cards below map -->
       <div class="journey-cards">
         <div class="journey-card active" id="card-0" onclick="selectCity(0)">
           <div class="jc-num">01</div>
           <div class="jc-city">Brisbane</div>
-          <div class="jc-country"> Queensland, Australia</div>
+          <div class="jc-country">Queensland, Australia</div>
           <div class="jc-desc">Our home. Where Hyperion was built, trained, and launched into international competition from Brisbane Boys' College, Toowong.</div>
           <span class="jc-badge">Base of Operations</span>
         </div>
         <div class="journey-card" id="card-1" onclick="selectCity(1)">
           <div class="jc-num">02</div>
           <div class="jc-city">Salvador</div>
-          <div class="jc-country"> Bahia, Brazil</div>
+          <div class="jc-country">Bahia, Brazil</div>
           <div class="jc-desc">2025 RoboCup Junior Worlds. We placed 14th individually and claimed 1st in the Lightweight SuperTeam — a historic result for BBC robotics.</div>
           <span class="jc-badge">2025 · 1st SuperTeam</span>
         </div>
         <div class="journey-card" id="card-2" onclick="selectCity(2)">
           <div class="jc-num">03</div>
           <div class="jc-city">Incheon</div>
-          <div class="jc-country"> South Korea</div>
+          <div class="jc-country">South Korea</div>
           <div class="jc-desc">Our next challenge. The 2026 RoboCup Junior World Championship. We're going back stronger — with upgraded hardware, refined strategy, and a point to prove.</div>
           <span class="jc-badge" style="color:#00ff6a;border-color:rgba(0,255,120,0.4);">2026 · Upcoming ★</span>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ ROBOT EMULATOR EMBED ════ -->
+<section id="emulator-embed">
+  <div class="emu-inner">
+    <p class="section-label">Interactive Simulation</p>
+    <h2 class="section-title">ROBOT <span class="accent">EMULATOR</span></h2>
+    <p style="color:rgba(240,255,244,0.5);font-family:'Share Tech Mono',monospace;font-size:0.78rem;letter-spacing:0.12em;margin-top:8px;margin-bottom:0;">Live simulation of our autonomous robot strategy — drag the ball, add enemies, adjust parameters.</p>
+
+    <div class="emu-frame-wrap">
+      <!-- Click-to-activate overlay (prevents accidental scroll capture) -->
+      <div class="emu-overlay" id="emu-overlay" onclick="activateEmulator()">
+        <div class="emu-overlay-icon">🤖</div>
+        <div class="emu-overlay-title">ROBOT EMULATOR</div>
+        <div class="emu-overlay-sub">Live Autonomous Strategy Simulation</div>
+        <button class="emu-launch-btn">▶ LAUNCH SIMULATION</button>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;color:rgba(0,200,90,0.4);margin-top:8px;">Click to activate · Scroll to resize</div>
+      </div>
+      <iframe id="emu-iframe" src="emulator.html" title="Robot Emulator" scrolling="no" loading="lazy"></iframe>
+    </div>
+
+    <div class="emu-preview-stats">
+      <div class="emu-stat">
+        <div class="emu-stat-num">4×</div>
+        <div class="emu-stat-lbl">Omnidirectional Motors</div>
+      </div>
+      <div class="emu-stat">
+        <div class="emu-stat-num">8×</div>
+        <div class="emu-stat-lbl">IR Sensors</div>
+      </div>
+      <div class="emu-stat">
+        <div class="emu-stat-num">BT</div>
+        <div class="emu-stat-lbl">Role Swap Protocol</div>
       </div>
     </div>
   </div>
@@ -483,67 +634,324 @@
     <a href="campaign2025.html" class="page-tile"><span class="tile-icon"></span><div class="tile-title">2025 Campaign</div><p class="tile-desc">Read our 2025 International Experience at the RoboCup Junior Competition in Salvador.</p><span class="tile-arrow">→ VIEW 25' CAMPAIGN</span></a>
     <a href="campaign2026.html" class="page-tile"><span class="tile-icon"></span><div class="tile-title">2026 Campaign</div><p class="tile-desc">Join us in our 2026 journey to Incheon, South Korea.</p><span class="tile-arrow">→ VIEW 26' CAMPAIGN</span></a>
     <a href="resources.html" class="page-tile"><span class="tile-icon"></span><div class="tile-title">Resources</div><p class="tile-desc">Have a look at some of the resources that we use to design our robot!</p><span class="tile-arrow">→ VIEW RESOURCES</span></a>
-    <a href="emulator.html" class="page-tile"><span class="tile-icon"></span><div class="tile-title">Interactive Robot Emulator</div><p class="tile-desc">Check out our cool emulator for how we want our robot to perform!</p><span class="tile-arrow">→ VIEW EMULATOR</span></a>
   </div>
 </section>
 
+<!-- ════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════ -->
 <script>
-/* ── TERMINAL BOOT ── */
-const bootLines=[
-  {text:"HYPERION OS v3.2.0 — INITIALISING...",delay:0,cls:""},
-  {text:"[ OK ] Booting kernel modules...",delay:280,cls:"dim"},
-  {text:"[ OK ] Loading sensor array: IR × 8, LIDAR × 1, CAM × 2",delay:520,cls:"dim"},
-  {text:"[ OK ] Motor controllers online — 4× omnidirectional",delay:760,cls:"dim"},
-  {text:"[ OK ] Communication bus: I²C / SPI — active",delay:980,cls:"dim"},
-  {text:"[ !! ] Checking competition firmware... valid ✓",delay:1200,cls:"warn"},
-  {text:"────────────────────────────────────────────────────────────",delay:1400,cls:"dim"},
-  {text:"SCHOOL      : Brisbane Boys' College, Queensland AUS",delay:1540,cls:"white"},
-  {text:"DIVISION    : RoboCup Junior · Lightweight Soccer",delay:1680,cls:"white"},
-  {text:"SEASON      : 2026 — Incheon, South Korea",delay:1820,cls:"white"},
-  {text:"RECORD      : 8× podiums · 1st SuperTeam 2025 · Undefeated Nationals",delay:1960,cls:"white"},
-  {text:"────────────────────────────────────────────────────────────",delay:2100,cls:"dim"},
-  {text:"[ OK ] Strategy engine loaded",delay:2250,cls:"dim"},
-  {text:"[ OK ] Ball tracking algorithm: ACTIVE",delay:2400,cls:"dim"},
-  {text:"[ OK ] All systems nominal. Ready to compete.",delay:2680,cls:""},
-  {text:"────────────────────────────────────────────────────────────",delay:2820,cls:"dim"},
-  {text:"TEAM  HYPERION",delay:3000,cls:"big"},
-  {text:"GREEN.  WHITE.  BLACK.  REPRESENTING AUSTRALIA.",delay:3200,cls:""},
-  {text:"",delay:3400,cls:""},
-  {text:"> LAUNCHING MISSION CONTROL...",delay:3600,cls:""},
+/* ─────────────────────────────────────────
+   STATS TICKER
+───────────────────────────────────────── */
+const TICKER_ITEMS = [
+  { tag: '2025 WORLDS',    gold: true,  text: '1st Place · Lightweight SuperTeam' },
+  { tag: '2025 WORLDS',    gold: false, text: '14th Place · Individual' },
+  { tag: '2025 NATIONALS', gold: true,  text: 'Undefeated · 0 Losses' },
+  { tag: 'HISTORY',        gold: true,  text: '8× Total Podium Finishes' },
+  { tag: 'HISTORY',        gold: false, text: '5+ Years Competing' },
+  { tag: 'HISTORY',        gold: false, text: '2× National Appearances' },
+  { tag: '2026',           gold: false, text: 'Qualified → Incheon, South Korea' },
+  { tag: 'BBC',            gold: false, text: 'Brisbane Boys\' College · Est. 1902' },
+  { tag: 'DIVISION',       gold: false, text: 'RoboCup Junior Lightweight Soccer' },
 ];
-const bootContainer=document.getElementById('boot-lines');
-let bootDone=false;
-function runBoot(){
-  bootLines.forEach((line,i)=>{
-    setTimeout(()=>{
-      if(bootDone)return;
-      const el=document.createElement('span');
-      el.className='boot-line '+(line.cls||'');
-      el.textContent=line.text||'\u00A0';
-      el.style.opacity='0';
-      bootContainer.appendChild(el);
-      requestAnimationFrame(()=>{el.style.transition='opacity 0.18s';el.style.opacity='1';});
-    },line.delay);
+
+function buildTicker() {
+  const inner = document.getElementById('ticker-inner');
+  const items = [...TICKER_ITEMS, ...TICKER_ITEMS]; // double for seamless loop
+  items.forEach(item => {
+    const el = document.createElement('div');
+    el.className = 'ticker-item';
+    el.innerHTML = `<span class="ti-tag${item.gold ? ' gold' : ''}">${item.tag}</span>${item.text}`;
+    inner.appendChild(el);
   });
-  setTimeout(()=>{if(bootDone)return;const cur=document.createElement('span');cur.className='boot-line';cur.innerHTML='> <span class="boot-cursor"></span>';cur.style.opacity='1';bootContainer.appendChild(cur);},3800);
-  setTimeout(()=>{if(!bootDone)dismissBoot();},5200);
 }
-function dismissBoot(){bootDone=true;document.getElementById('boot-screen').classList.add('hidden');}
-function skipBoot(){dismissBoot();}
-if(!sessionStorage.getItem('booted')){sessionStorage.setItem('booted','1');runBoot();}
-else{document.getElementById('boot-screen').style.display='none';}
+buildTicker();
 
-/* ── JOURNEY MAP ── */
-function selectCity(idx){
-  document.querySelectorAll('.journey-card').forEach((c,i)=>c.classList.toggle('active',i===idx));
-  const pins=['pin-brisbane','pin-salvador','pin-incheon'];
-  pins.forEach((id,i)=>{const pin=document.getElementById(id);if(pin){const dot=pin.querySelectorAll('circle')[1];if(dot)dot.setAttribute('stroke',i===idx?'#00ff6a':'#00c85a');}});
+/* ─────────────────────────────────────────
+   BOOT SCREEN WITH OPERATOR CUSTOMISER
+───────────────────────────────────────── */
+let operatorName = '';
+
+function startBoot() {
+  const input = document.getElementById('operator-input');
+  operatorName = input.value.trim().toUpperCase() || 'GUEST';
+  document.getElementById('boot-name-prompt').style.display = 'none';
+  runBoot(operatorName);
 }
 
-/* ── SCROLL ANIMATIONS ── */
-const observer=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}});},{threshold:0.1});
-document.querySelectorAll('.stat-box,.page-tile,.bbc-panel,.journey-card,.journey-map-wrap').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(18px)';el.style.transition='opacity 0.5s ease,transform 0.5s ease';observer.observe(el);});
+// Allow Enter key to submit
+document.getElementById('operator-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') startBoot();
+});
+
+function buildBootLines(name) {
+  return [
+    { text: 'HYPERION OS v3.2.0 — INITIALISING...', delay: 0, cls: '' },
+    { text: '[ OK ] Booting kernel modules...', delay: 220, cls: 'dim' },
+    { text: '[ OK ] Loading sensor array: IR × 8, LIDAR × 1, CAM × 2', delay: 440, cls: 'dim' },
+    { text: '[ OK ] Motor controllers online — 4× omnidirectional', delay: 640, cls: 'dim' },
+    { text: '[ OK ] Communication bus: I²C / SPI — active', delay: 820, cls: 'dim' },
+    { text: '[ !! ] Checking competition firmware... valid ✓', delay: 1000, cls: 'warn' },
+    { text: '────────────────────────────────────────────────────────────', delay: 1160, cls: 'dim' },
+    { text: `SCHOOL      : Brisbane Boys' College, Queensland AUS`, delay: 1280, cls: 'white' },
+    { text: 'DIVISION    : RoboCup Junior · Lightweight Soccer', delay: 1400, cls: 'white' },
+    { text: 'SEASON      : 2026 — Incheon, South Korea', delay: 1520, cls: 'white' },
+    { text: 'RECORD      : 8× podiums · 1st SuperTeam 2025 · Undefeated Nationals', delay: 1640, cls: 'white' },
+    { text: '────────────────────────────────────────────────────────────', delay: 1760, cls: 'dim' },
+    { text: '[ OK ] Strategy engine loaded', delay: 1880, cls: 'dim' },
+    { text: '[ OK ] Ball tracking algorithm: ACTIVE', delay: 2000, cls: 'dim' },
+    { text: '[ OK ] All systems nominal. Ready to compete.', delay: 2200, cls: '' },
+    { text: '────────────────────────────────────────────────────────────', delay: 2320, cls: 'dim' },
+    { text: 'TEAM  HYPERION', delay: 2480, cls: 'big' },
+    { text: 'GREEN.  WHITE.  BLACK.  REPRESENTING AUSTRALIA.', delay: 2680, cls: '' },
+    { text: '', delay: 2860, cls: '' },
+    { text: `> OPERATOR IDENTIFIED: ${name}`, delay: 3000, cls: 'warn', highlight: name },
+    { text: `> WELCOME BACK, ${name}. CLEARANCE GRANTED.`, delay: 3180, cls: '' },
+    { text: '> LAUNCHING MISSION CONTROL...', delay: 3380, cls: '' },
+  ];
+}
+
+const bootContainer = document.getElementById('boot-lines');
+let bootDone = false;
+
+function runBoot(name) {
+  const lines = buildBootLines(name);
+  lines.forEach((line, i) => {
+    setTimeout(() => {
+      if (bootDone) return;
+      const el = document.createElement('span');
+      el.className = 'boot-line ' + (line.cls || '');
+      if (line.highlight && line.text.includes(line.highlight)) {
+        // Highlight the operator name in green
+        el.innerHTML = line.text.replace(line.highlight, `<span class="boot-name-highlight">${line.highlight}</span>`);
+      } else {
+        el.textContent = line.text || '\u00A0';
+      }
+      el.style.opacity = '0';
+      bootContainer.appendChild(el);
+      requestAnimationFrame(() => { el.style.transition = 'opacity 0.15s'; el.style.opacity = '1'; });
+      bootContainer.parentElement.scrollTop = bootContainer.parentElement.scrollHeight;
+    }, line.delay);
+  });
+
+  const lastDelay = lines[lines.length - 1].delay;
+  setTimeout(() => { if (bootDone) return; const cur = document.createElement('span'); cur.className = 'boot-line'; cur.innerHTML = '> <span class="boot-cursor"></span>'; cur.style.opacity = '1'; bootContainer.appendChild(cur); }, lastDelay + 200);
+  setTimeout(() => { if (!bootDone) dismissBoot(name); }, lastDelay + 1800);
+}
+
+function dismissBoot(name) {
+  bootDone = true;
+  document.getElementById('boot-screen').classList.add('hidden');
+  // Personalise hero greeting
+  if (name && name !== 'GUEST') {
+    const g = document.getElementById('hero-greeting');
+    g.textContent = `> WELCOME, OPERATOR ${name}`;
+    g.style.opacity = '1';
+  }
+  sessionStorage.setItem('operator', name || 'GUEST');
+}
+
+// On repeat visits: skip to prompt (no repeated boot sequence needed)
+const savedOp = sessionStorage.getItem('operator');
+if (savedOp) {
+  // Skip the name prompt, go straight to boot with saved name
+  document.getElementById('boot-name-prompt').style.display = 'none';
+  operatorName = savedOp;
+  runBoot(savedOp);
+  if (savedOp !== 'GUEST') {
+    const g = document.getElementById('hero-greeting');
+    g.textContent = `> WELCOME BACK, OPERATOR ${savedOp}`;
+  }
+}
+
+/* ─────────────────────────────────────────
+   COMPETITION TIMELINE
+───────────────────────────────────────── */
+const TL_EVENTS = [
+  {
+    year: '2021–22', future: false,
+    event: 'First Steps in RoboCup Junior',
+    location: '📍 Brisbane, Queensland',
+    badges: [{ t: 'Entry Division', c: 'grey' }, { t: 'Local Qualifiers', c: 'green' }],
+    desc: 'The squad learns the fundamentals of autonomous robot design — sensors, motors, strategy — competing in Queensland regional qualifiers.'
+  },
+  {
+    year: '2023', future: false,
+    event: 'State & National Qualifiers',
+    location: '📍 Queensland + National, Australia',
+    badges: [{ t: 'State Champions', c: 'gold' }, { t: 'Nationals Qualifier', c: 'green' }],
+    desc: 'Hyperion rise through the Standard Soccer competition, learning Soccer division fundamentals and mastering the basics.'
+  },
+  {
+    year: '2024', future: false,
+    event: 'Australian National Championship',
+    location: '📍 Australia',
+    badges: [{ t: 'Podium Finish', c: 'gold' }, { t: 'Lightweight Soccer', c: 'green' }],
+    desc: 'A strong national campaign. The teams first year in custom robotics, earning multiple podium finishes and setting the foundation for an international bid.'
+  },
+  {
+    year: '2025', future: false,
+    event: 'RoboCup Junior World Championship',
+    location: '📍 Salvador, Bahia — Brazil',
+    badges: [{ t: '1st · SuperTeam', c: 'gold' }, { t: '14th · Individual', c: 'green' }, { t: 'Undefeated Nationals', c: 'gold' }],
+    desc: 'Team Hyperion represents Australia at Worlds for the first time — claiming 1st place in the Lightweight SuperTeam division. Returning home, they go undefeated at Nationals and lock in Australia\'s 2026 qualification spot.'
+  },
+  {
+    year: '2026', future: true,
+    event: 'RoboCup Junior World Championship',
+    location: '📍 Incheon, South Korea',
+    badges: [{ t: 'Upcoming ★', c: 'future' }, { t: 'Qualified', c: 'green' }],
+    desc: 'The next challenge. Hyperion heads to Incheon with upgraded hardware, refined strategy, and experience from Brazil. The goal: improve on the individual ranking and defend the SuperTeam title.'
+  }
+];
+
+let tlCurrent = 0;
+
+function tlBuild() {
+  const nodesEl = document.getElementById('tl-nodes');
+  TL_EVENTS.forEach((e, i) => {
+    const d = document.createElement('div');
+    d.className = 'tl-node' + (e.future ? ' future' : '');
+    d.innerHTML = `<span class="tl-node-year">${e.year}</span>`;
+    d.onclick = () => tlSet(i);
+    nodesEl.appendChild(d);
+  });
+  tlRender(0);
+}
+
+function tlRender(idx) {
+  const e = TL_EVENTS[idx];
+  const pct = (idx / (TL_EVENTS.length - 1)) * 100;
+  document.getElementById('tl-fill').style.width = pct + '%';
+  document.getElementById('tl-slider').value = idx;
+  document.querySelectorAll('.tl-node').forEach((n, i) => n.classList.toggle('active', i <= idx));
+  document.getElementById('tl-year').textContent = e.year;
+  document.getElementById('tl-event').textContent = e.event;
+  document.getElementById('tl-loc').textContent = e.location;
+  document.getElementById('tl-desc').textContent = e.desc;
+  const card = document.getElementById('tl-card');
+  card.className = 'tl-card' + (e.future ? ' future' : '');
+  const bw = document.getElementById('tl-badges');
+  bw.innerHTML = '';
+  e.badges.forEach(b => {
+    const el = document.createElement('span');
+    el.className = 'tl-badge ' + b.c;
+    el.textContent = b.t;
+    bw.appendChild(el);
+  });
+  document.getElementById('tl-prev').disabled = idx === 0;
+  document.getElementById('tl-next').disabled = idx === TL_EVENTS.length - 1;
+}
+
+function tlSet(idx) { tlCurrent = Math.max(0, Math.min(TL_EVENTS.length - 1, idx)); tlRender(tlCurrent); }
+function tlMove(dir) { tlSet(tlCurrent + dir); }
+function tlClickTrack(e) {
+  const rect = e.currentTarget.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  tlSet(Math.round(pct * (TL_EVENTS.length - 1)));
+}
+tlBuild();
+
+/* ─────────────────────────────────────────
+   INTERACTIVE JOURNEY MAP
+───────────────────────────────────────── */
+const CITY_DATA = [
+  {
+    city: 'Brisbane', country: 'Queensland, Australia',
+    desc: 'Our home base. Brisbane Boys\' College, Toowong — where Hyperion was designed, built, and launched into international competition.',
+    badge: 'Base of Operations'
+  },
+  {
+    city: 'Salvador', country: 'Bahia, Brazil',
+    desc: '2025 RoboCup Junior Worlds. 14th individually. 1st in the Lightweight SuperTeam. A historic result for BBC robotics.',
+    badge: '2025 · 1st SuperTeam'
+  },
+  {
+    city: 'Incheon', country: 'South Korea',
+    desc: 'The 2026 RoboCup Junior World Championship. We\'re going back stronger — upgraded hardware, refined strategy, a point to prove.',
+    badge: '2026 · Upcoming ★'
+  }
+];
+
+function showCity(idx, svgX, svgY) {
+  const data = CITY_DATA[idx];
+  const popup = document.getElementById('city-popup');
+  const wrap = document.getElementById('journey-canvas-wrap');
+  const rect = wrap.getBoundingClientRect();
+  const svgEl = document.getElementById('journey-svg');
+  const viewBox = { w: 1000, h: 520 };
+
+  // Convert SVG coords to % position
+  const pctX = svgX / viewBox.w;
+  const pctY = svgY / viewBox.h;
+  const wrapW = wrap.offsetWidth;
+  const wrapH = wrap.offsetHeight;
+  let left = pctX * wrapW;
+  let top = pctY * wrapH;
+
+  // Offset so popup doesn't cover pin; clamp to wrap
+  left = Math.min(left + 10, wrapW - 220);
+  top = Math.max(top - 160, 10);
+
+  popup.style.left = left + 'px';
+  popup.style.top = top + 'px';
+  document.getElementById('cp-city').textContent = data.city;
+  document.getElementById('cp-country').textContent = data.country;
+  document.getElementById('cp-desc').textContent = data.desc;
+  document.getElementById('cp-badge').textContent = data.badge;
+  popup.classList.add('visible');
+
+  selectCity(idx);
+}
+
+function closePopup() {
+  document.getElementById('city-popup').classList.remove('visible');
+}
+
+function selectCity(idx) {
+  document.querySelectorAll('.journey-card').forEach((c, i) => c.classList.toggle('active', i === idx));
+}
+
+/* ─────────────────────────────────────────
+   EMULATOR EMBED
+───────────────────────────────────────── */
+function activateEmulator() {
+  document.getElementById('emu-overlay').classList.add('hidden');
+}
+
+/* ─────────────────────────────────────────
+   SCROLL ANIMATIONS
+───────────────────────────────────────── */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.08 });
+
+document.querySelectorAll('.page-tile, .bbc-panel, .journey-card, .journey-map-wrap, .tl-card, .emu-frame-wrap, .emu-stat').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(18px)';
+  el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+  observer.observe(el);
+});
+
+/* Pulse ring animation for map pins */
+document.querySelectorAll('.pulse-ring').forEach(el => {
+  el.style.animation = 'ping 2s cubic-bezier(0,0,0.2,1) infinite';
+  el.style.transformOrigin = 'center';
+});
 </script>
+
+<style>
+  .journey-pin circle.pulse-ring { animation: ping 2s cubic-bezier(0,0,0.2,1) infinite; transform-origin: center; }
+  @keyframes ping { 0%{transform:scale(1);opacity:0.8} 100%{transform:scale(2.4);opacity:0} }
+  .journey-pin:nth-child(2) circle.pulse-ring { animation-delay: 0.6s; }
+  .journey-pin:nth-child(3) circle.pulse-ring { animation-delay: 1.2s; }
+</style>
 
 <script src="assets/nav-component.js"></script>
 </body>
