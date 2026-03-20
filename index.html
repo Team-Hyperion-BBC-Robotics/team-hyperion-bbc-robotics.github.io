@@ -72,7 +72,7 @@
     }
 
     /* ══════════════════════════════════════════
-       BOOT SCREEN CUSTOMISER
+       BOOT SCREEN
     ══════════════════════════════════════════ */
     #boot-screen {
       position: fixed; inset: 0; background: #000; z-index: 9999;
@@ -101,39 +101,6 @@
     .boot-line.big { font-size: clamp(1.4rem,3.5vw,2.2rem); color: #00ff6a; letter-spacing: 0.18em; text-shadow: 0 0 20px rgba(0,255,106,0.6), 0 0 40px rgba(0,255,106,0.3); margin: 6px 0; }
     .boot-cursor { display: inline-block; width: 10px; height: 1.1em; background: #00c85a; vertical-align: text-bottom; animation: blink 0.7s step-end infinite; margin-left: 2px; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-    .boot-name-highlight { color: #00ff6a; font-weight: bold; text-shadow: 0 0 8px rgba(0,255,106,0.5); }
-
-    /* Operator name prompt */
-    #boot-name-prompt {
-      position: absolute; bottom: 80px; right: 64px; z-index: 4;
-      background: rgba(0,20,10,0.95); border: 1px solid rgba(0,200,90,0.3);
-      padding: 18px 22px; width: 320px;
-    }
-    #boot-name-prompt .bnp-title {
-      font-size: 0.6rem; letter-spacing: 0.2em; color: var(--gb, #00c85a);
-      text-transform: uppercase; margin-bottom: 10px;
-    }
-    #boot-name-prompt .bnp-row { display: flex; gap: 8px; align-items: center; }
-    #boot-name-prompt input {
-      flex: 1; background: rgba(0,0,0,0.6); border: 1px solid rgba(0,200,90,0.4);
-      color: #00ff6a; font-family: 'Share Tech Mono', monospace;
-      font-size: 0.75rem; padding: 7px 10px; outline: none;
-      letter-spacing: 0.08em;
-    }
-    #boot-name-prompt input::placeholder { color: rgba(0,200,90,0.3); }
-    #boot-name-prompt input:focus { border-color: #00c85a; }
-    #boot-name-prompt button {
-      background: var(--green, #00723f); color: #fff; border: none;
-      font-family: 'Share Tech Mono', monospace; font-size: 0.6rem;
-      letter-spacing: 0.12em; padding: 7px 12px; cursor: pointer;
-      text-transform: uppercase; transition: background 0.2s;
-    }
-    #boot-name-prompt button:hover { background: #00c85a; }
-    #boot-name-prompt .bnp-skip {
-      margin-top: 10px; font-size: 0.52rem; color: rgba(0,200,90,0.4);
-      letter-spacing: 0.12em; cursor: pointer; text-align: right;
-    }
-    #boot-name-prompt .bnp-skip:hover { color: rgba(0,200,90,0.7); }
 
     /* ══════════════════════════════════════════
        HERO
@@ -337,21 +304,11 @@
   </div>
 </div>
 
-<!-- ════ BOOT SCREEN WITH CUSTOMISER ════ -->
+<!-- ════ BOOT SCREEN ════ -->
 <div id="boot-screen">
   <div class="boot-scanlines"></div>
   <div class="boot-glow"></div>
   <div id="boot-lines"></div>
-
-  <!-- Operator name prompt — shown before boot starts -->
-  <div id="boot-name-prompt">
-    <div class="bnp-title">[ OPERATOR IDENTIFICATION ]</div>
-    <div class="bnp-row">
-      <input type="text" id="operator-input" placeholder="Enter your name..." maxlength="24" autocomplete="off"/>
-      <button onclick="startBoot()">LOGIN</button>
-    </div>
-    <div class="bnp-skip" onclick="startBoot()">[ skip → boot as GUEST ]</div>
-  </div>
 </div>
 
 <!-- HERO -->
@@ -647,7 +604,7 @@
 const TICKER_ITEMS = [
   { tag: '2025 WORLDS',    gold: true,  text: '1st Place · Lightweight SuperTeam' },
   { tag: '2025 WORLDS',    gold: false, text: '14th Place · Individual' },
-  { tag: '2025 NATIONALS', gold: true,  text: 'Undefeated · 0 Losses' },
+  { tag: '2025 NATIONALS', gold: true,  text: 'Undefeated · No Losses' },
   { tag: 'HISTORY',        gold: true,  text: '8× Total Podium Finishes' },
   { tag: 'HISTORY',        gold: false, text: '5+ Years Competing' },
   { tag: 'HISTORY',        gold: false, text: '2× National Appearances' },
@@ -669,101 +626,51 @@ function buildTicker() {
 buildTicker();
 
 /* ─────────────────────────────────────────
-   BOOT SCREEN WITH OPERATOR CUSTOMISER
+   BOOT SCREEN
 ───────────────────────────────────────── */
-let operatorName = '';
-
-function startBoot() {
-  const input = document.getElementById('operator-input');
-  operatorName = input.value.trim().toUpperCase() || 'GUEST';
-  document.getElementById('boot-name-prompt').style.display = 'none';
-  runBoot(operatorName);
-}
-
-// Allow Enter key to submit
-document.getElementById('operator-input').addEventListener('keydown', e => {
-  if (e.key === 'Enter') startBoot();
-});
-
-function buildBootLines(name) {
-  return [
-    { text: 'HYPERION OS v3.2.0 — INITIALISING...', delay: 0, cls: '' },
-    { text: '[ OK ] Booting kernel modules...', delay: 220, cls: 'dim' },
-    { text: '[ OK ] Loading sensor array: IR × 8, LIDAR × 1, CAM × 2', delay: 440, cls: 'dim' },
-    { text: '[ OK ] Motor controllers online — 4× omnidirectional', delay: 640, cls: 'dim' },
-    { text: '[ OK ] Communication bus: I²C / SPI — active', delay: 820, cls: 'dim' },
-    { text: '[ !! ] Checking competition firmware... valid ✓', delay: 1000, cls: 'warn' },
-    { text: '────────────────────────────────────────────────────────────', delay: 1160, cls: 'dim' },
-    { text: `SCHOOL      : Brisbane Boys' College, Queensland AUS`, delay: 1280, cls: 'white' },
-    { text: 'DIVISION    : RoboCup Junior · Lightweight Soccer', delay: 1400, cls: 'white' },
-    { text: 'SEASON      : 2026 — Incheon, South Korea', delay: 1520, cls: 'white' },
-    { text: 'RECORD      : 8× podiums · 1st SuperTeam 2025 · Undefeated Nationals', delay: 1640, cls: 'white' },
-    { text: '────────────────────────────────────────────────────────────', delay: 1760, cls: 'dim' },
-    { text: '[ OK ] Strategy engine loaded', delay: 1880, cls: 'dim' },
-    { text: '[ OK ] Ball tracking algorithm: ACTIVE', delay: 2000, cls: 'dim' },
-    { text: '[ OK ] All systems nominal. Ready to compete.', delay: 2200, cls: '' },
-    { text: '────────────────────────────────────────────────────────────', delay: 2320, cls: 'dim' },
-    { text: 'TEAM  HYPERION', delay: 2480, cls: 'big' },
-    { text: 'GREEN.  WHITE.  BLACK.  REPRESENTING AUSTRALIA.', delay: 2680, cls: '' },
-    { text: '', delay: 2860, cls: '' },
-    { text: `> OPERATOR IDENTIFIED: ${name}`, delay: 3000, cls: 'warn', highlight: name },
-    { text: `> WELCOME BACK, ${name}. CLEARANCE GRANTED.`, delay: 3180, cls: '' },
-    { text: '> LAUNCHING MISSION CONTROL...', delay: 3380, cls: '' },
-  ];
-}
+const BOOT_LINES = [
+  { text: 'HYPERION OS v3.2.0 — INITIALISING...', delay: 0,    cls: '' },
+  { text: '[ OK ] Sensors online · Motors active · Comms ready', delay: 200,  cls: 'dim' },
+  { text: '[ OK ] Competition firmware validated ✓',            delay: 380,  cls: 'warn' },
+  { text: 'SCHOOL   : Brisbane Boys\' College · Queensland AUS', delay: 540,  cls: 'white' },
+  { text: 'SEASON   : 2026 — Incheon, South Korea',             delay: 680,  cls: 'white' },
+  { text: 'RECORD   : 8× podiums · 1st SuperTeam 2025 · Undefeated Nationals', delay: 820, cls: 'white' },
+  { text: '[ OK ] All systems nominal. Ready to compete.',       delay: 980,  cls: '' },
+  { text: 'TEAM  HYPERION',                                      delay: 1140, cls: 'big' },
+  { text: 'GREEN.  WHITE.  BLACK.  REPRESENTING AUSTRALIA.',     delay: 1300, cls: '' },
+  { text: '> LAUNCHING MISSION CONTROL...',                      delay: 1480, cls: 'warn' },
+];
 
 const bootContainer = document.getElementById('boot-lines');
-let bootDone = false;
 
-function runBoot(name) {
-  const lines = buildBootLines(name);
-  lines.forEach((line, i) => {
+function runBoot() {
+  BOOT_LINES.forEach(line => {
     setTimeout(() => {
-      if (bootDone) return;
       const el = document.createElement('span');
       el.className = 'boot-line ' + (line.cls || '');
-      if (line.highlight && line.text.includes(line.highlight)) {
-        // Highlight the operator name in green
-        el.innerHTML = line.text.replace(line.highlight, `<span class="boot-name-highlight">${line.highlight}</span>`);
-      } else {
-        el.textContent = line.text || '\u00A0';
-      }
+      el.textContent = line.text || '\u00A0';
       el.style.opacity = '0';
       bootContainer.appendChild(el);
       requestAnimationFrame(() => { el.style.transition = 'opacity 0.15s'; el.style.opacity = '1'; });
-      bootContainer.parentElement.scrollTop = bootContainer.parentElement.scrollHeight;
     }, line.delay);
   });
 
-  const lastDelay = lines[lines.length - 1].delay;
-  setTimeout(() => { if (bootDone) return; const cur = document.createElement('span'); cur.className = 'boot-line'; cur.innerHTML = '> <span class="boot-cursor"></span>'; cur.style.opacity = '1'; bootContainer.appendChild(cur); }, lastDelay + 200);
-  setTimeout(() => { if (!bootDone) dismissBoot(name); }, lastDelay + 1800);
+  const lastDelay = BOOT_LINES[BOOT_LINES.length - 1].delay;
+  setTimeout(() => {
+    const cur = document.createElement('span');
+    cur.className = 'boot-line';
+    cur.innerHTML = '> <span class="boot-cursor"></span>';
+    cur.style.opacity = '1';
+    bootContainer.appendChild(cur);
+  }, lastDelay + 200);
+  setTimeout(() => dismissBoot(), lastDelay + 1200);
 }
 
-function dismissBoot(name) {
-  bootDone = true;
+function dismissBoot() {
   document.getElementById('boot-screen').classList.add('hidden');
-  // Personalise hero greeting
-  if (name && name !== 'GUEST') {
-    const g = document.getElementById('hero-greeting');
-    g.textContent = `> WELCOME, OPERATOR ${name}`;
-    g.style.opacity = '1';
-  }
-  sessionStorage.setItem('operator', name || 'GUEST');
 }
 
-// On repeat visits: skip to prompt (no repeated boot sequence needed)
-const savedOp = sessionStorage.getItem('operator');
-if (savedOp) {
-  // Skip the name prompt, go straight to boot with saved name
-  document.getElementById('boot-name-prompt').style.display = 'none';
-  operatorName = savedOp;
-  runBoot(savedOp);
-  if (savedOp !== 'GUEST') {
-    const g = document.getElementById('hero-greeting');
-    g.textContent = `> WELCOME BACK, OPERATOR ${savedOp}`;
-  }
-}
+runBoot();
 
 /* ─────────────────────────────────────────
    COMPETITION TIMELINE
@@ -878,11 +785,8 @@ function showCity(idx, svgX, svgY) {
   const data = CITY_DATA[idx];
   const popup = document.getElementById('city-popup');
   const wrap = document.getElementById('journey-canvas-wrap');
-  const rect = wrap.getBoundingClientRect();
-  const svgEl = document.getElementById('journey-svg');
   const viewBox = { w: 1000, h: 520 };
 
-  // Convert SVG coords to % position
   const pctX = svgX / viewBox.w;
   const pctY = svgY / viewBox.h;
   const wrapW = wrap.offsetWidth;
@@ -890,7 +794,6 @@ function showCity(idx, svgX, svgY) {
   let left = pctX * wrapW;
   let top = pctY * wrapH;
 
-  // Offset so popup doesn't cover pin; clamp to wrap
   left = Math.min(left + 10, wrapW - 220);
   top = Math.max(top - 160, 10);
 
