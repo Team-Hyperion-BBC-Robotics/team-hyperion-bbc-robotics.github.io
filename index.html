@@ -1,846 +1,2969 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Team Hyperion — Brisbane Boys' College · RoboCup Junior</title>
-  <link rel="stylesheet" href="assets/shared.css"/>
+  <link rel="stylesheet" href="assets/shared.css" />
   <style>
     /* ══════════════════════════════════════════
        STATS TICKER
-       — sits BELOW the 64px nav bar
     ══════════════════════════════════════════ */
     #ticker {
-      position: fixed; top: 64px; left: 0; right: 0; z-index: 999;
-      height: 26px; overflow: hidden;
-      display: flex; align-items: center;
-      background: rgba(5,10,5,0.97);
-      border-bottom: 1px solid rgba(0,200,90,0.18);
-      border-top: 1px solid rgba(0,200,90,0.1);
+      position: fixed;
+      top: 64px;
+      left: 0;
+      right: 0;
+      z-index: 999;
+      height: 26px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      background: rgba(5, 10, 5, 0.97);
+      border-bottom: 1px solid rgba(0, 200, 90, 0.18);
+      border-top: 1px solid rgba(0, 200, 90, 0.1);
     }
-    /* Subtle scanline texture on the ticker */
+
     #ticker::before {
-      content: ''; position: absolute; inset: 0; pointer-events: none;
-      background: repeating-linear-gradient(to bottom, transparent 0px, transparent 1px, rgba(0,200,90,0.03) 1px, rgba(0,200,90,0.03) 2px);
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: repeating-linear-gradient(to bottom, transparent 0px, transparent 1px, rgba(0, 200, 90, 0.03) 1px, rgba(0, 200, 90, 0.03) 2px);
     }
+
     .ticker-label {
-      flex-shrink: 0; height: 100%;
-      background: var(--green-bright, #00c85a); color: #001a0e;
+      flex-shrink: 0;
+      height: 100%;
+      background: var(--green-bright, #00c85a);
+      color: #001a0e;
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 0.72rem; letter-spacing: 0.25em;
-      padding: 0 14px; display: flex; align-items: center; gap: 7px;
-      border-right: 1px solid rgba(0,0,0,0.25); z-index: 1; position: relative;
+      font-size: 0.72rem;
+      letter-spacing: 0.25em;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      border-right: 1px solid rgba(0, 0, 0, 0.25);
+      z-index: 1;
+      position: relative;
     }
-    /* Blinking live dot on the label */
+
     .ticker-label::before {
-      content: ''; width: 5px; height: 5px; border-radius: 50%;
-      background: #001a0e; animation: blink-dot 1.4s step-end infinite; flex-shrink: 0;
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #001a0e;
+      animation: blink-dot 1.4s step-end infinite;
+      flex-shrink: 0;
     }
-    @keyframes blink-dot { 0%,100%{opacity:1} 50%{opacity:0.15} }
-    .ticker-track { flex: 1; overflow: hidden; position: relative; height: 100%; }
+
+    @keyframes blink-dot {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: 0.15
+      }
+    }
+
+    .ticker-track {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+      height: 100%;
+    }
+
     .ticker-inner {
-      display: flex; gap: 0; height: 100%;
+      display: flex;
+      gap: 0;
+      height: 100%;
       animation: ticker-scroll 50s linear infinite;
-      white-space: nowrap; will-change: transform;
+      white-space: nowrap;
+      will-change: transform;
     }
-    .ticker-inner:hover { animation-play-state: paused; }
+
+    .ticker-inner:hover {
+      animation-play-state: paused;
+    }
+
     .ticker-item {
-      display: inline-flex; align-items: center; gap: 10px;
-      padding: 0 24px; height: 100%; flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 24px;
+      height: 100%;
+      flex-shrink: 0;
       font-family: 'Share Tech Mono', monospace;
-      font-size: 0.6rem; letter-spacing: 0.1em;
-      color: rgba(240,255,244,0.55);
-      border-right: 1px solid rgba(0,200,90,0.08);
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      color: rgba(240, 255, 244, 0.55);
+      border-right: 1px solid rgba(0, 200, 90, 0.08);
     }
+
     .ticker-item .ti-tag {
-      font-size: 0.48rem; letter-spacing: 0.18em; text-transform: uppercase;
-      background: rgba(0,200,90,0.12); border: 1px solid rgba(0,200,90,0.2);
-      padding: 1px 6px; color: var(--green-bright, #00c85a); flex-shrink: 0;
+      font-size: 0.48rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      background: rgba(0, 200, 90, 0.12);
+      border: 1px solid rgba(0, 200, 90, 0.2);
+      padding: 1px 6px;
+      color: var(--green-bright, #00c85a);
+      flex-shrink: 0;
     }
-    /* Gold tag variant for podium results */
+
     .ticker-item .ti-tag.gold {
-      background: rgba(212,160,23,0.1); border-color: rgba(212,160,23,0.25);
+      background: rgba(212, 160, 23, 0.1);
+      border-color: rgba(212, 160, 23, 0.25);
       color: #d4a017;
     }
+
     .ticker-sep {
-      width: 1px; height: 10px;
-      background: rgba(0,200,90,0.2); flex-shrink: 0;
+      width: 1px;
+      height: 10px;
+      background: rgba(0, 200, 90, 0.2);
+      flex-shrink: 0;
     }
+
     @keyframes ticker-scroll {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
+      0% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(-50%);
+      }
     }
 
     /* ══════════════════════════════════════════
        BOOT SCREEN
     ══════════════════════════════════════════ */
     #boot-screen {
-      position: fixed; inset: 0; background: #000; z-index: 9999;
-      display: flex; flex-direction: column; justify-content: center;
-      align-items: flex-start; padding: 48px 64px;
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 48px 64px;
       font-family: 'Share Tech Mono', monospace;
-      overflow: hidden; transition: opacity 0.6s ease, visibility 0.6s ease;
+      overflow: hidden;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
     }
-    #boot-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+    #boot-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
     .boot-scanlines {
-      position: absolute; inset: 0; pointer-events: none; z-index: 1;
-      background: repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background: repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, rgba(0, 0, 0, 0.08) 2px, rgba(0, 0, 0, 0.08) 4px);
     }
+
     .boot-glow {
-      position: absolute; inset: 0; pointer-events: none;
-      background: radial-gradient(ellipse at 50% 50%, rgba(0,114,63,0.06) 0%, transparent 70%);
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(ellipse at 50% 50%, rgba(0, 114, 63, 0.06) 0%, transparent 70%);
     }
-    #boot-lines { position: relative; z-index: 2; width: 100%; max-width: 820px; }
+
+    #boot-lines {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 820px;
+    }
+
     .boot-line {
-      display: block; font-size: clamp(0.7rem, 1.3vw, 0.88rem);
-      line-height: 1.75; color: #00c85a; opacity: 0; white-space: nowrap; overflow: hidden;
+      display: block;
+      font-size: clamp(0.7rem, 1.3vw, 0.88rem);
+      line-height: 1.75;
+      color: #00c85a;
+      opacity: 0;
+      white-space: nowrap;
+      overflow: hidden;
     }
-    .boot-line.dim { color: rgba(0,200,90,0.4); }
-    .boot-line.white { color: rgba(255,255,255,0.85); }
-    .boot-line.warn { color: #f0e060; }
-    .boot-line.big { font-size: clamp(1.4rem,3.5vw,2.2rem); color: #00ff6a; letter-spacing: 0.18em; text-shadow: 0 0 20px rgba(0,255,106,0.6), 0 0 40px rgba(0,255,106,0.3); margin: 6px 0; }
-    .boot-cursor { display: inline-block; width: 10px; height: 1.1em; background: #00c85a; vertical-align: text-bottom; animation: blink 0.7s step-end infinite; margin-left: 2px; }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    .boot-line.dim {
+      color: rgba(0, 200, 90, 0.4);
+    }
+
+    .boot-line.white {
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .boot-line.warn {
+      color: #f0e060;
+    }
+
+    .boot-line.big {
+      font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+      color: #00ff6a;
+      letter-spacing: 0.18em;
+      text-shadow: 0 0 20px rgba(0, 255, 106, 0.6), 0 0 40px rgba(0, 255, 106, 0.3);
+      margin: 6px 0;
+    }
+
+    .boot-cursor {
+      display: inline-block;
+      width: 10px;
+      height: 1.1em;
+      background: #00c85a;
+      vertical-align: text-bottom;
+      animation: blink 0.7s step-end infinite;
+      margin-left: 2px;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: 0
+      }
+    }
 
     /* ══════════════════════════════════════════
        HERO
     ══════════════════════════════════════════ */
     #hero {
-      position: relative; min-height: 100vh;
-      display: flex; flex-direction: column;
-      justify-content: center; align-items: center;
-      text-align: center; padding: 160px 24px 100px; z-index: 1;
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 160px 24px 100px;
+      z-index: 1;
     }
+
     #hero::after {
-      content: ''; position: absolute; width: 700px; height: 700px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(0,114,63,0.13) 0%, transparent 68%);
-      animation: orb 8s ease-in-out infinite; pointer-events: none;
+      content: '';
+      position: absolute;
+      width: 700px;
+      height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 114, 63, 0.13) 0%, transparent 68%);
+      animation: orb 8s ease-in-out infinite;
+      pointer-events: none;
     }
-    @keyframes orb { 0%,100%{transform:scale(1) translateY(0);opacity:0.7} 50%{transform:scale(1.1) translateY(-20px);opacity:1} }
-    .hero-school { display:flex;align-items:center;gap:14px;margin-bottom:28px;opacity:0;animation:fadeUp 0.7s 0.1s forwards; }
-    .hero-school-logo { height:52px;width:auto;filter:brightness(1.1) drop-shadow(0 0 10px rgba(0,114,63,0.4)); }
-    .hero-school-text { text-align:left; }
-    .hero-school-name { font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:0.15em;color:var(--white);line-height:1; }
-    .hero-school-sub { font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.18em;color:var(--green-bright);text-transform:uppercase;margin-top:3px; }
-    .hero-eyebrow { font-family:'Share Tech Mono',monospace;font-size:0.8rem;letter-spacing:0.3em;color:var(--green-bright);text-transform:uppercase;margin-bottom:16px;opacity:0;animation:fadeUp 0.7s 0.25s forwards; }
-    .hero-title { font-family:'Bebas Neue',sans-serif;font-size:clamp(5.5rem,16vw,13rem);line-height:0.88;letter-spacing:0.04em;color:var(--white);text-shadow:0 0 80px rgba(0,114,63,0.25),0 0 160px rgba(0,114,63,0.1);opacity:0;animation:fadeUp 0.7s 0.45s forwards; }
-    .hero-title .green { color:var(--green-bright); }
-    .hero-divider { width:100px;height:2px;background:linear-gradient(90deg,transparent,var(--green-bright),transparent);margin:22px auto;opacity:0;animation:fadeUp 0.7s 0.65s forwards; }
-    .hero-tagline { font-family:'Share Tech Mono',monospace;font-size:0.9rem;color:rgba(240,255,244,0.55);letter-spacing:0.1em;opacity:0;animation:fadeUp 0.7s 0.8s forwards; }
-    .hero-greeting { font-family:'Share Tech Mono',monospace;font-size:0.7rem;letter-spacing:0.18em;color:var(--green-bright);opacity:0;animation:fadeUp 0.7s 0.9s forwards;margin-top:10px;min-height:1.2em; }
-    .hero-cta { display:flex;gap:14px;margin-top:36px;flex-wrap:wrap;justify-content:center;opacity:0;animation:fadeUp 0.7s 1s forwards; }
+
+    @keyframes orb {
+
+      0%,
+      100% {
+        transform: scale(1) translateY(0);
+        opacity: 0.7
+      }
+
+      50% {
+        transform: scale(1.1) translateY(-20px);
+        opacity: 1
+      }
+    }
+
+    .hero-school {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.1s forwards;
+    }
+
+    .hero-school-logo {
+      height: 52px;
+      width: auto;
+      filter: brightness(1.1) drop-shadow(0 0 10px rgba(0, 114, 63, 0.4));
+    }
+
+    .hero-school-text {
+      text-align: left;
+    }
+
+    .hero-school-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.15em;
+      color: var(--white);
+      line-height: 1;
+    }
+
+    .hero-school-sub {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      color: var(--green-bright);
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.3em;
+      color: var(--green-bright);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.25s forwards;
+    }
+
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(5.5rem, 16vw, 13rem);
+      line-height: 0.88;
+      letter-spacing: 0.04em;
+      color: var(--white);
+      text-shadow: 0 0 80px rgba(0, 114, 63, 0.25), 0 0 160px rgba(0, 114, 63, 0.1);
+      opacity: 0;
+      animation: fadeUp 0.7s 0.45s forwards;
+    }
+
+    .hero-title .green {
+      color: var(--green-bright);
+    }
+
+    .hero-divider {
+      width: 100px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--green-bright), transparent);
+      margin: 22px auto;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.65s forwards;
+    }
+
+    .hero-tagline {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.9rem;
+      color: rgba(240, 255, 244, 0.55);
+      letter-spacing: 0.1em;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.8s forwards;
+    }
+
+    .hero-greeting {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      color: var(--green-bright);
+      opacity: 0;
+      animation: fadeUp 0.7s 0.9s forwards;
+      margin-top: 10px;
+      min-height: 1.2em;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 14px;
+      margin-top: 36px;
+      flex-wrap: wrap;
+      justify-content: center;
+      opacity: 0;
+      animation: fadeUp 0.7s 1s forwards;
+    }
 
     /* ══════════════════════════════════════════
-       JOURNEY MAP (Interactive Globe-style)
+       JOURNEY MAP
     ══════════════════════════════════════════ */
-    #journey { position:relative;z-index:1;padding:100px 48px;background:var(--black2);border-top:1px solid var(--border);overflow:hidden; }
-    #journey::before { content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(0,114,63,0.05) 0%,transparent 70%);pointer-events:none; }
-    .journey-inner { max-width:1200px;margin:0 auto; }
-    .journey-map-wrap { position:relative;margin-top:48px;background:var(--card-bg);border:1px solid var(--border);overflow:hidden; }
-    .journey-map-wrap::before { content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green-bright),transparent); }
-    #journey-canvas-wrap { position:relative;width:100%;padding-bottom:52%; }
-    #journey-canvas-wrap svg { position:absolute;inset:0;width:100%;height:100%; }
-
-    /* Clickable city popups */
-    .city-popup {
-      position: absolute; pointer-events: none; opacity: 0;
-      background: rgba(5,10,5,0.97); border: 1px solid var(--green-bright);
-      padding: 14px 18px; width: 200px; z-index: 10;
-      transition: opacity 0.2s; font-family: 'Share Tech Mono', monospace;
+    #journey {
+      position: relative;
+      z-index: 1;
+      padding: 100px 48px;
+      background: var(--black2);
+      border-top: 1px solid var(--border);
+      overflow: hidden;
     }
-    .city-popup.visible { opacity: 1; pointer-events: auto; }
-    .cp-city { font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:0.08em;color:var(--white); }
-    .cp-country { font-size:0.58rem;letter-spacing:0.16em;color:var(--green-bright);text-transform:uppercase;margin-bottom:8px; }
-    .cp-desc { font-size:0.7rem;color:rgba(240,255,244,0.6);line-height:1.6; }
-    .cp-badge { display:inline-block;margin-top:8px;font-size:0.56rem;letter-spacing:0.1em;color:var(--green-bright);border:1px solid rgba(0,200,90,0.3);padding:2px 7px;text-transform:uppercase; }
-    .journey-cards { display:grid;grid-template-columns:repeat(3,1fr);gap:2px;border-top:1px solid var(--border); }
-    .journey-card { padding:28px 24px;border-right:1px solid var(--border);cursor:pointer;transition:background 0.2s;position:relative;overflow:hidden; }
-    .journey-card:last-child { border-right:none; }
-    .journey-card::after { content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green-bright),transparent);opacity:0;transition:opacity 0.2s; }
-    .journey-card:hover { background:rgba(0,114,63,0.05); }
-    .journey-card:hover::after,.journey-card.active::after { opacity:1; }
-    .journey-card.active { background:rgba(0,114,63,0.08); }
-    .jc-num { font-family:'Bebas Neue',sans-serif;font-size:2.8rem;line-height:1;color:rgba(0,200,90,0.18);margin-bottom:4px; }
-    .jc-city { font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.08em;color:var(--white);margin-bottom:2px; }
-    .jc-country { font-family:'Share Tech Mono',monospace;font-size:0.62rem;letter-spacing:0.16em;color:var(--green-bright);text-transform:uppercase;margin-bottom:10px; }
-    .jc-desc { font-size:0.83rem;color:rgba(240,255,244,0.55);line-height:1.6; }
-    .jc-badge { display:inline-block;margin-top:10px;font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;color:var(--green-bright);border:1px solid rgba(0,200,90,0.3);padding:3px 8px;text-transform:uppercase; }
+
+    #journey::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 50%, rgba(0, 114, 63, 0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .journey-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .journey-map-wrap {
+      position: relative;
+      margin-top: 48px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .journey-map-wrap::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--green-bright), transparent);
+    }
+
+    #journey-canvas-wrap {
+      position: relative;
+      width: 100%;
+      padding-bottom: 52%;
+    }
+
+    #journey-canvas-wrap svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .city-popup {
+      position: absolute;
+      pointer-events: none;
+      opacity: 0;
+      background: rgba(5, 10, 5, 0.97);
+      border: 1px solid var(--green-bright);
+      padding: 14px 18px;
+      width: 200px;
+      z-index: 10;
+      transition: opacity 0.2s;
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    .city-popup.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .cp-city {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      letter-spacing: 0.08em;
+      color: var(--white);
+    }
+
+    .cp-country {
+      font-size: 0.58rem;
+      letter-spacing: 0.16em;
+      color: var(--green-bright);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .cp-desc {
+      font-size: 0.7rem;
+      color: rgba(240, 255, 244, 0.6);
+      line-height: 1.6;
+    }
+
+    .cp-badge {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 0.56rem;
+      letter-spacing: 0.1em;
+      color: var(--green-bright);
+      border: 1px solid rgba(0, 200, 90, 0.3);
+      padding: 2px 7px;
+      text-transform: uppercase;
+    }
+
+    .journey-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      border-top: 1px solid var(--border);
+    }
+
+    .journey-card {
+      padding: 28px 24px;
+      border-right: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .journey-card:last-child {
+      border-right: none;
+    }
+
+    .journey-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--green-bright), transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .journey-card:hover {
+      background: rgba(0, 114, 63, 0.05);
+    }
+
+    .journey-card:hover::after,
+    .journey-card.active::after {
+      opacity: 1;
+    }
+
+    .journey-card.active {
+      background: rgba(0, 114, 63, 0.08);
+    }
+
+    .jc-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.8rem;
+      line-height: 1;
+      color: rgba(0, 200, 90, 0.18);
+      margin-bottom: 4px;
+    }
+
+    .jc-city {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 0.08em;
+      color: var(--white);
+      margin-bottom: 2px;
+    }
+
+    .jc-country {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
+      color: var(--green-bright);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .jc-desc {
+      font-size: 0.83rem;
+      color: rgba(240, 255, 244, 0.55);
+      line-height: 1.6;
+    }
+
+    .jc-badge {
+      display: inline-block;
+      margin-top: 10px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.12em;
+      color: var(--green-bright);
+      border: 1px solid rgba(0, 200, 90, 0.3);
+      padding: 3px 8px;
+      text-transform: uppercase;
+    }
 
     /* ══════════════════════════════════════════
-       TIMELINE SECTION (replaces old stats)
+       TIMELINE
     ══════════════════════════════════════════ */
     #timeline {
-      position:relative;z-index:1;background:var(--black2);
-      border-top:1px solid var(--border);border-bottom:1px solid var(--border);
-      padding:80px 48px;
+      position: relative;
+      z-index: 1;
+      background: var(--black2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 80px 48px;
     }
-    .tl-inner { max-width:1200px;margin:0 auto; }
-    .tl-controls { display:flex;align-items:center;gap:12px;margin:32px 0 20px; }
-    .tl-track-bg { flex:1;height:3px;background:var(--border);border-radius:2px;position:relative;cursor:pointer; }
-    .tl-track-fill { height:3px;background:linear-gradient(90deg,var(--green),var(--green-bright));border-radius:2px;position:absolute;top:0;left:0;transition:width 0.3s; }
-    .tl-nodes { position:absolute;top:-7px;left:0;right:0;display:flex;justify-content:space-between; }
-    .tl-node { width:17px;height:17px;border-radius:50%;background:var(--black2);border:2px solid var(--border);cursor:pointer;transition:all 0.2s;position:relative;flex-shrink:0; }
-    .tl-node.active { background:var(--green-bright);border-color:var(--green-bright);box-shadow:0 0 0 3px rgba(0,200,90,0.2); }
-    .tl-node.future { border-color:var(--green-bright);border-style:dashed; }
-    .tl-node-year { position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:rgba(240,255,244,0.4);white-space:nowrap; }
-    .tl-node.active .tl-node-year { color:var(--green-bright); }
-    .tl-btn { font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:6px 14px;border:1px solid var(--border);background:transparent;color:rgba(240,255,244,0.5);cursor:pointer;transition:all 0.15s; }
-    .tl-btn:hover { border-color:var(--green-bright);color:var(--green-bright); }
-    .tl-card { background:var(--card-bg);border:1px solid var(--border);padding:30px;position:relative;overflow:hidden; }
-    .tl-card::before { content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--green-bright);transition:background 0.3s; }
-    .tl-card.future::before { background:rgba(0,255,120,0.8); }
-    .tl-year { font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--green-bright);margin-bottom:6px; }
-    .tl-event { font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.06em;color:var(--white);margin-bottom:4px; }
-    .tl-location { font-size:0.85rem;color:rgba(240,255,244,0.45);margin-bottom:14px;font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.1em; }
-    .tl-badges { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px; }
-    .tl-badge { font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;padding:3px 9px;border:1px solid; }
-    .tl-badge.gold { color:#d4a017;border-color:rgba(212,160,23,0.4);background:rgba(212,160,23,0.06); }
-    .tl-badge.green { color:var(--green-bright);border-color:rgba(0,200,90,0.35);background:rgba(0,200,90,0.06); }
-    .tl-badge.future { color:#00ff6a;border-color:rgba(0,255,120,0.4);background:rgba(0,255,120,0.06); }
-    .tl-badge.grey { color:rgba(240,255,244,0.4);border-color:var(--border); }
-    .tl-desc { font-size:0.92rem;color:rgba(240,255,244,0.6);line-height:1.75; }
+
+    .tl-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .tl-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 32px 0 20px;
+    }
+
+    .tl-track-bg {
+      flex: 1;
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .tl-track-fill {
+      height: 3px;
+      background: linear-gradient(90deg, var(--green), var(--green-bright));
+      border-radius: 2px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transition: width 0.3s;
+    }
+
+    .tl-nodes {
+      position: absolute;
+      top: -7px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .tl-node {
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      background: var(--black2);
+      border: 2px solid var(--border);
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .tl-node.active {
+      background: var(--green-bright);
+      border-color: var(--green-bright);
+      box-shadow: 0 0 0 3px rgba(0, 200, 90, 0.2);
+    }
+
+    .tl-node.future {
+      border-color: var(--green-bright);
+      border-style: dashed;
+    }
+
+    .tl-node-year {
+      position: absolute;
+      top: -22px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.58rem;
+      color: rgba(240, 255, 244, 0.4);
+      white-space: nowrap;
+    }
+
+    .tl-node.active .tl-node-year {
+      color: var(--green-bright);
+    }
+
+    .tl-btn {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: rgba(240, 255, 244, 0.5);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .tl-btn:hover {
+      border-color: var(--green-bright);
+      color: var(--green-bright);
+    }
+
+    .tl-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 30px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tl-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--green-bright);
+      transition: background 0.3s;
+    }
+
+    .tl-card.future::before {
+      background: rgba(0, 255, 120, 0.8);
+    }
+
+    .tl-year {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--green-bright);
+      margin-bottom: 6px;
+    }
+
+    .tl-event {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 0.06em;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+
+    .tl-location {
+      font-size: 0.85rem;
+      color: rgba(240, 255, 244, 0.45);
+      margin-bottom: 14px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+    }
+
+    .tl-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .tl-badge {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border: 1px solid;
+    }
+
+    .tl-badge.gold {
+      color: #d4a017;
+      border-color: rgba(212, 160, 23, 0.4);
+      background: rgba(212, 160, 23, 0.06);
+    }
+
+    .tl-badge.green {
+      color: var(--green-bright);
+      border-color: rgba(0, 200, 90, 0.35);
+      background: rgba(0, 200, 90, 0.06);
+    }
+
+    .tl-badge.future {
+      color: #00ff6a;
+      border-color: rgba(0, 255, 120, 0.4);
+      background: rgba(0, 255, 120, 0.06);
+    }
+
+    .tl-badge.grey {
+      color: rgba(240, 255, 244, 0.4);
+      border-color: var(--border);
+    }
+
+    .tl-desc {
+      font-size: 0.92rem;
+      color: rgba(240, 255, 244, 0.6);
+      line-height: 1.75;
+    }
+
     input[type=range].tl-range {
-      width:100%; appearance:none; height:3px; background:transparent;
-      outline:none; cursor:pointer; margin-top:16px;
+      width: 100%;
+      appearance: none;
+      height: 3px;
+      background: transparent;
+      outline: none;
+      cursor: pointer;
+      margin-top: 16px;
     }
-    input[type=range].tl-range::-webkit-slider-thumb { appearance:none;width:14px;height:14px;border-radius:50%;background:var(--green-bright);cursor:pointer;box-shadow:0 0 6px rgba(0,200,90,0.4); }
+
+    input[type=range].tl-range::-webkit-slider-thumb {
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--green-bright);
+      cursor: pointer;
+      box-shadow: 0 0 6px rgba(0, 200, 90, 0.4);
+    }
 
     /* ══════════════════════════════════════════
        EMULATOR EMBED
     ══════════════════════════════════════════ */
-    #emulator-embed { position:relative;z-index:1;padding:100px 48px; }
-    .emu-inner { max-width:1200px;margin:0 auto; }
+    #emulator-embed {
+      position: relative;
+      z-index: 1;
+      padding: 100px 48px;
+    }
+
+    .emu-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
     .emu-frame-wrap {
-      margin-top:32px;position:relative;
-      border:1px solid var(--border);background:var(--card-bg);overflow:hidden;
+      margin-top: 32px;
+      position: relative;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      overflow: hidden;
     }
-    .emu-frame-wrap::before { content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green-bright),transparent);z-index:1; }
+
+    .emu-frame-wrap::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--green-bright), transparent);
+      z-index: 1;
+    }
+
     .emu-overlay {
-      position:absolute;inset:0;background:rgba(5,10,5,0.92);z-index:5;
-      display:flex;flex-direction:column;align-items:center;justify-content:center;
-      gap:18px;transition:opacity 0.4s;cursor:pointer;
+      position: absolute;
+      inset: 0;
+      background: rgba(5, 10, 5, 0.92);
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      transition: opacity 0.4s;
+      cursor: pointer;
     }
-    .emu-overlay.hidden { opacity:0;pointer-events:none; }
-    .emu-overlay-icon { font-size:3rem;opacity:0.6; }
-    .emu-overlay-title { font-family:'Bebas Neue',sans-serif;font-size:2.5rem;letter-spacing:0.1em;color:var(--white); }
-    .emu-overlay-sub { font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.16em;color:var(--green-bright);text-transform:uppercase; }
+
+    .emu-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .emu-overlay-icon {
+      font-size: 3rem;
+      opacity: 0.6;
+    }
+
+    .emu-overlay-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.5rem;
+      letter-spacing: 0.1em;
+      color: var(--white);
+    }
+
+    .emu-overlay-sub {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.16em;
+      color: var(--green-bright);
+      text-transform: uppercase;
+    }
+
     .emu-launch-btn {
-      font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.9rem;letter-spacing:0.14em;
-      text-transform:uppercase;color:var(--black);background:var(--green-bright);
-      padding:14px 28px;border:none;cursor:pointer;
-      clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
-      transition:all 0.2s;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--green-bright);
+      padding: 14px 28px;
+      border: none;
+      cursor: pointer;
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+      transition: all 0.2s;
     }
-    .emu-launch-btn:hover { background:#00ff6a; }
-    #emu-iframe { width:100%;height:680px;border:none;display:block; }
-    .emu-preview-stats { display:grid;grid-template-columns:repeat(3,1fr);gap:2px;border-top:1px solid var(--border); }
-    .emu-stat { padding:18px 20px;border-right:1px solid var(--border);text-align:center; }
-    .emu-stat:last-child { border-right:none; }
-    .emu-stat-num { font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--green-bright);text-shadow:0 0 16px rgba(0,200,90,0.3); }
-    .emu-stat-lbl { font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(240,255,244,0.4);margin-top:4px; }
+
+    .emu-launch-btn:hover {
+      background: #00ff6a;
+    }
+
+    #emu-iframe {
+      width: 100%;
+      height: 680px;
+      border: none;
+      display: block;
+    }
+
+    .emu-preview-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      border-top: 1px solid var(--border);
+    }
+
+    .emu-stat {
+      padding: 18px 20px;
+      border-right: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .emu-stat:last-child {
+      border-right: none;
+    }
+
+    .emu-stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      color: var(--green-bright);
+      text-shadow: 0 0 16px rgba(0, 200, 90, 0.3);
+    }
+
+    .emu-stat-lbl {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(240, 255, 244, 0.4);
+      margin-top: 4px;
+    }
 
     /* ══════════════════════════════════════════
-       INTRO SECTION
+       INTRO
     ══════════════════════════════════════════ */
-    #intro { position:relative;z-index:1;padding:100px 48px; }
-    .intro-grid { max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.1fr 0.9fr;gap:72px;align-items:start; }
-    .intro-text p { color:rgba(240,255,244,0.72);font-size:1.05rem;line-height:1.85;margin-bottom:18px; }
-    .intro-text p strong { color:var(--white);font-weight:600; }
-    .intro-link { color:var(--green-bright);text-decoration:none;border-bottom:1px solid rgba(0,200,90,0.3);transition:border-color 0.2s; }
-    .intro-link:hover { border-color:var(--green-bright); }
-    .bbc-panel { background:var(--card-bg);border:1px solid var(--border);padding:36px 30px;position:relative;overflow:hidden; }
-    .bbc-panel::before { content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--green),var(--green-bright),transparent); }
-    .bbc-logo-large { width:90px;height:auto;display:block;margin:0 auto 20px;filter:brightness(1.1) drop-shadow(0 0 14px rgba(0,114,63,0.35)); }
-    .bbc-panel-title { font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:0.12em;color:var(--white);text-align:center;margin-bottom:6px; }
-    .bbc-panel-sub { font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.18em;color:var(--green-bright);text-align:center;text-transform:uppercase;margin-bottom:24px; }
-    .bbc-facts { display:flex;flex-direction:column;gap:10px; }
-    .bbc-fact { display:flex;align-items:flex-start;gap:10px;font-size:0.88rem;color:rgba(240,255,244,0.65);line-height:1.5; }
-    .bbc-fact-dot { width:6px;height:6px;border-radius:50%;background:var(--green-bright);flex-shrink:0;margin-top:6px;box-shadow:0 0 6px var(--green-bright); }
+    #intro {
+      position: relative;
+      z-index: 1;
+      padding: 100px 48px;
+    }
+
+    .intro-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 72px;
+      align-items: start;
+    }
+
+    .intro-text p {
+      color: rgba(240, 255, 244, 0.72);
+      font-size: 1.05rem;
+      line-height: 1.85;
+      margin-bottom: 18px;
+    }
+
+    .intro-text p strong {
+      color: var(--white);
+      font-weight: 600;
+    }
+
+    .intro-link {
+      color: var(--green-bright);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(0, 200, 90, 0.3);
+      transition: border-color 0.2s;
+    }
+
+    .intro-link:hover {
+      border-color: var(--green-bright);
+    }
+
+    .bbc-panel {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 36px 30px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bbc-panel::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--green), var(--green-bright), transparent);
+    }
+
+    .bbc-logo-large {
+      width: 90px;
+      height: auto;
+      display: block;
+      margin: 0 auto 20px;
+      filter: brightness(1.1) drop-shadow(0 0 14px rgba(0, 114, 63, 0.35));
+    }
+
+    .bbc-panel-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: 0.12em;
+      color: var(--white);
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .bbc-panel-sub {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      color: var(--green-bright);
+      text-align: center;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .bbc-facts {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .bbc-fact {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.88rem;
+      color: rgba(240, 255, 244, 0.65);
+      line-height: 1.5;
+    }
+
+    .bbc-fact-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green-bright);
+      flex-shrink: 0;
+      margin-top: 6px;
+      box-shadow: 0 0 6px var(--green-bright);
+    }
 
     /* ══════════════════════════════════════════
        NAV TILES
     ══════════════════════════════════════════ */
-    #pages { position:relative;z-index:1;padding:100px 48px; }
-    .pages-grid { max-width:1200px;margin:40px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:2px; }
-    .page-tile { background:var(--card-bg);border:1px solid var(--border);padding:40px 30px;text-decoration:none;display:block;position:relative;overflow:hidden;transition:all 0.3s; }
-    .page-tile::after { content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green-bright),transparent);opacity:0;transition:opacity 0.3s; }
-    .page-tile:hover { border-color:rgba(0,114,63,0.45);transform:translateY(-3px); }
-    .page-tile:hover::after { opacity:1; }
-    .tile-icon { font-size:2.2rem;margin-bottom:14px;display:block; }
-    .tile-title { font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.08em;color:var(--white);margin-bottom:10px; }
-    .tile-desc { font-size:0.9rem;color:var(--grey);line-height:1.6; }
-    .tile-arrow { display:inline-block;margin-top:20px;font-family:'Share Tech Mono',monospace;font-size:0.68rem;letter-spacing:0.15em;color:var(--green-bright); }
+    #pages {
+      position: relative;
+      z-index: 1;
+      padding: 100px 48px;
+    }
+
+    .pages-grid {
+      max-width: 1200px;
+      margin: 40px auto 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .page-tile {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 40px 30px;
+      text-decoration: none;
+      display: block;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+
+    .page-tile::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--green-bright), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .page-tile:hover {
+      border-color: rgba(0, 114, 63, 0.45);
+      transform: translateY(-3px);
+    }
+
+    .page-tile:hover::after {
+      opacity: 1;
+    }
+
+    .tile-icon {
+      font-size: 2.2rem;
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .tile-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      letter-spacing: 0.08em;
+      color: var(--white);
+      margin-bottom: 10px;
+    }
+
+    .tile-desc {
+      font-size: 0.9rem;
+      color: var(--grey);
+      line-height: 1.6;
+    }
+
+    .tile-arrow {
+      display: inline-block;
+      margin-top: 20px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      color: var(--green-bright);
+    }
 
     /* ══════════════════════════════════════════
-       YOUTUBE EMBED
+       YOUTUBE
     ══════════════════════════════════════════ */
-    #watch { position:relative;z-index:1;padding:80px 48px 0; }
+    #watch {
+      position: relative;
+      z-index: 1;
+      padding: 80px 48px 0;
+    }
+
+    /* ══════════════════════════════════════════
+       ROBOT DIAGRAM SECTION  ← NEW
+    ══════════════════════════════════════════ */
+    #robot-diagram {
+      position: relative;
+      z-index: 1;
+      padding: 80px 48px;
+      border-top: 1px solid var(--border);
+    }
+
+    .rdiag-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .rdiag-shell {
+      margin-top: 32px;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 2px;
+      border: 1px solid var(--border);
+      background: var(--border);
+    }
+
+    .rdiag-img-side {
+      background: var(--black2);
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 1 / 1;
+    }
+
+    .rdiag-img-side img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: brightness(0.88) contrast(1.08) saturate(0.85);
+    }
+
+    .rdiag-img-side::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 55%, rgba(5, 10, 5, 0.6) 100%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .rdiag-pins-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+    }
+
+    .rdiag-pin {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .rdiag-pin-outer {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(0, 200, 90, 0.5);
+      position: absolute;
+      animation: rdiag-ping 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+      transition: border-color 0.2s;
+    }
+
+    .rdiag-pin-mid {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: rgba(0, 40, 20, 0.92);
+      border: 1.5px solid var(--green-bright);
+      position: relative;
+      z-index: 2;
+      transition: background 0.15s, border-color 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .rdiag-pin-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--green-bright);
+      transition: background 0.15s;
+    }
+
+    .rdiag-pin:hover .rdiag-pin-outer,
+    .rdiag-pin.active .rdiag-pin-outer {
+      border-color: #00ff6a;
+    }
+
+    .rdiag-pin:hover .rdiag-pin-mid,
+    .rdiag-pin.active .rdiag-pin-mid {
+      background: rgba(0, 80, 30, 0.95);
+      border-color: #00ff6a;
+    }
+
+    .rdiag-pin:hover .rdiag-pin-dot,
+    .rdiag-pin.active .rdiag-pin-dot {
+      background: #00ff6a;
+    }
+
+    .rdiag-pin:nth-child(2) .rdiag-pin-outer {
+      animation-delay: 0.25s;
+    }
+
+    .rdiag-pin:nth-child(3) .rdiag-pin-outer {
+      animation-delay: 0.5s;
+    }
+
+    .rdiag-pin:nth-child(4) .rdiag-pin-outer {
+      animation-delay: 0.75s;
+    }
+
+    .rdiag-pin:nth-child(5) .rdiag-pin-outer {
+      animation-delay: 1.0s;
+    }
+
+    .rdiag-pin:nth-child(6) .rdiag-pin-outer {
+      animation-delay: 1.25s;
+    }
+
+    .rdiag-pin:nth-child(7) .rdiag-pin-outer {
+      animation-delay: 1.5s;
+    }
+
+    .rdiag-pin:nth-child(8) .rdiag-pin-outer {
+      animation-delay: 1.75s;
+    }
+
+    .rdiag-pin:nth-child(9) .rdiag-pin-outer {
+      animation-delay: 2.0s;
+    }
+
+    @keyframes rdiag-ping {
+      0% {
+        transform: scale(1);
+        opacity: 0.8;
+      }
+
+      80% {
+        transform: scale(2.4);
+        opacity: 0;
+      }
+
+      100% {
+        transform: scale(2.4);
+        opacity: 0;
+      }
+    }
+
+    .rdiag-pin-label {
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 6px);
+      transform: translateX(-50%);
+      background: rgba(5, 10, 5, 0.97);
+      border: 1px solid rgba(0, 200, 90, 0.3);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.5rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--green-bright);
+      padding: 3px 8px;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s;
+      z-index: 20;
+    }
+
+    .rdiag-pin-label::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 4px solid transparent;
+      border-top-color: rgba(0, 200, 90, 0.3);
+    }
+
+    .rdiag-pin:hover .rdiag-pin-label,
+    .rdiag-pin.active .rdiag-pin-label {
+      opacity: 1;
+    }
+
+    .rdiag-info-side {
+      background: rgba(6, 12, 6, 0.98);
+      display: flex;
+      flex-direction: column;
+      min-height: 400px;
+    }
+
+    .rdiag-info-header {
+      padding: 20px 22px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .rdiag-info-eyebrow {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.52rem;
+      letter-spacing: 0.28em;
+      color: var(--green-bright);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .rdiag-info-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      letter-spacing: 0.08em;
+      color: var(--white);
+      line-height: 1;
+    }
+
+    .rdiag-info-sub {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.14em;
+      color: rgba(0, 200, 90, 0.65);
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .rdiag-info-body {
+      padding: 18px 22px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .rdiag-info-desc {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.75rem;
+      line-height: 1.85;
+      color: rgba(240, 255, 244, 0.6);
+      margin-bottom: 16px;
+    }
+
+    .rdiag-specs-grid {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--border);
+    }
+
+    .rdiag-spec-row {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      border-bottom: 1px solid rgba(0, 200, 90, 0.07);
+    }
+
+    .rdiag-spec-row:last-child {
+      border-bottom: none;
+    }
+
+    .rdiag-spec-key {
+      padding: 7px 10px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.54rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(240, 255, 244, 0.28);
+      border-right: 1px solid rgba(0, 200, 90, 0.07);
+      display: flex;
+      align-items: center;
+    }
+
+    .rdiag-spec-val {
+      padding: 7px 10px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.66rem;
+      letter-spacing: 0.06em;
+      color: var(--green-bright);
+    }
+
+    .rdiag-info-nav {
+      padding: 12px 22px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .rdiag-nav-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.5rem;
+      letter-spacing: 0.2em;
+      color: rgba(240, 255, 244, 0.18);
+      margin-left: auto;
+      text-transform: uppercase;
+    }
+
+    .rdiag-placeholder {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 40px;
+      opacity: 0.3;
+    }
+
+    .rdiag-placeholder-ring {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 1px solid var(--green-bright);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.4rem;
+      color: var(--green-bright);
+    }
+
+    .rdiag-placeholder-text {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(240, 255, 244, 0.5);
+      text-align: center;
+      line-height: 2;
+    }
+
+    .rdiag-info-content {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .rdiag-info-content.visible {
+      display: flex;
+    }
+
+    @media(max-width:900px) {
+      .rdiag-shell {
+        grid-template-columns: 1fr;
+      }
+
+      #robot-diagram {
+        padding: 70px 20px;
+      }
+    }
 
     /* ══════════════════════════════════════════
        SHARED ANIMATIONS
     ══════════════════════════════════════════ */
-    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
 
     @media(max-width:1000px) {
-      .intro-grid { grid-template-columns:1fr;gap:40px; }
-      .pages-grid { grid-template-columns:1fr; }
-      .journey-cards { grid-template-columns:1fr; }
-      .journey-card { border-right:none;border-bottom:1px solid var(--border); }
-      .emu-preview-stats { grid-template-columns:1fr; }
+      .intro-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .pages-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .journey-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .journey-card {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .emu-preview-stats {
+        grid-template-columns: 1fr;
+      }
     }
+
     @media(max-width:600px) {
-      #intro,#pages,#journey,#timeline,#emulator-embed,#watch { padding:70px 20px; }
-      .tl-controls { flex-direction:column;align-items:stretch; }
+
+      #intro,
+      #pages,
+      #journey,
+      #timeline,
+      #emulator-embed,
+      #watch {
+        padding: 70px 20px;
+      }
+
+      .tl-controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
     }
   </style>
 </head>
+
 <body>
 
-<!-- ════ STATS TICKER ════ -->
-<div id="ticker">
-  <div class="ticker-label">LIVE</div>
-  <div class="ticker-track">
-    <div class="ticker-inner" id="ticker-inner"></div>
-  </div>
-</div>
-
-<!-- ════ BOOT SCREEN ════ -->
-<div id="boot-screen">
-  <div class="boot-scanlines"></div>
-  <div class="boot-glow"></div>
-  <div id="boot-lines"></div>
-</div>
-
-<!-- HERO -->
-<section id="hero" style="background-image:url('assets/teamphoto.jpg');background-size:cover;background-position:center;background-repeat:no-repeat;">
-  <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(5,10,5,0.45) 0%,rgba(5,10,5,0.8) 100%);z-index:0;"></div>
-  <div class="hero-school" style="position:relative;z-index:1;">
-    <img src="assets/schoolLogo.png" alt="Brisbane Boys' College" class="hero-school-logo"/>
-    <div class="hero-school-text">
-      <div class="hero-school-name">Brisbane Boys' College</div>
-      <div class="hero-school-sub">Queensland, Australia</div>
+  <!-- ════ STATS TICKER ════ -->
+  <div id="ticker">
+    <div class="ticker-label">LIVE</div>
+    <div class="ticker-track">
+      <div class="ticker-inner" id="ticker-inner"></div>
     </div>
   </div>
-  <p class="hero-eyebrow" style="position:relative;z-index:1;">RoboCup Junior International Soccer Squad</p>
-  <h1 class="hero-title" style="position:relative;z-index:1;">
-    <span class="glitch" data-text="TEAM">TEAM</span><br/>
-    <span class="green">HYPERION</span>
-  </h1>
-  <div class="hero-divider" style="position:relative;z-index:1;"></div>
-  <p class="hero-tagline" style="position:relative;z-index:1;">Green. White. Black. Representing Australia.</p>
-  <p class="hero-greeting" id="hero-greeting" style="position:relative;z-index:1;"></p>
-  <div class="hero-cta" style="position:relative;z-index:1;">
-    <a href="robot.html" class="btn-primary">Our Robot</a>
-    <a href="team.html" class="btn-outline">Meet the Team</a>
-    <a href="achievements.html" class="btn-outline">Achievements</a>
+
+  <!-- ════ BOOT SCREEN ════ -->
+  <div id="boot-screen">
+    <div class="boot-scanlines"></div>
+    <div class="boot-glow"></div>
+    <div id="boot-lines"></div>
   </div>
-</section>
 
-<!-- INTRO -->
-<section id="intro">
-  <div class="intro-grid">
-    <div class="intro-text">
-      <div class="bbc-stripe">Brisbane Boys' College · RoboCup Junior</div>
-      <p class="section-label">Our Background</p>
-      <h2 class="section-title">BUILT TO <span class="accent">COMPETE</span></h2>
-      <div class="green-line"></div>
-      <p>Team Hyperion is a passionate group of high school students from <strong>Brisbane Boys' College</strong>, located in Queensland, Australia. After a successful 1.5 years in the Lightweight division, we were proud to represent Australia at the <strong>2025 RoboCup Junior International Competition</strong> in Salvador, Brazil.</p>
-      <p>In Salvador, we achieved outstanding results — placing <strong>14th individually</strong> and earning <strong>1st place in the Lightweight SuperTeam</strong> division. We then returned home and remained <strong>undefeated at the 2025 Australian National Competition</strong>, reclaiming Australia's qualification spot for 2026.</p>
-      <p>We are now preparing to represent our school, our community, and our country at the <strong>2026 RoboCup Junior International Competition in Incheon, South Korea</strong> — our most ambitious challenge yet.</p>
-      <a href="achievements.html" class="intro-link">→ See our full achievements &amp; history</a>
+  <!-- HERO -->
+  <section id="hero"
+    style="background-image:url('assets/teamphoto.jpg');background-size:cover;background-position:center;background-repeat:no-repeat;">
+    <div
+      style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(5,10,5,0.45) 0%,rgba(5,10,5,0.8) 100%);z-index:0;">
     </div>
-    <div class="bbc-panel">
-      <img src="assets/schoolLogo.png" alt="Brisbane Boys' College" class="bbc-logo-large"/>
-      <div class="bbc-panel-title">Brisbane Boys' College</div>
-      <div class="bbc-panel-sub">Est. 1902 · Toowong, Queensland</div>
-      <div class="bbc-facts">
-        <div class="bbc-fact"><div class="bbc-fact-dot"></div><span>Presbyterian and Methodist school for boys in Brisbane's inner west</span></div>
-        <div class="bbc-fact"><div class="bbc-fact-dot"></div><span>Strong tradition of academic excellence and innovation</span></div>
-        <div class="bbc-fact"><div class="bbc-fact-dot"></div><span>Home of Team Hyperion — representing BBC on the world stage</span></div>
-        <div class="bbc-fact"><div class="bbc-fact-dot"></div><span>RoboCup Junior team active since 2021 in multiple divisions</span></div>
-        <div class="bbc-fact"><div class="bbc-fact-dot"></div><span>2025 International representatives · 2026 International qualifiers</span></div>
+    <div class="hero-school" style="position:relative;z-index:1;">
+      <img src="assets/schoolLogo.png" alt="Brisbane Boys' College" class="hero-school-logo" />
+      <div class="hero-school-text">
+        <div class="hero-school-name">Brisbane Boys' College</div>
+        <div class="hero-school-sub">Queensland, Australia</div>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- ════ COMPETITION TIMELINE (replaces old stats strip) ════ -->
-<section id="timeline">
-  <div class="tl-inner">
-    <p class="section-label">Competition History</p>
-    <h2 class="section-title">HYPERION <span class="accent">TIMELINE</span></h2>
-
-    <div class="tl-controls">
-      <button class="tl-btn" id="tl-prev" onclick="tlMove(-1)">← PREV</button>
-      <div class="tl-track-bg" id="tl-track" onclick="tlClickTrack(event)">
-        <div class="tl-track-fill" id="tl-fill"></div>
-        <div class="tl-nodes" id="tl-nodes"></div>
-      </div>
-      <button class="tl-btn" id="tl-next" onclick="tlMove(1)">NEXT →</button>
+    <p class="hero-eyebrow" style="position:relative;z-index:1;">RoboCup Junior International Soccer Squad</p>
+    <h1 class="hero-title" style="position:relative;z-index:1;">
+      <span class="glitch" data-text="TEAM">TEAM</span><br />
+      <span class="green">HYPERION</span>
+    </h1>
+    <div class="hero-divider" style="position:relative;z-index:1;"></div>
+    <p class="hero-tagline" style="position:relative;z-index:1;">Green. White. Black. Representing Australia.</p>
+    <p class="hero-greeting" id="hero-greeting" style="position:relative;z-index:1;"></p>
+    <div class="hero-cta" style="position:relative;z-index:1;">
+      <a href="robot.html" class="btn-primary">Our Robot</a>
+      <a href="team.html" class="btn-outline">Meet the Team</a>
+      <a href="achievements.html" class="btn-outline">Achievements</a>
     </div>
-    <input type="range" class="tl-range" id="tl-slider" min="0" max="4" step="1" value="0" oninput="tlSet(+this.value)"/>
+  </section>
 
-    <div class="tl-card" id="tl-card">
-      <div class="tl-year" id="tl-year"></div>
-      <div class="tl-event" id="tl-event"></div>
-      <div class="tl-location" id="tl-loc"></div>
-      <div class="tl-badges" id="tl-badges"></div>
-      <div class="tl-desc" id="tl-desc"></div>
-    </div>
-  </div>
-</section>
-
-<!-- ════ YOUTUBE ════ -->
-<section id="watch">
-  <div style="max-width:1200px;margin:0 auto;">
-    <p class="section-label">In Action</p>
-    <h2 class="section-title">WATCH US <span class="accent">COMPETE</span></h2>
-    <div style="margin-top:32px;display:grid;grid-template-columns:1fr 1fr;gap:2px;align-items:start;">
-      <div style="position:relative;overflow:hidden;background:var(--card-bg);border:1px solid var(--border);aspect-ratio:16/9;">
-        <iframe src="https://www.youtube.com/embed/ycFrGBrWPew?si=heSMPku8nT6jJXTU" title="Team Hyperion — 2025 Nationals Gameplay" style="position:absolute;inset:0;width:100%;height:100%;border:none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        <div style="position:absolute;top:10px;left:10px;width:18px;height:18px;border-top:2px solid var(--green-bright);border-left:2px solid var(--green-bright);z-index:1;pointer-events:none;"></div>
-        <div style="position:absolute;top:10px;right:10px;width:18px;height:18px;border-top:2px solid var(--green-bright);border-right:2px solid var(--green-bright);z-index:1;pointer-events:none;"></div>
-        <div style="position:absolute;bottom:10px;left:10px;width:18px;height:18px;border-bottom:2px solid var(--green-bright);border-left:2px solid var(--green-bright);z-index:1;pointer-events:none;"></div>
-        <div style="position:absolute;bottom:10px;right:10px;width:18px;height:18px;border-bottom:2px solid var(--green-bright);border-right:2px solid var(--green-bright);z-index:1;pointer-events:none;"></div>
+  <!-- INTRO -->
+  <section id="intro">
+    <div class="intro-grid">
+      <div class="intro-text">
+        <div class="bbc-stripe">Brisbane Boys' College · RoboCup Junior</div>
+        <p class="section-label">Our Background</p>
+        <h2 class="section-title">BUILT TO <span class="accent">COMPETE</span></h2>
+        <div class="green-line"></div>
+        <p>Team Hyperion is a passionate group of high school students from <strong>Brisbane Boys' College</strong>,
+          located in Queensland, Australia. After a successful 1.5 years in the Lightweight division, we were proud to
+          represent Australia at the <strong>2025 RoboCup Junior International Competition</strong> in Salvador, Brazil.
+        </p>
+        <p>In Salvador, we achieved outstanding results — placing <strong>14th individually</strong> and earning
+          <strong>1st place in the Lightweight SuperTeam</strong> division. We then returned home and remained
+          <strong>undefeated at the 2025 Australian National Competition</strong>, reclaiming Australia's qualification
+          spot for 2026.</p>
+        <p>We are now preparing to represent our school, our community, and our country at the <strong>2026 RoboCup
+            Junior International Competition in Incheon, South Korea</strong> — our most ambitious challenge yet.</p>
+        <a href="achievements.html" class="intro-link">→ See our full achievements &amp; history</a>
       </div>
-      <div style="padding:8px 0 0 32px;display:flex;flex-direction:column;justify-content:center;">
-        <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;color:var(--green-bright);text-transform:uppercase;margin-bottom:12px;">2025 Australian Nationals</div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:0.06em;color:var(--white);line-height:1;margin-bottom:16px;">Hyperion in the Field</div>
-        <p style="font-size:0.95rem;color:rgba(240,255,244,0.65);line-height:1.75;margin-bottom:20px;">Watch Team Hyperion compete at the 2025 RoboCup Junior Australian National Championship — the tournament where we went undefeated and secured Australia's qualification spot for the 2026 World Championship in Incheon, South Korea.</p>
-        <div style="display:flex;flex-wrap:wrap;gap:8px;">
-          <span style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;color:var(--green-bright);border:1px solid rgba(0,114,63,0.35);padding:4px 10px;text-transform:uppercase;">Undefeated</span>
-          <span style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;color:var(--green-bright);border:1px solid rgba(0,114,63,0.35);padding:4px 10px;text-transform:uppercase;">1st Nationally</span>
-          <span style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;color:var(--green-bright);border:1px solid rgba(0,114,63,0.35);padding:4px 10px;text-transform:uppercase;">Lightweight Soccer</span>
-        </div>
-        <a href="https://www.youtube.com/@hyperion-bbcrobotics" target="_blank" rel="noopener" style="display:inline-block;margin-top:24px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.88rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--black);background:var(--green-bright);padding:12px 24px;text-decoration:none;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));transition:all 0.2s;">
-          → More on YouTube
-        </a>
-      </div>
-    </div>
-  </div><br><br>
-</section>
-
-<!-- ════ INTERACTIVE JOURNEY MAP ════ -->
-<section id="journey">
-  <div class="journey-inner">
-    <p class="section-label">Our Journey</p>
-    <h2 class="section-title">HYPERION <span class="accent">ON THE MAP</span></h2>
-    <p style="color:rgba(240,255,244,0.5);font-family:'Share Tech Mono',monospace;font-size:0.78rem;letter-spacing:0.12em;margin-top:8px;">Click any city pin to explore · Brisbane → Salvador → Incheon</p>
-
-    <div class="journey-map-wrap">
-      <!-- City popup overlay -->
-      <div class="city-popup" id="city-popup">
-        <div class="cp-city" id="cp-city"></div>
-        <div class="cp-country" id="cp-country"></div>
-        <div class="cp-desc" id="cp-desc"></div>
-        <span class="cp-badge" id="cp-badge"></span>
-        <div style="margin-top:10px;font-family:'Share Tech Mono',monospace;font-size:0.5rem;color:rgba(0,200,90,0.4);cursor:pointer;" onclick="closePopup()">[ CLOSE ×]</div>
-      </div>
-
-      <div id="journey-canvas-wrap">
-        <svg viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg" id="journey-svg" style="background:rgba(0,0,0,0);cursor:default;">
-          <!-- Grid -->
-          <g stroke="rgba(0,114,63,0.08)" stroke-width="0.5">
-            <line x1="0" y1="130" x2="1000" y2="130"/><line x1="0" y1="260" x2="1000" y2="260"/>
-            <line x1="0" y1="390" x2="1000" y2="390"/><line x1="250" y1="0" x2="250" y2="520"/>
-            <line x1="500" y1="0" x2="500" y2="520"/><line x1="750" y1="0" x2="750" y2="520"/>
-          </g>
-          <line x1="0" y1="260" x2="1000" y2="260" stroke="rgba(0,200,90,0.12)" stroke-width="1" stroke-dasharray="4 6"/>
-
-          <!-- Continents (simplified) -->
-          <!-- Australia -->
-          <path d="M 760,330 L 800,318 L 840,322 L 862,340 L 868,362 L 858,385 L 835,400 L 808,405 L 782,395 L 762,375 L 752,352 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
-          <!-- South America -->
-          <path d="M 195,255 L 220,248 L 255,258 L 275,280 L 278,310 L 270,340 L 255,370 L 235,400 L 215,415 L 198,405 L 182,385 L 172,355 L 168,320 L 170,290 L 178,268 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
-          <!-- North America -->
-          <path d="M 108,60 L 135,55 L 175,68 L 200,85 L 215,100 L 220,120 L 210,135 L 195,150 L 180,165 L 165,190 L 150,210 L 135,225 L 120,215 L 105,195 L 95,170 L 88,145 L 85,120 L 88,95 L 95,75 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
-          <!-- Europe -->
-          <path d="M 460,80 L 485,72 L 510,75 L 525,88 L 520,105 L 505,118 L 488,122 L 470,115 L 455,100 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
-          <!-- Africa -->
-          <path d="M 468,140 L 495,130 L 525,138 L 545,158 L 552,185 L 548,215 L 535,245 L 515,270 L 495,285 L 475,278 L 458,258 L 448,228 L 445,198 L 450,168 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
-          <!-- Asia -->
-          <path d="M 580,55 L 640,45 L 710,50 L 760,58 L 790,75 L 800,95 L 790,118 L 765,135 L 735,148 L 700,155 L 665,148 L 635,138 L 608,125 L 590,108 L 578,88 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
-          <!-- Korea peninsula -->
-          <path d="M 740,158 L 770,148 L 795,158 L 810,175 L 805,192 L 785,198 L 760,188 L 745,172 Z" fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1"/>
-
-          <!-- Flight paths -->
-          <!-- Brisbane → Salvador (completed) -->
-          <path id="path-bne-sal" d="M 790,378 Q 900,180 700,260 Q 560,310 227,305" fill="none" stroke="rgba(0,200,90,0.5)" stroke-width="1.5" stroke-dasharray="1000" stroke-dashoffset="1000">
-            <animate attributeName="stroke-dashoffset" from="1000" to="0" dur="2.5s" begin="0.5s" fill="freeze"/>
-          </path>
-          <!-- Salvador → Brisbane (return, faint) -->
-          <path d="M 227,305 Q 560,420 700,340 Q 860,250 790,378" fill="none" stroke="rgba(0,200,90,0.15)" stroke-width="1" stroke-dasharray="4 5"/>
-          <!-- Brisbane → Incheon (upcoming, animated dash) -->
-          <path id="path-bne-inc" d="M 790,378 Q 820,280 790,200 Q 770,165 762,172" fill="none" stroke="rgba(0,255,120,0.7)" stroke-width="1.8" stroke-dasharray="1000" stroke-dashoffset="1000">
-            <animate attributeName="stroke-dashoffset" from="1000" to="0" dur="1.8s" begin="3s" fill="freeze"/>
-          </path>
-          <!-- Moving dot along Incheon path -->
-          <circle r="4" fill="#00ff6a" opacity="0.85" id="travel-dot">
-            <animateMotion dur="4s" begin="3.5s" repeatCount="indefinite" path="M 790,378 Q 820,280 790,200 Q 770,165 762,172"/>
-          </circle>
-
-          <!-- CITY PINS — clickable -->
-          <!-- Brisbane -->
-          <g class="journey-pin" id="pin-brisbane" onclick="showCity(0,790,378)" style="cursor:pointer;">
-            <circle cx="790" cy="378" r="22" fill="rgba(0,114,63,0.08)" stroke="rgba(0,200,90,0.4)" stroke-width="1" class="pulse-ring"/>
-            <circle cx="790" cy="378" r="9" fill="rgba(0,40,20,0.95)" stroke="#00c85a" stroke-width="2.5"/>
-            <circle cx="790" cy="378" r="3.5" fill="#00ff6a"/>
-            <text x="790" y="400" text-anchor="middle" font-family="'Share Tech Mono',monospace" font-size="11" fill="rgba(240,255,244,0.8)" letter-spacing="1">BRISBANE</text>
-          </g>
-          <!-- Salvador -->
-          <g class="journey-pin" id="pin-salvador" onclick="showCity(1,227,305)" style="cursor:pointer;">
-            <circle cx="227" cy="305" r="22" fill="rgba(0,114,63,0.08)" stroke="rgba(0,200,90,0.4)" stroke-width="1" class="pulse-ring"/>
-            <circle cx="227" cy="305" r="9" fill="rgba(0,40,20,0.95)" stroke="#00c85a" stroke-width="2.5"/>
-            <circle cx="227" cy="305" r="3.5" fill="#00ff6a"/>
-            <text x="227" y="326" text-anchor="middle" font-family="'Share Tech Mono',monospace" font-size="11" fill="rgba(240,255,244,0.8)" letter-spacing="1">SALVADOR</text>
-          </g>
-          <!-- Incheon -->
-          <g class="journey-pin" id="pin-incheon" onclick="showCity(2,762,172)" style="cursor:pointer;">
-            <circle cx="762" cy="172" r="24" fill="rgba(0,200,90,0.15)" stroke="rgba(0,255,120,0.6)" stroke-width="1.5" class="pulse-ring"/>
-            <circle cx="762" cy="172" r="9" fill="rgba(0,40,20,0.95)" stroke="#00ff6a" stroke-width="2.5"/>
-            <circle cx="762" cy="172" r="3.5" fill="#fff"/>
-            <text x="762" y="150" text-anchor="middle" font-family="monospace" font-size="14" fill="#00ff6a">★</text>
-            <text x="762" y="195" text-anchor="middle" font-family="'Share Tech Mono',monospace" font-size="11" fill="rgba(240,255,244,0.9)" letter-spacing="1">INCHEON</text>
-          </g>
-
-          <!-- Legend -->
-          <g transform="translate(20,458)">
-            <line x1="0" y1="6" x2="22" y2="6" stroke="rgba(0,200,90,0.5)" stroke-width="1.5"/>
-            <text x="28" y="10" font-family="'Share Tech Mono',monospace" font-size="9" fill="rgba(240,255,244,0.4)">COMPLETED</text>
-            <line x1="140" y1="6" x2="162" y2="6" stroke="rgba(0,255,120,0.7)" stroke-width="1.8"/>
-            <text x="168" y="10" font-family="'Share Tech Mono',monospace" font-size="9" fill="rgba(240,255,244,0.4)">UPCOMING 2026</text>
-            <text x="310" y="10" font-family="'Share Tech Mono',monospace" font-size="9" fill="rgba(240,255,244,0.25)">★ NEXT DESTINATION  · CLICK PINS FOR DETAILS</text>
-          </g>
-        </svg>
-      </div>
-
-      <!-- Info cards below map -->
-      <div class="journey-cards">
-        <div class="journey-card active" id="card-0" onclick="selectCity(0)">
-          <div class="jc-num">01</div>
-          <div class="jc-city">Brisbane</div>
-          <div class="jc-country">Queensland, Australia</div>
-          <div class="jc-desc">Our home. Where Hyperion was built, trained, and launched into international competition from Brisbane Boys' College, Toowong.</div>
-          <span class="jc-badge">Base of Operations</span>
-        </div>
-        <div class="journey-card" id="card-1" onclick="selectCity(1)">
-          <div class="jc-num">02</div>
-          <div class="jc-city">Salvador</div>
-          <div class="jc-country">Bahia, Brazil</div>
-          <div class="jc-desc">2025 RoboCup Junior Worlds. We placed 14th individually and claimed 1st in the Lightweight SuperTeam — a historic result for BBC robotics.</div>
-          <span class="jc-badge">2025 · 1st SuperTeam</span>
-        </div>
-        <div class="journey-card" id="card-2" onclick="selectCity(2)">
-          <div class="jc-num">03</div>
-          <div class="jc-city">Incheon</div>
-          <div class="jc-country">South Korea</div>
-          <div class="jc-desc">Our next challenge. The 2026 RoboCup Junior World Championship. We're going back stronger — with upgraded hardware, refined strategy, and a point to prove.</div>
-          <span class="jc-badge" style="color:#00ff6a;border-color:rgba(0,255,120,0.4);">2026 · Upcoming ★</span>
+      <div class="bbc-panel">
+        <img src="assets/schoolLogo.png" alt="Brisbane Boys' College" class="bbc-logo-large" />
+        <div class="bbc-panel-title">Brisbane Boys' College</div>
+        <div class="bbc-panel-sub">Est. 1902 · Toowong, Queensland</div>
+        <div class="bbc-facts">
+          <div class="bbc-fact">
+            <div class="bbc-fact-dot"></div><span>Presbyterian and Methodist school for boys in Brisbane's inner
+              west</span>
+          </div>
+          <div class="bbc-fact">
+            <div class="bbc-fact-dot"></div><span>Strong tradition of academic excellence and innovation</span>
+          </div>
+          <div class="bbc-fact">
+            <div class="bbc-fact-dot"></div><span>Home of Team Hyperion — representing BBC on the world stage</span>
+          </div>
+          <div class="bbc-fact">
+            <div class="bbc-fact-dot"></div><span>RoboCup Junior team active since 2021 in multiple divisions</span>
+          </div>
+          <div class="bbc-fact">
+            <div class="bbc-fact-dot"></div><span>2025 International representatives · 2026 International
+              qualifiers</span>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ════ ROBOT EMULATOR EMBED ════ -->
-<section id="emulator-embed">
-  <div class="emu-inner">
-    <p class="section-label">Interactive Simulation</p>
-    <h2 class="section-title">ROBOT <span class="accent">EMULATOR</span></h2>
-    <p style="color:rgba(240,255,244,0.5);font-family:'Share Tech Mono',monospace;font-size:0.78rem;letter-spacing:0.12em;margin-top:8px;margin-bottom:0;">Live simulation of our autonomous robot strategy — drag the ball, add enemies, adjust parameters.</p>
-
-    <div class="emu-frame-wrap">
-      <!-- Click-to-activate overlay (prevents accidental scroll capture) -->
-      <div class="emu-overlay" id="emu-overlay" onclick="activateEmulator()">
-        <div class="emu-overlay-icon">🤖</div>
-        <div class="emu-overlay-title">ROBOT EMULATOR</div>
-        <div class="emu-overlay-sub">Live Autonomous Strategy Simulation</div>
-        <button class="emu-launch-btn">▶ LAUNCH SIMULATION</button>
-        <div style="font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;color:rgba(0,200,90,0.4);margin-top:8px;">Click to activate · Scroll to resize</div>
+  <!-- ════ COMPETITION TIMELINE ════ -->
+  <section id="timeline">
+    <div class="tl-inner">
+      <p class="section-label">Competition History</p>
+      <h2 class="section-title">HYPERION <span class="accent">TIMELINE</span></h2>
+      <div class="tl-controls">
+        <button class="tl-btn" id="tl-prev" onclick="tlMove(-1)">← PREV</button>
+        <div class="tl-track-bg" id="tl-track" onclick="tlClickTrack(event)">
+          <div class="tl-track-fill" id="tl-fill"></div>
+          <div class="tl-nodes" id="tl-nodes"></div>
+        </div>
+        <button class="tl-btn" id="tl-next" onclick="tlMove(1)">NEXT →</button>
       </div>
-      <iframe id="emu-iframe" src="emulator.html" title="Robot Emulator" scrolling="no" loading="lazy"></iframe>
+      <input type="range" class="tl-range" id="tl-slider" min="0" max="4" step="1" value="0"
+        oninput="tlSet(+this.value)" />
+      <div class="tl-card" id="tl-card">
+        <div class="tl-year" id="tl-year"></div>
+        <div class="tl-event" id="tl-event"></div>
+        <div class="tl-location" id="tl-loc"></div>
+        <div class="tl-badges" id="tl-badges"></div>
+        <div class="tl-desc" id="tl-desc"></div>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- PAGE TILES -->
-<section id="pages">
-  <div style="max-width:1200px;margin:0 auto;">
-    <p class="section-label">Explore</p>
-    <h2 class="section-title">DIVE <span class="accent">DEEPER</span></h2>
-  </div>
-  <div class="pages-grid">
-    <a href="team.html" class="page-tile"><span class="tile-icon"></span><div class="tile-title">The Team</div><p class="tile-desc">Meet Sam, Matthew, Luke, and Thomas — the four prodigies behind Team Hyperion.</p><span class="tile-arrow">→ MEET THE SQUAD</span></a>
-    <a href="robot.html" class="page-tile"><span class="tile-icon"></span><div class="tile-title">Our Robot</div><p class="tile-desc">Explore the electronics, software, and mechanical engineering behind our competition robot.</p><span class="tile-arrow">→ SEE THE MACHINE</span></a>
-    <a href="achievements.html" class="page-tile"><span class="tile-icon"></span><div class="tile-title">Achievements</div><p class="tile-desc">Our full competition history — from local qualifiers to Brazil and beyond to South Korea.</p><span class="tile-arrow">→ VIEW ACHIEVEMENTS</span></a>
-    <a href="campaign2025.html" class="page-tile"><span class="tile-icon"></span><div class="tile-title">2025 Campaign</div><p class="tile-desc">Read our 2025 International Experience at the RoboCup Junior Competition in Salvador.</p><span class="tile-arrow">→ VIEW 25' CAMPAIGN</span></a>
-    <a href="campaign2026.html" class="page-tile"><span class="tile-icon"></span><div class="tile-title">2026 Campaign</div><p class="tile-desc">Join us in our 2026 journey to Incheon, South Korea.</p><span class="tile-arrow">→ VIEW 26' CAMPAIGN</span></a>
-    <a href="resources.html" class="page-tile"><span class="tile-icon"></span><div class="tile-title">Resources</div><p class="tile-desc">Have a look at some of the resources that we use to design our robot!</p><span class="tile-arrow">→ VIEW RESOURCES</span></a>
-  </div>
-</section>
+  <!-- ════ YOUTUBE ════ -->
+  <section id="watch">
+    <div style="max-width:1200px;margin:0 auto;">
+      <p class="section-label">In Action</p>
+      <h2 class="section-title">WATCH US <span class="accent">COMPETE</span></h2>
+      <div style="margin-top:32px;display:grid;grid-template-columns:1fr 1fr;gap:2px;align-items:start;">
+        <div
+          style="position:relative;overflow:hidden;background:var(--card-bg);border:1px solid var(--border);aspect-ratio:16/9;">
+          <iframe src="https://www.youtube.com/embed/ycFrGBrWPew?si=heSMPku8nT6jJXTU"
+            title="Team Hyperion — 2025 Nationals Gameplay"
+            style="position:absolute;inset:0;width:100%;height:100%;border:none;"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+          <div
+            style="position:absolute;top:10px;left:10px;width:18px;height:18px;border-top:2px solid var(--green-bright);border-left:2px solid var(--green-bright);z-index:1;pointer-events:none;">
+          </div>
+          <div
+            style="position:absolute;top:10px;right:10px;width:18px;height:18px;border-top:2px solid var(--green-bright);border-right:2px solid var(--green-bright);z-index:1;pointer-events:none;">
+          </div>
+          <div
+            style="position:absolute;bottom:10px;left:10px;width:18px;height:18px;border-bottom:2px solid var(--green-bright);border-left:2px solid var(--green-bright);z-index:1;pointer-events:none;">
+          </div>
+          <div
+            style="position:absolute;bottom:10px;right:10px;width:18px;height:18px;border-bottom:2px solid var(--green-bright);border-right:2px solid var(--green-bright);z-index:1;pointer-events:none;">
+          </div>
+        </div>
+        <div style="padding:8px 0 0 32px;display:flex;flex-direction:column;justify-content:center;">
+          <div
+            style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;color:var(--green-bright);text-transform:uppercase;margin-bottom:12px;">
+            2025 Australian Nationals</div>
+          <div
+            style="font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:0.06em;color:var(--white);line-height:1;margin-bottom:16px;">
+            Hyperion in the Field</div>
+          <p style="font-size:0.95rem;color:rgba(240,255,244,0.65);line-height:1.75;margin-bottom:20px;">Watch Team
+            Hyperion compete at the 2025 RoboCup Junior Australian National Championship — the tournament where we went
+            undefeated and secured Australia's qualification spot for the 2026 World Championship in Incheon, South
+            Korea.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <span
+              style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;color:var(--green-bright);border:1px solid rgba(0,114,63,0.35);padding:4px 10px;text-transform:uppercase;">Undefeated</span>
+            <span
+              style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;color:var(--green-bright);border:1px solid rgba(0,114,63,0.35);padding:4px 10px;text-transform:uppercase;">1st
+              Nationally</span>
+            <span
+              style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;color:var(--green-bright);border:1px solid rgba(0,114,63,0.35);padding:4px 10px;text-transform:uppercase;">Lightweight
+              Soccer</span>
+          </div>
+          <a href="https://www.youtube.com/@hyperion-bbcrobotics" target="_blank" rel="noopener"
+            style="display:inline-block;margin-top:24px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.88rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--black);background:var(--green-bright);padding:12px 24px;text-decoration:none;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));transition:all 0.2s;">
+            → More on YouTube
+          </a>
+        </div>
+      </div>
+    </div><br><br>
+  </section>
 
-<!-- ════════════════════════════════════════════
-     JAVASCRIPT
-════════════════════════════════════════════ -->
-<script>
-/* ─────────────────────────────────────────
-   STATS TICKER
-───────────────────────────────────────── */
-const TICKER_ITEMS = [
-  { tag: '2025 WORLDS',    gold: true,  text: '1st Place · Lightweight SuperTeam' },
-  { tag: '2025 WORLDS',    gold: false, text: '14th Place · Individual' },
-  { tag: '2025 NATIONALS', gold: true,  text: 'Undefeated · No Losses' },
-  { tag: 'HISTORY',        gold: true,  text: '8× Total Podium Finishes' },
-  { tag: 'HISTORY',        gold: false, text: '5+ Years Competing' },
-  { tag: 'HISTORY',        gold: false, text: '2× National Appearances' },
-  { tag: '2026',           gold: false, text: 'Qualified → Incheon, South Korea' },
-  { tag: 'BBC',            gold: false, text: 'Brisbane Boys\' College · Est. 1902' },
-  { tag: 'DIVISION',       gold: false, text: 'RoboCup Junior Lightweight Soccer' },
-];
+  <!-- ════ INTERACTIVE ROBOT DIAGRAM ════ -->
+  <section id="robot-diagram">
+    <div class="rdiag-inner">
+      <p class="section-label">Inspect the Machine</p>
+      <h2 class="section-title">ROBOT <span class="accent">ANATOMY</span></h2>
+      <p
+        style="color:rgba(240,255,244,0.5);font-family:'Share Tech Mono',monospace;font-size:0.78rem;letter-spacing:0.12em;margin-top:8px;">
+        Click any pin to explore the components powering Hyperion 2026</p>
+      <p
+        style="color:rgba(240,255,244,0.5);font-family:'Share Tech Mono',monospace;font-size:0.78rem;letter-spacing:0.12em;margin-top:8px;">
+        <strong>[CURRENTLY UNDER DEVELOPMENT]</strong></p>
+      <div class="rdiag-shell">
+        <!-- IMAGE + PINS — swap src to your actual robot photo path -->
+        <div class="rdiag-img-side">
+          <img src="assets/robot.png" alt="Hyperion 2026 Component Overview"
+            onerror="this.onerror=null;this.src='assets/construction.png'" />
+          <div class="rdiag-pins-layer">
+            <div class="rdiag-pin" style="left:50.5%;top:14.5%;" data-id="kicker" onclick="rdiagSelect('kicker')">
+              <div class="rdiag-pin-outer"></div>
+              <div class="rdiag-pin-mid">
+                <div class="rdiag-pin-dot"></div>
+              </div>
+              <div class="rdiag-pin-label">Kicker</div>
+            </div>
+            <div class="rdiag-pin" style="left:53%;top:20%;" data-id="bno055" onclick="rdiagSelect('bno055')">
+              <div class="rdiag-pin-outer"></div>
+              <div class="rdiag-pin-mid">
+                <div class="rdiag-pin-dot"></div>
+              </div>
+              <div class="rdiag-pin-label">BNO055 IMU</div>
+            </div>
+            <div class="rdiag-pin" style="left:65%;top:30%;" data-id="teensy" onclick="rdiagSelect('teensy')">
+              <div class="rdiag-pin-outer"></div>
+              <div class="rdiag-pin-mid">
+                <div class="rdiag-pin-dot"></div>
+              </div>
+              <div class="rdiag-pin-label">Teensy 4.1</div>
+            </div>
+            <div class="rdiag-pin" style="left:39%;top:48%;" data-id="motors" onclick="rdiagSelect('motors')">
+              <div class="rdiag-pin-outer"></div>
+              <div class="rdiag-pin-mid">
+                <div class="rdiag-pin-dot"></div>
+              </div>
+              <div class="rdiag-pin-label">Motor Drivers</div>
+            </div>
+            <div class="rdiag-pin" style="left:48%;top:37%;" data-id="camera" onclick="rdiagSelect('camera')">
+              <div class="rdiag-pin-outer"></div>
+              <div class="rdiag-pin-mid">
+                <div class="rdiag-pin-dot"></div>
+              </div>
+              <div class="rdiag-pin-label">OpenMV Camera</div>
+            </div>
+            <div class="rdiag-pin" style="left:50%;top:68%;" data-id="battery" onclick="rdiagSelect('battery')">
+              <div class="rdiag-pin-outer"></div>
+              <div class="rdiag-pin-mid">
+                <div class="rdiag-pin-dot"></div>
+              </div>
+              <div class="rdiag-pin-label">Battery</div>
+            </div>
+            <div class="rdiag-pin" style="left:77.5%;top:50%;" data-id="tssp" onclick="rdiagSelect('tssp')">
+              <div class="rdiag-pin-outer"></div>
+              <div class="rdiag-pin-mid">
+                <div class="rdiag-pin-dot"></div>
+              </div>
+              <div class="rdiag-pin-label">TSSP IR Ring</div>
+            </div>
+            <div class="rdiag-pin" style="left:80%;top:27%;" data-id="wheels" onclick="rdiagSelect('wheels')">
+              <div class="rdiag-pin-outer"></div>
+              <div class="rdiag-pin-mid">
+                <div class="rdiag-pin-dot"></div>
+              </div>
+              <div class="rdiag-pin-label">Omni Wheels</div>
+            </div>
+            <div class="rdiag-pin" style="left:65%;top:60%;" data-id="bluetooth" onclick="rdiagSelect('bluetooth')">
+              <div class="rdiag-pin-outer"></div>
+              <div class="rdiag-pin-mid">
+                <div class="rdiag-pin-dot"></div>
+              </div>
+              <div class="rdiag-pin-label">Bluetooth</div>
+            </div>
+          </div>
+        </div>
+        <!-- INFO PANEL -->
+        <div class="rdiag-info-side">
+          <div id="rdiag-placeholder" class="rdiag-placeholder">
+            <div class="rdiag-placeholder-ring">&#8853;</div>
+            <div class="rdiag-placeholder-text">Select any<br>component pin<br>to inspect</div>
+          </div>
+          <div class="rdiag-info-content" id="rdiag-info-content">
+            <div class="rdiag-info-header">
+              <div class="rdiag-info-eyebrow" id="rdiag-eyebrow"></div>
+              <div class="rdiag-info-title" id="rdiag-title"></div>
+              <div class="rdiag-info-sub" id="rdiag-sub"></div>
+            </div>
+            <div class="rdiag-info-body">
+              <div class="rdiag-info-desc" id="rdiag-desc"></div>
+              <div class="rdiag-specs-grid" id="rdiag-specs"></div>
+            </div>
+            <div class="rdiag-info-nav">
+              <div class="rdiag-nav-label" id="rdiag-nav-label"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-function buildTicker() {
-  const inner = document.getElementById('ticker-inner');
-  const items = [...TICKER_ITEMS, ...TICKER_ITEMS]; // double for seamless loop
-  items.forEach(item => {
-    const el = document.createElement('div');
-    el.className = 'ticker-item';
-    el.innerHTML = `<span class="ti-tag${item.gold ? ' gold' : ''}">${item.tag}</span>${item.text}`;
-    inner.appendChild(el);
-  });
-}
-buildTicker();
+  <!-- ════ INTERACTIVE JOURNEY MAP ════ -->
+  <section id="journey">
+    <div class="journey-inner">
+      <p class="section-label">Our Journey</p>
+      <h2 class="section-title">HYPERION <span class="accent">ON THE MAP</span></h2>
+      <p
+        style="color:rgba(240,255,244,0.5);font-family:'Share Tech Mono',monospace;font-size:0.78rem;letter-spacing:0.12em;margin-top:8px;">
+        Click any city pin to explore · Brisbane → Salvador → Incheon</p>
 
-/* ─────────────────────────────────────────
-   BOOT SCREEN
-───────────────────────────────────────── */
-const BOOT_LINES = [
-  { text: 'HYPERION OS v3.2.0 — INITIALISING...', delay: 0,    cls: '' },
-  { text: '[ OK ] Sensors online · Motors active · Comms ready', delay: 200,  cls: 'dim' },
-  { text: '[ OK ] Competition firmware validated ✓',            delay: 380,  cls: 'warn' },
-  { text: 'SCHOOL   : Brisbane Boys\' College · Queensland AUS', delay: 540,  cls: 'white' },
-  { text: 'SEASON   : 2026 — Incheon, South Korea',             delay: 680,  cls: 'white' },
-  { text: 'RECORD   : 8× podiums · 1st SuperTeam 2025 · Undefeated Nationals', delay: 820, cls: 'white' },
-  { text: '[ OK ] All systems nominal. Ready to compete.',       delay: 980,  cls: '' },
-  { text: 'TEAM  HYPERION',                                      delay: 1140, cls: 'big' },
-  { text: 'GREEN.  WHITE.  BLACK.  REPRESENTING AUSTRALIA.',     delay: 1300, cls: '' },
-  { text: '> LAUNCHING MISSION CONTROL...',                      delay: 1480, cls: 'warn' },
-];
+      <div class="journey-map-wrap">
+        <div class="city-popup" id="city-popup">
+          <div class="cp-city" id="cp-city"></div>
+          <div class="cp-country" id="cp-country"></div>
+          <div class="cp-desc" id="cp-desc"></div>
+          <span class="cp-badge" id="cp-badge"></span>
+          <div
+            style="margin-top:10px;font-family:'Share Tech Mono',monospace;font-size:0.5rem;color:rgba(0,200,90,0.4);cursor:pointer;"
+            onclick="closePopup()">[ CLOSE ×]</div>
+        </div>
 
-const bootContainer = document.getElementById('boot-lines');
+        <div id="journey-canvas-wrap">
+          <svg viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg" id="journey-svg"
+            style="background:rgba(0,0,0,0);cursor:default;">
+            <g stroke="rgba(0,114,63,0.08)" stroke-width="0.5">
+              <line x1="0" y1="130" x2="1000" y2="130" />
+              <line x1="0" y1="260" x2="1000" y2="260" />
+              <line x1="0" y1="390" x2="1000" y2="390" />
+              <line x1="250" y1="0" x2="250" y2="520" />
+              <line x1="500" y1="0" x2="500" y2="520" />
+              <line x1="750" y1="0" x2="750" y2="520" />
+            </g>
+            <line x1="0" y1="260" x2="1000" y2="260" stroke="rgba(0,200,90,0.12)" stroke-width="1"
+              stroke-dasharray="4 6" />
+            <path
+              d="M 760,330 L 800,318 L 840,322 L 862,340 L 868,362 L 858,385 L 835,400 L 808,405 L 782,395 L 762,375 L 752,352 Z"
+              fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1" />
+            <path
+              d="M 195,255 L 220,248 L 255,258 L 275,280 L 278,310 L 270,340 L 255,370 L 235,400 L 215,415 L 198,405 L 182,385 L 172,355 L 168,320 L 170,290 L 178,268 Z"
+              fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1" />
+            <path
+              d="M 108,60 L 135,55 L 175,68 L 200,85 L 215,100 L 220,120 L 210,135 L 195,150 L 180,165 L 165,190 L 150,210 L 135,225 L 120,215 L 105,195 L 95,170 L 88,145 L 85,120 L 88,95 L 95,75 Z"
+              fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1" />
+            <path d="M 460,80 L 485,72 L 510,75 L 525,88 L 520,105 L 505,118 L 488,122 L 470,115 L 455,100 Z"
+              fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1" />
+            <path
+              d="M 468,140 L 495,130 L 525,138 L 545,158 L 552,185 L 548,215 L 535,245 L 515,270 L 495,285 L 475,278 L 458,258 L 448,228 L 445,198 L 450,168 Z"
+              fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1" />
+            <path
+              d="M 580,55 L 640,45 L 710,50 L 760,58 L 790,75 L 800,95 L 790,118 L 765,135 L 735,148 L 700,155 L 665,148 L 635,138 L 608,125 L 590,108 L 578,88 Z"
+              fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1" />
+            <path d="M 740,158 L 770,148 L 795,158 L 810,175 L 805,192 L 785,198 L 760,188 L 745,172 Z"
+              fill="rgba(0,80,35,0.25)" stroke="rgba(0,160,60,0.35)" stroke-width="1" />
+            <path id="path-bne-sal" d="M 790,378 Q 900,180 700,260 Q 560,310 227,305" fill="none"
+              stroke="rgba(0,200,90,0.5)" stroke-width="1.5" stroke-dasharray="1000" stroke-dashoffset="1000">
+              <animate attributeName="stroke-dashoffset" from="1000" to="0" dur="2.5s" begin="0.5s" fill="freeze" />
+            </path>
+            <path d="M 227,305 Q 560,420 700,340 Q 860,250 790,378" fill="none" stroke="rgba(0,200,90,0.15)"
+              stroke-width="1" stroke-dasharray="4 5" />
+            <path id="path-bne-inc" d="M 790,378 Q 820,280 790,200 Q 770,165 762,172" fill="none"
+              stroke="rgba(0,255,120,0.7)" stroke-width="1.8" stroke-dasharray="1000" stroke-dashoffset="1000">
+              <animate attributeName="stroke-dashoffset" from="1000" to="0" dur="1.8s" begin="3s" fill="freeze" />
+            </path>
+            <circle r="4" fill="#00ff6a" opacity="0.85" id="travel-dot">
+              <animateMotion dur="4s" begin="3.5s" repeatCount="indefinite"
+                path="M 790,378 Q 820,280 790,200 Q 770,165 762,172" />
+            </circle>
+            <g class="journey-pin" id="pin-brisbane" onclick="showCity(0,790,378)" style="cursor:pointer;">
+              <circle cx="790" cy="378" r="22" fill="rgba(0,114,63,0.08)" stroke="rgba(0,200,90,0.4)" stroke-width="1"
+                class="pulse-ring" />
+              <circle cx="790" cy="378" r="9" fill="rgba(0,40,20,0.95)" stroke="#00c85a" stroke-width="2.5" />
+              <circle cx="790" cy="378" r="3.5" fill="#00ff6a" />
+              <text x="790" y="400" text-anchor="middle" font-family="'Share Tech Mono',monospace" font-size="11"
+                fill="rgba(240,255,244,0.8)" letter-spacing="1">BRISBANE</text>
+            </g>
+            <g class="journey-pin" id="pin-salvador" onclick="showCity(1,227,305)" style="cursor:pointer;">
+              <circle cx="227" cy="305" r="22" fill="rgba(0,114,63,0.08)" stroke="rgba(0,200,90,0.4)" stroke-width="1"
+                class="pulse-ring" />
+              <circle cx="227" cy="305" r="9" fill="rgba(0,40,20,0.95)" stroke="#00c85a" stroke-width="2.5" />
+              <circle cx="227" cy="305" r="3.5" fill="#00ff6a" />
+              <text x="227" y="326" text-anchor="middle" font-family="'Share Tech Mono',monospace" font-size="11"
+                fill="rgba(240,255,244,0.8)" letter-spacing="1">SALVADOR</text>
+            </g>
+            <g class="journey-pin" id="pin-incheon" onclick="showCity(2,762,172)" style="cursor:pointer;">
+              <circle cx="762" cy="172" r="24" fill="rgba(0,200,90,0.15)" stroke="rgba(0,255,120,0.6)"
+                stroke-width="1.5" class="pulse-ring" />
+              <circle cx="762" cy="172" r="9" fill="rgba(0,40,20,0.95)" stroke="#00ff6a" stroke-width="2.5" />
+              <circle cx="762" cy="172" r="3.5" fill="#fff" />
+              <text x="762" y="150" text-anchor="middle" font-family="monospace" font-size="14" fill="#00ff6a">★</text>
+              <text x="762" y="195" text-anchor="middle" font-family="'Share Tech Mono',monospace" font-size="11"
+                fill="rgba(240,255,244,0.9)" letter-spacing="1">INCHEON</text>
+            </g>
+            <g transform="translate(20,458)">
+              <line x1="0" y1="6" x2="22" y2="6" stroke="rgba(0,200,90,0.5)" stroke-width="1.5" />
+              <text x="28" y="10" font-family="'Share Tech Mono',monospace" font-size="9"
+                fill="rgba(240,255,244,0.4)">COMPLETED</text>
+              <line x1="140" y1="6" x2="162" y2="6" stroke="rgba(0,255,120,0.7)" stroke-width="1.8" />
+              <text x="168" y="10" font-family="'Share Tech Mono',monospace" font-size="9"
+                fill="rgba(240,255,244,0.4)">UPCOMING 2026</text>
+              <text x="310" y="10" font-family="'Share Tech Mono',monospace" font-size="9"
+                fill="rgba(240,255,244,0.25)">★ NEXT DESTINATION · CLICK PINS FOR DETAILS</text>
+            </g>
+          </svg>
+        </div>
 
-function runBoot() {
-  BOOT_LINES.forEach(line => {
-    setTimeout(() => {
-      const el = document.createElement('span');
-      el.className = 'boot-line ' + (line.cls || '');
-      el.textContent = line.text || '\u00A0';
-      el.style.opacity = '0';
-      bootContainer.appendChild(el);
-      requestAnimationFrame(() => { el.style.transition = 'opacity 0.15s'; el.style.opacity = '1'; });
-    }, line.delay);
-  });
+        <div class="journey-cards">
+          <div class="journey-card active" id="card-0" onclick="selectCity(0)">
+            <div class="jc-num">01</div>
+            <div class="jc-city">Brisbane</div>
+            <div class="jc-country">Queensland, Australia</div>
+            <div class="jc-desc">Our home. Where Hyperion was built, trained, and launched into international
+              competition from Brisbane Boys' College, Toowong.</div>
+            <span class="jc-badge">Base of Operations</span>
+          </div>
+          <div class="journey-card" id="card-1" onclick="selectCity(1)">
+            <div class="jc-num">02</div>
+            <div class="jc-city">Salvador</div>
+            <div class="jc-country">Bahia, Brazil</div>
+            <div class="jc-desc">2025 RoboCup Junior Worlds. We placed 14th individually and claimed 1st in the
+              Lightweight SuperTeam — a historic result for BBC robotics.</div>
+            <span class="jc-badge">2025 · 1st SuperTeam</span>
+          </div>
+          <div class="journey-card" id="card-2" onclick="selectCity(2)">
+            <div class="jc-num">03</div>
+            <div class="jc-city">Incheon</div>
+            <div class="jc-country">South Korea</div>
+            <div class="jc-desc">Our next challenge. The 2026 RoboCup Junior World Championship. We're going back
+              stronger — with upgraded hardware, refined strategy, and a point to prove.</div>
+            <span class="jc-badge" style="color:#00ff6a;border-color:rgba(0,255,120,0.4);">2026 · Upcoming ★</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  const lastDelay = BOOT_LINES[BOOT_LINES.length - 1].delay;
-  setTimeout(() => {
-    const cur = document.createElement('span');
-    cur.className = 'boot-line';
-    cur.innerHTML = '> <span class="boot-cursor"></span>';
-    cur.style.opacity = '1';
-    bootContainer.appendChild(cur);
-  }, lastDelay + 200);
-  setTimeout(() => dismissBoot(), lastDelay + 1200);
-}
+  <!-- ════ ROBOT EMULATOR ════ -->
+  <section id="emulator-embed">
+    <div class="emu-inner">
+      <p class="section-label">Interactive Simulation</p>
+      <h2 class="section-title">ROBOT <span class="accent">EMULATOR</span></h2>
+      <p
+        style="color:rgba(240,255,244,0.5);font-family:'Share Tech Mono',monospace;font-size:0.78rem;letter-spacing:0.12em;margin-top:8px;margin-bottom:0;">
+        Live simulation of our autonomous robot strategy — drag the ball, add enemies, adjust parameters.</p>
+      <div class="emu-frame-wrap">
+        <div class="emu-overlay" id="emu-overlay" onclick="activateEmulator()">
+          <div class="emu-overlay-icon">🤖</div>
+          <div class="emu-overlay-title">ROBOT EMULATOR</div>
+          <div class="emu-overlay-sub">Live Autonomous Strategy Simulation</div>
+          <button class="emu-launch-btn">▶ LAUNCH SIMULATION</button>
+          <div
+            style="font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;color:rgba(0,200,90,0.4);margin-top:8px;">
+            Click to activate · Scroll to resize</div>
+        </div>
+        <iframe id="emu-iframe" src="emulator.html" title="Robot Emulator" scrolling="no" loading="lazy"></iframe>
+      </div>
+    </div>
+  </section>
 
-function dismissBoot() {
-  document.getElementById('boot-screen').classList.add('hidden');
-}
+  <!-- PAGE TILES -->
+  <section id="pages">
+    <div style="max-width:1200px;margin:0 auto;">
+      <p class="section-label">Explore</p>
+      <h2 class="section-title">DIVE <span class="accent">DEEPER</span></h2>
+    </div>
+    <div class="pages-grid">
+      <a href="team.html" class="page-tile"><span class="tile-icon"></span>
+        <div class="tile-title">The Team</div>
+        <p class="tile-desc">Meet Sam, Matthew, Luke, and Thomas — the four prodigies behind Team Hyperion.</p><span
+          class="tile-arrow">→ MEET THE SQUAD</span>
+      </a>
+      <a href="robot.html" class="page-tile"><span class="tile-icon"></span>
+        <div class="tile-title">Our Robot</div>
+        <p class="tile-desc">Explore the electronics, software, and mechanical engineering behind our competition robot.
+        </p><span class="tile-arrow">→ SEE THE MACHINE</span>
+      </a>
+      <a href="achievements.html" class="page-tile"><span class="tile-icon"></span>
+        <div class="tile-title">Achievements</div>
+        <p class="tile-desc">Our full competition history — from local qualifiers to Brazil and beyond to South Korea.
+        </p><span class="tile-arrow">→ VIEW ACHIEVEMENTS</span>
+      </a>
+      <a href="campaign2025.html" class="page-tile"><span class="tile-icon"></span>
+        <div class="tile-title">2025 Campaign</div>
+        <p class="tile-desc">Read our 2025 International Experience at the RoboCup Junior Competition in Salvador.</p>
+        <span class="tile-arrow">→ VIEW 25' CAMPAIGN</span>
+      </a>
+      <a href="campaign2026.html" class="page-tile"><span class="tile-icon"></span>
+        <div class="tile-title">2026 Campaign</div>
+        <p class="tile-desc">Join us in our 2026 journey to Incheon, South Korea.</p><span class="tile-arrow">→ VIEW 26'
+          CAMPAIGN</span>
+      </a>
+      <a href="resources.html" class="page-tile"><span class="tile-icon"></span>
+        <div class="tile-title">Resources</div>
+        <p class="tile-desc">Have a look at some of the resources that we use to design our robot!</p><span
+          class="tile-arrow">→ VIEW RESOURCES</span>
+      </a>
+    </div>
+  </section>
 
-runBoot();
-
-/* ─────────────────────────────────────────
-   COMPETITION TIMELINE
-───────────────────────────────────────── */
-const TL_EVENTS = [
-  {
-    year: '2021–22', future: false,
-    event: 'First Steps in RoboCup Junior',
-    location: '📍 Brisbane, Queensland',
-    badges: [{ t: 'Entry Division', c: 'grey' }, { t: 'Local Qualifiers', c: 'green' }],
-    desc: 'The squad learns the fundamentals of lego robot design — sensors, motors, strategy — competing in Queensland and National competitions of other RCJ divisions.'
-  },
-  {
-    year: '2023', future: false,
-    event: 'State & National Qualifiers',
-    location: '📍 Queensland + National, Australia',
-    badges: [{ t: 'State Champions', c: 'gold' }, { t: 'Nationals Qualifier', c: 'green' }],
-    desc: 'Hyperion rise through the Standard Soccer competition, learning Soccer division fundamentals and mastering the basics.'
-  },
-  {
-    year: '2024', future: false,
-    event: 'Australian National Championship',
-    location: '📍 Australia',
-    badges: [{ t: 'Podium Finish', c: 'gold' }, { t: 'Lightweight Soccer', c: 'green' }],
-    desc: 'A strong national campaign. The teams first year in custom robotics, earning multiple podium finishes and setting the foundation for an international bid.'
-  },
-  {
-    year: '2025', future: false,
-    event: 'RoboCup Junior World Championship',
-    location: '📍 Salvador, Bahia — Brazil',
-    badges: [{ t: '1st · SuperTeam', c: 'gold' }, { t: '14th · Individual', c: 'green' }, { t: 'Undefeated Nationals', c: 'gold' }],
-    desc: 'Team Hyperion represents Australia at Worlds for the first time — claiming 1st place in the Lightweight SuperTeam division. Returning home, they go undefeated at Nationals and lock in Australia\'s 2026 qualification spot.'
-  },
-  {
-    year: '2026', future: true,
-    event: 'RoboCup Junior World Championship',
-    location: '📍 Incheon, South Korea',
-    badges: [{ t: 'Upcoming ★', c: 'future' }, { t: 'Qualified', c: 'green' }],
-    desc: 'The next challenge. Hyperion heads to Incheon with upgraded hardware, refined strategy, and experience from Brazil. The goal: improve on the individual ranking and defend the SuperTeam title.'
-  }
-];
-
-let tlCurrent = 0;
-
-function tlBuild() {
-  const nodesEl = document.getElementById('tl-nodes');
-  TL_EVENTS.forEach((e, i) => {
-    const d = document.createElement('div');
-    d.className = 'tl-node' + (e.future ? ' future' : '');
-    d.innerHTML = `<span class="tl-node-year">${e.year}</span>`;
-    d.onclick = () => tlSet(i);
-    nodesEl.appendChild(d);
-  });
-  tlRender(0);
-}
-
-function tlRender(idx) {
-  const e = TL_EVENTS[idx];
-  const pct = (idx / (TL_EVENTS.length - 1)) * 100;
-  document.getElementById('tl-fill').style.width = pct + '%';
-  document.getElementById('tl-slider').value = idx;
-  document.querySelectorAll('.tl-node').forEach((n, i) => n.classList.toggle('active', i <= idx));
-  document.getElementById('tl-year').textContent = e.year;
-  document.getElementById('tl-event').textContent = e.event;
-  document.getElementById('tl-loc').textContent = e.location;
-  document.getElementById('tl-desc').textContent = e.desc;
-  const card = document.getElementById('tl-card');
-  card.className = 'tl-card' + (e.future ? ' future' : '');
-  const bw = document.getElementById('tl-badges');
-  bw.innerHTML = '';
-  e.badges.forEach(b => {
-    const el = document.createElement('span');
-    el.className = 'tl-badge ' + b.c;
-    el.textContent = b.t;
-    bw.appendChild(el);
-  });
-  document.getElementById('tl-prev').disabled = idx === 0;
-  document.getElementById('tl-next').disabled = idx === TL_EVENTS.length - 1;
-}
-
-function tlSet(idx) { tlCurrent = Math.max(0, Math.min(TL_EVENTS.length - 1, idx)); tlRender(tlCurrent); }
-function tlMove(dir) { tlSet(tlCurrent + dir); }
-function tlClickTrack(e) {
-  const rect = e.currentTarget.getBoundingClientRect();
-  const pct = (e.clientX - rect.left) / rect.width;
-  tlSet(Math.round(pct * (TL_EVENTS.length - 1)));
-}
-tlBuild();
-
-/* ─────────────────────────────────────────
-   INTERACTIVE JOURNEY MAP
-───────────────────────────────────────── */
-const CITY_DATA = [
-  {
-    city: 'Brisbane', country: 'Queensland, Australia',
-    desc: 'Our home base. Brisbane Boys\' College, Toowong — where Hyperion was designed, built, and launched into international competition.',
-    badge: 'Base of Operations'
-  },
-  {
-    city: 'Salvador', country: 'Bahia, Brazil',
-    desc: '2025 RoboCup Junior Worlds. 14th individually. 1st in the Lightweight SuperTeam. A historic result for BBC robotics.',
-    badge: '2025 · 1st SuperTeam'
-  },
-  {
-    city: 'Incheon', country: 'South Korea',
-    desc: 'The 2026 RoboCup Junior World Championship. We\'re going back stronger — upgraded hardware, refined strategy, a point to prove.',
-    badge: '2026 · Upcoming ★'
-  }
-];
-
-function showCity(idx, svgX, svgY) {
-  const data = CITY_DATA[idx];
-  const popup = document.getElementById('city-popup');
-  const wrap = document.getElementById('journey-canvas-wrap');
-  const viewBox = { w: 1000, h: 520 };
-
-  const pctX = svgX / viewBox.w;
-  const pctY = svgY / viewBox.h;
-  const wrapW = wrap.offsetWidth;
-  const wrapH = wrap.offsetHeight;
-  let left = pctX * wrapW;
-  let top = pctY * wrapH;
-
-  left = Math.min(left + 10, wrapW - 220);
-  top = Math.max(top - 160, 10);
-
-  popup.style.left = left + 'px';
-  popup.style.top = top + 'px';
-  document.getElementById('cp-city').textContent = data.city;
-  document.getElementById('cp-country').textContent = data.country;
-  document.getElementById('cp-desc').textContent = data.desc;
-  document.getElementById('cp-badge').textContent = data.badge;
-  popup.classList.add('visible');
-
-  selectCity(idx);
-}
-
-function closePopup() {
-  document.getElementById('city-popup').classList.remove('visible');
-}
-
-function selectCity(idx) {
-  document.querySelectorAll('.journey-card').forEach((c, i) => c.classList.toggle('active', i === idx));
-}
-
-/* ─────────────────────────────────────────
-   EMULATOR EMBED
-───────────────────────────────────────── */
-function activateEmulator() {
-  document.getElementById('emu-overlay').classList.add('hidden');
-}
-
-/* ─────────────────────────────────────────
-   SCROLL ANIMATIONS
-───────────────────────────────────────── */
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.style.opacity = '1';
-      e.target.style.transform = 'translateY(0)';
+  <script>
+    /* ─────────────────────────────────────────
+       STATS TICKER
+    ───────────────────────────────────────── */
+    const TICKER_ITEMS = [
+      { tag: '2025 WORLDS', gold: true, text: '1st Place · Lightweight SuperTeam' },
+      { tag: '2025 WORLDS', gold: false, text: '14th Place · Individual' },
+      { tag: '2025 NATIONALS', gold: true, text: 'Undefeated · No Losses' },
+      { tag: 'HISTORY', gold: true, text: '8× Total Podium Finishes' },
+      { tag: 'HISTORY', gold: false, text: '5+ Years Competing' },
+      { tag: 'HISTORY', gold: false, text: '2× National Appearances' },
+      { tag: '2026', gold: false, text: 'Qualified → Incheon, South Korea' },
+      { tag: 'BBC', gold: false, text: 'Brisbane Boys\' College · Est. 1902' },
+      { tag: 'DIVISION', gold: false, text: 'RoboCup Junior Lightweight Soccer' },
+    ];
+    function buildTicker() {
+      const inner = document.getElementById('ticker-inner');
+      const items = [...TICKER_ITEMS, ...TICKER_ITEMS];
+      items.forEach(item => {
+        const el = document.createElement('div');
+        el.className = 'ticker-item';
+        el.innerHTML = `<span class="ti-tag${item.gold ? ' gold' : ''}">${item.tag}</span>${item.text}`;
+        inner.appendChild(el);
+      });
     }
-  });
-}, { threshold: 0.08 });
+    buildTicker();
 
-document.querySelectorAll('.page-tile, .bbc-panel, .journey-card, .journey-map-wrap, .tl-card, .emu-frame-wrap, .emu-stat').forEach(el => {
-  el.style.opacity = '0';
-  el.style.transform = 'translateY(18px)';
-  el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-  observer.observe(el);
-});
+    /* ─────────────────────────────────────────
+       BOOT SCREEN
+    ───────────────────────────────────────── */
+    const BOOT_LINES = [
+      { text: 'HYPERION OS v3.2.0 — INITIALISING...', delay: 0, cls: '' },
+      { text: '[ OK ] Sensors online · Motors active · Comms ready', delay: 200, cls: 'dim' },
+      { text: '[ OK ] Competition firmware validated ✓', delay: 380, cls: 'warn' },
+      { text: 'SCHOOL   : Brisbane Boys\' College · Queensland AUS', delay: 540, cls: 'white' },
+      { text: 'SEASON   : 2026 — Incheon, South Korea', delay: 680, cls: 'white' },
+      { text: 'RECORD   : 8× podiums · 1st SuperTeam 2025 · Undefeated Nationals', delay: 820, cls: 'white' },
+      { text: '[ OK ] All systems nominal. Ready to compete.', delay: 980, cls: '' },
+      { text: 'TEAM  HYPERION', delay: 1140, cls: 'big' },
+      { text: 'GREEN.  WHITE.  BLACK.  REPRESENTING AUSTRALIA.', delay: 1300, cls: '' },
+      { text: '> LAUNCHING MISSION CONTROL...', delay: 1480, cls: 'warn' },
+    ];
+    const bootContainer = document.getElementById('boot-lines');
+    function runBoot() {
+      BOOT_LINES.forEach(line => {
+        setTimeout(() => {
+          const el = document.createElement('span');
+          el.className = 'boot-line ' + (line.cls || '');
+          el.textContent = line.text || '\u00A0';
+          el.style.opacity = '0';
+          bootContainer.appendChild(el);
+          requestAnimationFrame(() => { el.style.transition = 'opacity 0.15s'; el.style.opacity = '1'; });
+        }, line.delay);
+      });
+      const lastDelay = BOOT_LINES[BOOT_LINES.length - 1].delay;
+      setTimeout(() => {
+        const cur = document.createElement('span');
+        cur.className = 'boot-line';
+        cur.innerHTML = '> <span class="boot-cursor"></span>';
+        cur.style.opacity = '1';
+        bootContainer.appendChild(cur);
+      }, lastDelay + 200);
+      setTimeout(() => dismissBoot(), lastDelay + 1200);
+    }
+    function dismissBoot() {
+      document.getElementById('boot-screen').classList.add('hidden');
+      sessionStorage.setItem('hyperion_booted', '1');
+    }
+    if (sessionStorage.getItem('hyperion_booted')) {
+      document.getElementById('boot-screen').classList.add('hidden');
+    } else {
+      runBoot();
+    }
 
-/* Pulse ring animation for map pins */
-document.querySelectorAll('.pulse-ring').forEach(el => {
-  el.style.animation = 'ping 2s cubic-bezier(0,0,0.2,1) infinite';
-  el.style.transformOrigin = 'center';
-});
-</script>
+    /* ─────────────────────────────────────────
+       COMPETITION TIMELINE
+    ───────────────────────────────────────── */
+    const TL_EVENTS = [
+      { year: '2021–22', future: false, event: 'First Steps in RoboCup Junior', location: '📍 Brisbane, Queensland', badges: [{ t: 'Entry Division', c: 'grey' }, { t: 'Local Qualifiers', c: 'green' }], desc: 'The squad learns the fundamentals of lego robot design — sensors, motors, strategy — competing in Queensland and National competitions of other RCJ divisions.' },
+      { year: '2023', future: false, event: 'State & National Qualifiers', location: '📍 Queensland + National, Australia', badges: [{ t: 'State Champions', c: 'gold' }, { t: 'Nationals Qualifier', c: 'green' }], desc: 'Hyperion rise through the Standard Soccer competition, learning Soccer division fundamentals and mastering the basics.' },
+      { year: '2024', future: false, event: 'Australian National Championship', location: '📍 Australia', badges: [{ t: 'Podium Finish', c: 'gold' }, { t: 'Lightweight Soccer', c: 'green' }], desc: 'A strong national campaign. The teams first year in custom robotics, earning multiple podium finishes and setting the foundation for an international bid.' },
+      { year: '2025', future: false, event: 'RoboCup Junior World Championship', location: '📍 Salvador, Bahia — Brazil', badges: [{ t: '1st · SuperTeam', c: 'gold' }, { t: '14th · Individual', c: 'green' }, { t: 'Undefeated Nationals', c: 'gold' }], desc: 'Team Hyperion represents Australia at Worlds for the first time — claiming 1st place in the Lightweight SuperTeam division. Returning home, they go undefeated at Nationals and lock in Australia\'s 2026 qualification spot.' },
+      { year: '2026', future: true, event: 'RoboCup Junior World Championship', location: '📍 Incheon, South Korea', badges: [{ t: 'Upcoming ★', c: 'future' }, { t: 'Qualified', c: 'green' }], desc: 'The next challenge. Hyperion heads to Incheon with upgraded hardware, refined strategy, and experience from Brazil. The goal: improve on the individual ranking and defend the SuperTeam title.' },
+    ];
+    let tlCurrent = 0;
+    function tlBuild() {
+      const nodesEl = document.getElementById('tl-nodes');
+      TL_EVENTS.forEach((e, i) => {
+        const d = document.createElement('div');
+        d.className = 'tl-node' + (e.future ? ' future' : '');
+        d.innerHTML = `<span class="tl-node-year">${e.year}</span>`;
+        d.onclick = () => tlSet(i);
+        nodesEl.appendChild(d);
+      });
+      tlRender(0);
+    }
+    function tlRender(idx) {
+      const e = TL_EVENTS[idx];
+      const pct = (idx / (TL_EVENTS.length - 1)) * 100;
+      document.getElementById('tl-fill').style.width = pct + '%';
+      document.getElementById('tl-slider').value = idx;
+      document.querySelectorAll('.tl-node').forEach((n, i) => n.classList.toggle('active', i <= idx));
+      document.getElementById('tl-year').textContent = e.year;
+      document.getElementById('tl-event').textContent = e.event;
+      document.getElementById('tl-loc').textContent = e.location;
+      document.getElementById('tl-desc').textContent = e.desc;
+      const card = document.getElementById('tl-card');
+      card.className = 'tl-card' + (e.future ? ' future' : '');
+      const bw = document.getElementById('tl-badges');
+      bw.innerHTML = '';
+      e.badges.forEach(b => {
+        const el = document.createElement('span');
+        el.className = 'tl-badge ' + b.c;
+        el.textContent = b.t;
+        bw.appendChild(el);
+      });
+      document.getElementById('tl-prev').disabled = idx === 0;
+      document.getElementById('tl-next').disabled = idx === TL_EVENTS.length - 1;
+    }
+    function tlSet(idx) { tlCurrent = Math.max(0, Math.min(TL_EVENTS.length - 1, idx)); tlRender(tlCurrent); }
+    function tlMove(dir) { tlSet(tlCurrent + dir); }
+    function tlClickTrack(e) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const pct = (e.clientX - rect.left) / rect.width;
+      tlSet(Math.round(pct * (TL_EVENTS.length - 1)));
+    }
+    tlBuild();
 
-<style>
-  .journey-pin circle.pulse-ring { animation: ping 2s cubic-bezier(0,0,0.2,1) infinite; transform-origin: center; }
-  @keyframes ping { 0%{transform:scale(1);opacity:0.8} 100%{transform:scale(2.4);opacity:0} }
-  .journey-pin:nth-child(2) circle.pulse-ring { animation-delay: 0.6s; }
-  .journey-pin:nth-child(3) circle.pulse-ring { animation-delay: 1.2s; }
-</style>
+    /* ─────────────────────────────────────────
+       INTERACTIVE JOURNEY MAP
+    ───────────────────────────────────────── */
+    const CITY_DATA = [
+      { city: 'Brisbane', country: 'Queensland, Australia', desc: 'Our home base. Brisbane Boys\' College, Toowong — where Hyperion was designed, built, and launched into international competition.', badge: 'Base of Operations' },
+      { city: 'Salvador', country: 'Bahia, Brazil', desc: '2025 RoboCup Junior Worlds. 14th individually. 1st in the Lightweight SuperTeam. A historic result for BBC robotics.', badge: '2025 · 1st SuperTeam' },
+      { city: 'Incheon', country: 'South Korea', desc: 'The 2026 RoboCup Junior World Championship. We\'re going back stronger — upgraded hardware, refined strategy, a point to prove.', badge: '2026 · Upcoming ★' },
+    ];
+    function showCity(idx, svgX, svgY) {
+      const data = CITY_DATA[idx];
+      const popup = document.getElementById('city-popup');
+      const wrap = document.getElementById('journey-canvas-wrap');
+      const pctX = svgX / 1000, pctY = svgY / 520;
+      const wrapW = wrap.offsetWidth, wrapH = wrap.offsetHeight;
+      let left = Math.min(pctX * wrapW + 10, wrapW - 220);
+      let top = Math.max(pctY * wrapH - 160, 10);
+      popup.style.left = left + 'px';
+      popup.style.top = top + 'px';
+      document.getElementById('cp-city').textContent = data.city;
+      document.getElementById('cp-country').textContent = data.country;
+      document.getElementById('cp-desc').textContent = data.desc;
+      document.getElementById('cp-badge').textContent = data.badge;
+      popup.classList.add('visible');
+      selectCity(idx);
+    }
+    function closePopup() { document.getElementById('city-popup').classList.remove('visible'); }
+    function selectCity(idx) { document.querySelectorAll('.journey-card').forEach((c, i) => c.classList.toggle('active', i === idx)); }
 
-<script src="assets/nav-component.js"></script>
+    /* ─────────────────────────────────────────
+       EMULATOR
+    ───────────────────────────────────────── */
+    function activateEmulator() { document.getElementById('emu-overlay').classList.add('hidden'); }
+
+    /* ─────────────────────────────────────────
+       ROBOT DIAGRAM
+    ───────────────────────────────────────── */
+    const RDIAG_DATA = {
+      kicker: { eyebrow: 'Mechanism · Ball Striking', title: 'KICKER', sub: 'Front solenoid actuator', desc: 'The kicker fires when the OpenMV camera confirms the attack goal is within 8° of centre and the TSSP ring detects the ball at close range. This two-condition trigger prevents wasted shots. The solenoid receives a digital fire signal directly from the primary Teensy.', specs: [['Type', 'Solenoid actuator'], ['Trigger', 'Goal < 8° + ball close'], ['Control', 'Digital — Teensy 4.1'], ['Position', 'Front centre of chassis']] },
+      bno055: { eyebrow: 'Sensor · Orientation & Stability', title: 'BNO055 IMU', sub: '9-Axis Orientation · I²C', desc: 'Acts as the robot\'s inner ear. Running in IMUPLUS mode, it fuses accelerometer and gyroscope data to maintain a stable heading throughout a match. A PID controller reads the heading error every loop and applies a counter-rotation correction — keeping the robot facing the opponent goal even after hard collisions.', specs: [['Mode', 'IMUPLUS (Accel + Gyro)'], ['Output', 'Euler angles 0–360°'], ['Interface', 'I²C'], ['Clock', 'External crystal'], ['Role', 'Heading lock + drift comp.']] },
+      teensy: { eyebrow: 'Microcontroller · Primary Brain', title: 'TEENSY 4.1', sub: 'ARM Cortex-M7 · 600 MHz', desc: 'The central nervous system of Hyperion. Reads every sensor, computes PID corrections, executes attacker/defender strategy, and commands all four motors. Its 600 MHz ARM Cortex-M7 gives headroom to run complex exponential orbit math in real time without lag.', specs: [['MCU', 'ARM Cortex-M7 @ 600 MHz'], ['Flash', '7.9 MB + 8 MB PSRAM'], ['I/O', '55 digital + 18 analog'], ['Comms', 'UART ×8, I2C, SPI'], ['Role', 'Primary strategy + motors']] },
+      motors: { eyebrow: 'Actuation · Drive System', title: 'MOTOR DRIVERS', sub: '4× drivers · one per omni wheel', desc: 'Four motor driver boards (the green PCBs visible in the corners) each control one omni wheel. The holonomic 4-wheel layout lets the robot move in any direction instantly without rotating — critical for orbiting behind the ball and snap-positioning for shots.', specs: [['Layout', '4-wheel holonomic'], ['Wheels', 'Omni-directional'], ['Positions', 'NW · NE · SW · SE'], ['Control', 'PWM from Teensy 4.1']] },
+      camera: { eyebrow: 'Sensor · Computer Vision', title: 'OPENMV RT', sub: 'Machine Vision Module · UART', desc: 'Runs its own MicroPython colour blob tracking script on a dedicated processor. Detects yellow (attack goal) and blue (defend goal) blobs, computes the centroid angle, and streams it to the Teensy over UART. A DIP switch allows instant hardware disabling if venue lighting is unreliable.', specs: [['Platform', 'OpenMV RT (own CPU)'], ['Detects', 'Yellow + blue goal'], ['Output', 'Goal angle + blob size'], ['Interface', 'UART → Teensy'], ['Failsafe', 'DIP switch gate']] },
+      battery: { eyebrow: 'Power · Energy Storage', title: 'BATTERY', sub: 'LiPo pack · main power source', desc: 'The LiPo battery sits in the lower chassis bay. Its voltage is constantly monitored via a voltage divider ADC input and shared with the teammate robot over Bluetooth every packet. If voltage drops critically low, the role-weighting algorithm forces that robot into Defender mode.', specs: [['Type', 'LiPo rechargeable'], ['Monitoring', 'Voltage divider → ADC'], ['Low-batt', 'Force Defender role'], ['Shared via', 'Bluetooth packet'], ['Position', 'Lower chassis bay']] },
+      tssp: { eyebrow: 'Sensor · Ball Detection', title: 'TSSP IR RING', sub: 'TSSP77038 · 12× perimeter sensors', desc: 'A ring of 12 TSSP infrared receivers detect the IR-pulsing competition ball. Each sensor is sampled 255 times per cycle. The top 4 readings are treated as vectors and summed to produce a resultant angle (ball direction) and magnitude (ball strength). A dedicated secondary Teensy handles all reading.', specs: [['Sensor', 'TSSP77038TR (SMD)'], ['Count', '12× around perimeter'], ['Samples', '255 per sensor/cycle'], ['Output', 'Ball direction + strength'], ['Processor', 'Dedicated secondary Teensy']] },
+      wheels: { eyebrow: 'Mechanical · Drive', title: 'OMNI WHEELS', sub: '4× holonomic · corner-mounted', desc: 'Four omni-directional wheels at 45° in each corner give Hyperion full holonomic movement — the robot can strafe, rotate, and translate simultaneously with zero turning radius. Essential for the exponential orbit algorithm that curves behind the ball before driving toward goal.', specs: [['Type', 'Omni-directional'], ['Count', '4× corner mounted'], ['Angle', '45° to chassis'], ['Drive', 'Individual motor per wheel'], ['Benefit', 'Zero turning radius']] },
+      bluetooth: { eyebrow: 'Communication · Inter-Robot', title: 'BLUETOOTH', sub: 'HC-05 Module · Robot-to-Robot', desc: 'The two Hyperion robots share structured data packets every cycle — ball strength, direction, goal angle, battery level, and field coordinates. A score-based role-weighting algorithm elects which robot attacks and which defends. If the link drops the robot immediately falls back to Defender.', specs: [['Module', 'HC-05 Bluetooth'], ['Packet', 'Ball + goal + battery + XY'], ['Role logic', 'Score-based election'], ['Failsafe', 'Disconnect → Defender'], ['Interface', 'UART bridge → Teensy']] },
+    };
+    const RDIAG_ORDERED = ['kicker', 'bno055', 'teensy', 'motors', 'camera', 'battery', 'tssp', 'wheels', 'bluetooth'];
+    let rdiagActive = null;
+    function rdiagSelect(id) {
+      if (rdiagActive) document.querySelector('.rdiag-pin[data-id="' + rdiagActive + '"]').classList.remove('active');
+      rdiagActive = id;
+      document.querySelector('.rdiag-pin[data-id="' + id + '"]').classList.add('active');
+      const d = RDIAG_DATA[id];
+      document.getElementById('rdiag-eyebrow').textContent = d.eyebrow;
+      document.getElementById('rdiag-title').textContent = d.title;
+      document.getElementById('rdiag-sub').textContent = d.sub;
+      document.getElementById('rdiag-desc').textContent = d.desc;
+      const sp = document.getElementById('rdiag-specs');
+      sp.innerHTML = '';
+      d.specs.forEach(function (row) { sp.innerHTML += '<div class="rdiag-spec-row"><span class="rdiag-spec-key">' + row[0] + '</span><span class="rdiag-spec-val">' + row[1] + '</span></div>'; });
+      document.getElementById('rdiag-nav-label').textContent = (RDIAG_ORDERED.indexOf(id) + 1) + ' / ' + RDIAG_ORDERED.length + ' components';
+      document.getElementById('rdiag-placeholder').style.display = 'none';
+      document.getElementById('rdiag-info-content').classList.add('visible');
+    }
+
+    /* ─────────────────────────────────────────
+       SCROLL ANIMATIONS
+    ───────────────────────────────────────── */
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; }
+      });
+    }, { threshold: 0.08 });
+
+    document.querySelectorAll('.page-tile, .bbc-panel, .journey-card, .journey-map-wrap, .tl-card, .emu-frame-wrap, .emu-stat, .rdiag-shell').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(18px)';
+      el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      observer.observe(el);
+    });
+
+    document.querySelectorAll('.pulse-ring').forEach(el => {
+      el.style.animation = 'ping 2s cubic-bezier(0,0,0.2,1) infinite';
+      el.style.transformOrigin = 'center';
+    });
+  </script>
+
+  <style>
+    .journey-pin circle.pulse-ring {
+      animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+      transform-origin: center;
+    }
+
+    @keyframes ping {
+      0% {
+        transform: scale(1);
+        opacity: 0.8
+      }
+
+      100% {
+        transform: scale(2.4);
+        opacity: 0
+      }
+    }
+
+    .journey-pin:nth-child(2) circle.pulse-ring {
+      animation-delay: 0.6s;
+    }
+
+    .journey-pin:nth-child(3) circle.pulse-ring {
+      animation-delay: 1.2s;
+    }
+  </style>
+
+  <script src="assets/nav-component.js"></script>
+  <!-- ════ HYPERION AI CHAT WIDGET ════ -->
+  <!-- Paste this block just before </body> in index.html -->
+  <style>
+    /* ── FAB BUTTON ── */
+    #hai-fab {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 9000;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: var(--green-bright, #00c85a);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 0 0 rgba(0, 200, 90, 0.4);
+      animation: hai-pulse 3s ease-in-out infinite;
+      transition: transform 0.2s, background 0.2s;
+      clip-path: none;
+    }
+
+    #hai-fab:hover {
+      transform: scale(1.1);
+      background: #00ff6a;
+    }
+
+    #hai-fab.open {
+      background: rgba(5, 10, 5, 0.95);
+      border: 1.5px solid rgba(0, 200, 90, 0.4);
+      animation: none;
+    }
+
+    @keyframes hai-pulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(0, 200, 90, 0.35);
+      }
+
+      50% {
+        box-shadow: 0 0 0 10px rgba(0, 200, 90, 0);
+      }
+    }
+
+    .hai-fab-icon {
+      font-size: 1.3rem;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .hai-fab-close {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1rem;
+      color: rgba(0, 200, 90, 0.8);
+      pointer-events: none;
+      display: none;
+    }
+
+    #hai-fab.open .hai-fab-icon {
+      display: none;
+    }
+
+    #hai-fab.open .hai-fab-close {
+      display: block;
+    }
+
+    /* ── TOOLTIP ── */
+    #hai-tooltip {
+      position: fixed;
+      bottom: 90px;
+      right: 28px;
+      z-index: 8999;
+      background: rgba(5, 10, 5, 0.97);
+      border: 1px solid rgba(0, 200, 90, 0.25);
+      padding: 8px 14px;
+      white-space: nowrap;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      color: rgba(240, 255, 244, 0.7);
+      pointer-events: none;
+      animation: hai-tooltip-in 0.3s 1.5s both;
+    }
+
+    #hai-tooltip.hide {
+      display: none;
+    }
+
+    #hai-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      right: 18px;
+      border: 5px solid transparent;
+      border-top-color: rgba(0, 200, 90, 0.25);
+    }
+
+    @keyframes hai-tooltip-in {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ── PANEL ── */
+    #hai-panel {
+      position: fixed;
+      bottom: 94px;
+      right: 28px;
+      z-index: 8998;
+      width: 360px;
+      height: 520px;
+      background: rgba(5, 10, 5, 0.98);
+      border: 1px solid rgba(0, 200, 90, 0.2);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(0, 200, 90, 0.06);
+      transform: scale(0.92) translateY(16px);
+      transform-origin: bottom right;
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease;
+    }
+
+    #hai-panel::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--green-bright, #00c85a), transparent);
+    }
+
+    #hai-panel.open {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    /* ── PANEL HEADER ── */
+    .hai-header {
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid rgba(0, 200, 90, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+      background: rgba(6, 12, 6, 0.98);
+    }
+
+    .hai-header-av {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(0, 40, 20, 0.9);
+      border: 1.5px solid var(--green-bright, #00c85a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.58rem;
+      letter-spacing: 0.06em;
+      color: var(--green-bright, #00c85a);
+      flex-shrink: 0;
+    }
+
+    .hai-header-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      color: #f0fff4;
+      line-height: 1;
+    }
+
+    .hai-header-sub {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.48rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(0, 200, 90, 0.6);
+      margin-top: 2px;
+    }
+
+    .hai-status-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--green-bright, #00c85a);
+      box-shadow: 0 0 5px var(--green-bright, #00c85a);
+      animation: hai-blink 2s ease-in-out infinite;
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+
+    @keyframes hai-blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: 0.3
+      }
+    }
+
+    .hai-fullscreen-btn {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.5rem;
+      letter-spacing: 0.12em;
+      color: rgba(0, 200, 90, 0.4);
+      text-decoration: none;
+      border: 1px solid rgba(0, 200, 90, 0.15);
+      padding: 3px 7px;
+      transition: all 0.15s;
+      flex-shrink: 0;
+      margin-left: 6px;
+    }
+
+    .hai-fullscreen-btn:hover {
+      color: var(--green-bright, #00c85a);
+      border-color: rgba(0, 200, 90, 0.4);
+    }
+
+    /* ── MESSAGES ── */
+    .hai-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      scroll-behavior: smooth;
+    }
+
+    .hai-messages::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    .hai-messages::-webkit-scrollbar-thumb {
+      background: rgba(0, 200, 90, 0.15);
+    }
+
+    .hai-msg {
+      display: flex;
+      gap: 8px;
+      animation: hai-msg-in 0.2s ease-out;
+    }
+
+    .hai-msg.user {
+      flex-direction: row-reverse;
+    }
+
+    @keyframes hai-msg-in {
+      from {
+        opacity: 0;
+        transform: translateY(6px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .hai-av {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.52rem;
+      letter-spacing: 0.05em;
+    }
+
+    .hai-av.ai {
+      background: rgba(0, 40, 20, 0.9);
+      border: 1px solid var(--green-bright, #00c85a);
+      color: var(--green-bright, #00c85a);
+    }
+
+    .hai-av.usr {
+      background: rgba(20, 40, 20, 0.5);
+      border: 1px solid rgba(0, 200, 90, 0.2);
+      color: rgba(240, 255, 244, 0.4);
+      font-size: 0.65rem;
+    }
+
+    .hai-bubble {
+      max-width: 80%;
+      padding: 9px 12px;
+      line-height: 1.65;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.02em;
+    }
+
+    .hai-msg.ai .hai-bubble {
+      background: rgba(6, 12, 6, 0.95);
+      border: 1px solid rgba(0, 200, 90, 0.1);
+      border-left: 2px solid var(--green-bright, #00c85a);
+      color: rgba(240, 255, 244, 0.78);
+    }
+
+    .hai-msg.user .hai-bubble {
+      background: rgba(0, 60, 25, 0.35);
+      border: 1px solid rgba(0, 200, 90, 0.15);
+      color: rgba(240, 255, 244, 0.85);
+      text-align: right;
+    }
+
+    .hai-bubble strong {
+      color: var(--green-bright, #00c85a);
+      font-weight: normal;
+    }
+
+    .hai-bubble .hlt {
+      color: #00ff6a;
+    }
+
+    .hai-bubble ul {
+      padding: 0;
+      list-style: none;
+      margin-top: 4px;
+    }
+
+    .hai-bubble ul li::before {
+      content: '→ ';
+      color: var(--green-bright, #00c85a);
+    }
+
+    /* ── TYPING ── */
+    .hai-typing {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 9px 12px;
+      background: rgba(6, 12, 6, 0.95);
+      border: 1px solid rgba(0, 200, 90, 0.1);
+      border-left: 2px solid var(--green-bright, #00c85a);
+      width: fit-content;
+    }
+
+    .hai-tdot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--green-bright, #00c85a);
+      opacity: 0.3;
+      animation: hai-td 1.2s ease-in-out infinite;
+    }
+
+    .hai-tdot:nth-child(2) {
+      animation-delay: .2s
+    }
+
+    .hai-tdot:nth-child(3) {
+      animation-delay: .4s
+    }
+
+    @keyframes hai-td {
+
+      0%,
+      60%,
+      100% {
+        opacity: 0.3;
+        transform: scale(1)
+      }
+
+      30% {
+        opacity: 1;
+        transform: scale(1.4)
+      }
+    }
+
+    /* ── CHIPS ── */
+    .hai-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 6px;
+    }
+
+    .hai-chip {
+      background: rgba(0, 114, 63, 0.06);
+      border: 1px solid rgba(0, 200, 90, 0.15);
+      padding: 4px 8px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.56rem;
+      letter-spacing: 0.04em;
+      color: rgba(240, 255, 244, 0.5);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .hai-chip:hover {
+      border-color: rgba(0, 200, 90, 0.4);
+      color: var(--green-bright, #00c85a);
+      background: rgba(0, 200, 90, 0.06);
+    }
+
+    /* ── INPUT ── */
+    .hai-input-row {
+      padding: 10px 12px;
+      border-top: 1px solid rgba(0, 200, 90, 0.1);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-shrink: 0;
+      background: rgba(6, 12, 6, 0.98);
+    }
+
+    #hai-input {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(0, 200, 90, 0.15);
+      color: #f0fff4;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      padding: 8px 10px;
+      outline: none;
+      resize: none;
+      height: 36px;
+      max-height: 80px;
+      transition: border-color 0.2s;
+      letter-spacing: 0.03em;
+    }
+
+    #hai-input:focus {
+      border-color: rgba(0, 200, 90, 0.4);
+    }
+
+    #hai-input::placeholder {
+      color: rgba(240, 255, 244, 0.18);
+    }
+
+    #hai-send {
+      background: var(--green-bright, #00c85a);
+      color: #001a0e;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      padding: 8px 14px;
+      height: 36px;
+      flex-shrink: 0;
+      clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+      transition: background 0.15s;
+    }
+
+    #hai-send:hover {
+      background: #00ff6a;
+    }
+
+    #hai-send:disabled {
+      background: rgba(0, 200, 90, 0.18);
+      color: rgba(0, 200, 90, 0.35);
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 420px) {
+      #hai-panel {
+        width: calc(100vw - 20px);
+        right: 10px;
+        bottom: 80px;
+      }
+
+      #hai-fab {
+        right: 14px;
+        bottom: 16px;
+      }
+
+      #hai-tooltip {
+        right: 14px;
+      }
+    }
+  </style>
+
+  <!-- FAB -->
+  <button id="hai-fab" onclick="haiToggle()" aria-label="Chat with Hyperion AI">
+    <span class="hai-fab-icon">🗨️</span>
+    <span class="hai-fab-close">✕</span>
+  </button>
+
+  <!-- TOOLTIP -->
+  <div id="hai-tooltip">Ask Hyperion AI anything ›</div>
+
+  <!-- PANEL -->
+  <div id="hai-panel">
+    <div class="hai-header">
+      <div class="hai-header-av">AI</div>
+      <div>
+        <div class="hai-header-name">HYPERION AI</div>
+        <div class="hai-header-sub">Team knowledge assistant</div>
+      </div>
+      <div class="hai-status-dot"></div>
+      <a href="hyperionai.html" class="hai-fullscreen-btn" title="Open full chat">⤢ EXPAND</a>
+    </div>
+    <div class="hai-messages" id="hai-messages"></div>
+    <div class="hai-input-row">
+      <textarea id="hai-input" placeholder="Ask about our robot, team, results…" rows="1"></textarea>
+      <button id="hai-send" onclick="haiSend()">SEND</button>
+    </div>
+  </div>
+
+  <script>
+    /* ─── WIDGET STATE ─── */
+    let haiOpen = false;
+    let haiMsgCount = 0;
+    let haiReady = false;
+
+    function haiToggle() {
+      haiOpen = !haiOpen;
+      document.getElementById('hai-fab').classList.toggle('open', haiOpen);
+      document.getElementById('hai-panel').classList.toggle('open', haiOpen);
+      document.getElementById('hai-tooltip').classList.add('hide');
+      if (haiOpen && !haiReady) { haiReady = true; haiWelcome(); }
+      if (haiOpen) setTimeout(() => document.getElementById('hai-input').focus(), 280);
+    }
+
+    /* ─── KNOWLEDGE BASE (mini version) ─── */
+    const HAI_KB = [
+      {
+        tags: ['team', 'hyperion', 'who', 'name', 'us', 'we', 'squad'],
+        r: () => `<strong>Team Hyperion</strong> is a high school robotics squad from <strong>Brisbane Boys' College</strong>, Toowong, QLD. We compete in <strong>RoboCup Junior Lightweight Soccer</strong> — green, white, black, representing Australia.`
+      },
+      {
+        tags: ['members', 'people', 'students', 'sam', 'matthew', 'luke', 'thomas', 'names', 'roster'],
+        r: () => `Our four members are <strong>Sam, Matthew, Luke,</strong> and <strong>Thomas</strong> — all students at Brisbane Boys' College.`
+      },
+      {
+        tags: ['school', 'college', 'bbc', 'brisbane', 'boys', 'toowong', '1902'],
+        r: () => `<strong>Brisbane Boys' College</strong> — est. <span class="hlt">1902</span>, Toowong, Brisbane's inner west. A Presbyterian and Methodist school with a strong tradition of academic excellence. Home of Team Hyperion since 2021.`
+      },
+      {
+        tags: ['achievements', 'results', 'won', 'podium', 'record', 'best', 'success', 'ranked'],
+        r: () => `Our highlights:<ul><li><span class="hlt">1st Place</span> — Lightweight SuperTeam, 2025 Worlds (Brazil)</li><li><strong>14th Place</strong> — Individual, 2025 Worlds</li><li><span class="hlt">Undefeated</span> — 2025 Australian Nationals</li><li><strong>8×</strong> total podium finishes</li></ul>`
+      },
+      {
+        tags: ['2025', 'worlds', 'world', 'brazil', 'salvador', 'bahia', 'international'],
+        r: () => `At the <strong>2025 RoboCup Junior World Championship</strong> in Salvador, Brazil:<ul><li><span class="hlt">1st Place</span> — Lightweight SuperTeam</li><li><strong>14th Place</strong> — Individual</li></ul>Our first-ever Worlds appearance for BBC robotics.`
+      },
+      {
+        tags: ['2026', 'incheon', 'korea', 'south', 'upcoming', 'next', 'qualify', 'qualified'],
+        r: () => `The <strong>2026 RoboCup Junior World Championship</strong> is in <span class="hlt">Incheon, South Korea</span>. We qualified by going undefeated at the 2025 Australian Nationals. We're going back stronger — upgraded hardware, refined strategy.`
+      },
+      {
+        tags: ['nationals', 'national', 'australia', 'undefeated', '2025'],
+        r: () => `At the <strong>2025 Australian National Championship</strong>, Hyperion went <span class="hlt">completely undefeated</span> — zero losses — securing Australia's qualification spot for 2026 Worlds.`
+      },
+      {
+        tags: ['robot', 'machine', 'build', 'hardware', 'custom', 'overview'],
+        r: () => `The Hyperion robot is a custom <strong>holonomic soccer robot</strong>. Key systems:<ul><li><strong>Brain:</strong> Teensy 4.1 @ 600 MHz</li><li><strong>Drive:</strong> 4× omni wheels</li><li><strong>Ball:</strong> 12× TSSP77038 IR ring</li><li><strong>Vision:</strong> OpenMV RT camera</li><li><strong>Comms:</strong> HC-05 Bluetooth</li></ul>`
+      },
+      {
+        tags: ['teensy', 'microcontroller', 'brain', 'cpu', 'processor', 'arm', 'cortex'],
+        r: () => `Primary brain is the <strong>Teensy 4.1</strong> — ARM Cortex-M7 @ <span class="hlt">600 MHz</span>, 7.9 MB Flash + 8 MB PSRAM. Handles all strategy, PID, motor control, and sensor reading.`
+      },
+      {
+        tags: ['ball', 'detect', 'tssp', 'infrared', 'ir', 'sensor', 'ring'],
+        r: () => `Ball detection uses <strong>12× TSSP77038 IR sensors</strong> around the perimeter. Each sampled <span class="hlt">255 times</span> per cycle. Top 4 readings summed as vectors → ball direction + strength. Handled by a dedicated secondary Teensy.`
+      },
+      {
+        tags: ['camera', 'openmv', 'vision', 'goal', 'yellow', 'blue', 'colour'],
+        r: () => `An <strong>OpenMV RT</strong> camera runs its own MicroPython blob tracking script. Detects <span class="hlt">yellow</span> (attack goal) and <strong>blue</strong> (defend goal) blobs, streams goal angle to the Teensy via UART. Has a DIP switch failsafe.`
+      },
+      {
+        tags: ['kicker', 'kick', 'shoot', 'solenoid', 'strike', 'fire'],
+        r: () => `The <strong>kicker</strong> is a solenoid that fires when two conditions are met simultaneously: ① goal within <span class="hlt">8°</span> of centre (camera) and ② ball detected close (IR ring). Zero wasted shots.`
+      },
+      {
+        tags: ['imu', 'bno055', 'gyro', 'heading', 'orientation', 'stability', 'pid'],
+        r: () => `The <strong>BNO055 IMU</strong> runs in IMUPLUS mode (accel + gyro fusion). A <span class="hlt">PID controller</span> reads heading error every loop and counter-rotates — keeps the robot facing the opponent goal even after hard collisions.`
+      },
+      {
+        tags: ['wheels', 'omni', 'motor', 'drive', 'holonomic', 'move', 'strafe'],
+        r: () => `Four <strong>omni-directional wheels</strong> at 45° in each corner give <span class="hlt">full holonomic movement</span> — strafe, rotate, translate simultaneously. Zero turning radius. Each driven by its own motor driver PCB.`
+      },
+      {
+        tags: ['bluetooth', 'communicate', 'comms', 'two', 'robots', 'role', 'attacker', 'defender'],
+        r: () => `The two robots share <strong>HC-05 Bluetooth</strong> data packets every cycle (ball, goal, battery, XY). A <span class="hlt">score-based election</span> picks attacker vs defender. If link drops → auto Defender mode.`
+      },
+      {
+        tags: ['battery', 'power', 'lipo', 'voltage', 'energy'],
+        r: () => `Runs on a <strong>LiPo battery</strong>. Voltage monitored via ADC, shared with teammate every Bluetooth packet. If critically low → <span class="hlt">forced into Defender</span> mode automatically.`
+      },
+      {
+        tags: ['timeline', 'history', 'years', '2021', '2022', '2023', '2024', 'started', 'began', 'long'],
+        r: () => `<ul><li><strong>2021–22:</strong> Fundamentals in multiple RCJ divisions</li><li><strong>2023:</strong> Standard Soccer, State & National qualifiers</li><li><strong>2024:</strong> First custom robot, Nationals podiums</li><li><span class="hlt">2025:</span> 🌍 Worlds + Undefeated Nationals</li><li><strong>2026:</strong> ⭐ Incheon, South Korea</li></ul>`
+      },
+    ];
+
+    const HAI_STOPS = new Set(['the', 'is', 'are', 'was', 'a', 'an', 'of', 'in', 'at', 'to', 'for', 'and', 'or', 'it', 'how', 'what', 'when', 'where', 'who', 'do', 'does', 'did', 'can', 'tell', 'me', 'us', 'about', 'your', 'our', 'please', 'know', 'could', 'would']);
+
+    function haiQuery(text) {
+      const tokens = text.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(t => t.length > 1 && !HAI_STOPS.has(t));
+      let best = 0, match = null;
+      for (const entry of HAI_KB) {
+        let score = 0;
+        for (const tok of tokens) for (const tag of entry.tags) {
+          if (tag === tok) score += 3;
+          else if (tag.includes(tok) || tok.includes(tag)) score += 1;
+        }
+        if (score > best) { best = score; match = entry; }
+      }
+      if (!match || best < 1) return `I'm not sure about that! Try asking about our <strong>robot</strong>, <strong>team members</strong>, <strong>competition results</strong>, or specific components like the <strong>Teensy</strong>, <strong>kicker</strong>, or <strong>camera</strong>. Or <a href="hyperionai.html" style="color:var(--green-bright,#00c85a);">open the full AI →</a>`;
+      return match.r();
+    }
+
+    /* ─── UI HELPERS ─── */
+    function haiAppend(role, html) {
+      haiMsgCount++;
+      const msgs = document.getElementById('hai-messages');
+      const wrap = document.createElement('div');
+      wrap.className = 'hai-msg ' + role;
+      const av = document.createElement('div');
+      av.className = 'hai-av ' + (role === 'ai' ? 'ai' : 'usr');
+      av.textContent = role === 'ai' ? 'AI' : '›';
+      const bub = document.createElement('div');
+      bub.className = 'hai-bubble';
+      bub.innerHTML = html;
+      wrap.appendChild(av);
+      wrap.appendChild(bub);
+      msgs.appendChild(wrap);
+      msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    function haiShowTyping() {
+      const msgs = document.getElementById('hai-messages');
+      const wrap = document.createElement('div');
+      wrap.className = 'hai-msg ai'; wrap.id = 'hai-typing-row';
+      const av = document.createElement('div');
+      av.className = 'hai-av ai'; av.textContent = 'AI';
+      const t = document.createElement('div');
+      t.className = 'hai-typing';
+      t.innerHTML = '<div class="hai-tdot"></div><div class="hai-tdot"></div><div class="hai-tdot"></div>';
+      wrap.appendChild(av); wrap.appendChild(t);
+      msgs.appendChild(wrap);
+      msgs.scrollTop = msgs.scrollHeight;
+    }
+    function haiRemoveTyping() { const t = document.getElementById('hai-typing-row'); if (t) t.remove(); }
+
+    function haiWelcome() {
+      setTimeout(() => {
+        const html = `Hi! I'm <strong>Hyperion AI</strong> — ask me anything about our team, robot, or results.
+    <div class="hai-chips">
+      <span class="hai-chip" onclick="haiQuick('Who is on the team?')">Team members</span>
+      <span class="hai-chip" onclick="haiQuick('What are your best results?')">Best results</span>
+      <span class="hai-chip" onclick="haiQuick('How does ball detection work?')">Ball detection</span>
+      <span class="hai-chip" onclick="haiQuick('Where is the 2026 competition?')">2026 Worlds</span>
+    </div>`;
+        haiAppend('ai', html);
+      }, 150);
+    }
+
+    function haiQuick(text) {
+      document.getElementById('hai-input').value = text;
+      haiSend();
+    }
+
+    function haiSend() {
+      const inp = document.getElementById('hai-input');
+      const text = inp.value.trim();
+      if (!text) return;
+      inp.value = ''; inp.style.height = 'auto';
+      document.getElementById('hai-send').disabled = true;
+      haiAppend('user', text);
+      haiShowTyping();
+      setTimeout(() => {
+        haiRemoveTyping();
+        haiAppend('ai', haiQuery(text));
+        document.getElementById('hai-send').disabled = false;
+        inp.focus();
+      }, 380 + Math.random() * 420);
+    }
+
+    /* ─── INPUT EVENTS ─── */
+    document.getElementById('hai-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); haiSend(); }
+    });
+    document.getElementById('hai-input').addEventListener('input', function () {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 80) + 'px';
+    });
+
+    /* ─── AUTO-HIDE TOOLTIP ─── */
+    setTimeout(() => document.getElementById('hai-tooltip').classList.add('hide'), 5000);
+  </script>
+  <!-- ════ END HYPERION AI CHAT WIDGET ════ -->
 </body>
+
 </html>
