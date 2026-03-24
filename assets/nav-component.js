@@ -24,6 +24,7 @@
     <li><a href="team.html"         data-page="team">Team</a></li>
     <li><a href="robot.html"        data-page="robot">Robot</a></li>
     <li><a href="achievements.html" data-page="achievements">Achievements</a></li>
+    <li><a href="logbook.html"      data-page="logbook" style="color:var(--green-bright,#00c85a);">Logbook</a></li>
 
     <!-- Campaigns dropdown -->
     <li>
@@ -69,6 +70,7 @@
     <a href="team.html"         data-page="team">Team</a>
     <a href="robot.html"        data-page="robot">Our Robot</a>
     <a href="achievements.html" data-page="achievements">Achievements</a>
+    <a href="logbook.html"      data-page="logbook" style="color:var(--green-bright,#00c85a);">📋 Engineering Logbook</a>
   </div>
   <div class="nav-sidebar-section">
     <span class="nav-sidebar-label">Campaigns</span>
@@ -120,7 +122,8 @@
     <div class="footer-right">
       <a href="achievements.html">Achievements</a> ·
       <a href="team.html">Team</a> ·
-      <a href="robot.html">Robot</a><br/>
+      <a href="robot.html">Robot</a> ·
+      <a href="logbook.html">Logbook</a><br/>
       🇦🇺 Queensland, Australia
     </div>
   </div>
@@ -310,13 +313,11 @@ nav {
 
   /* ── INJECT NAV ────────────────────────────────────────────── */
   function injectNav() {
-    // Remove any existing <nav> so pages don't duplicate
     const existing = document.querySelector('nav');
     if (existing) existing.remove();
 
     const wrapper = document.createElement('div');
     wrapper.innerHTML = NAV_HTML.trim();
-    // Insert all children at very start of body
     const body = document.body;
     Array.from(wrapper.childNodes).reverse().forEach(node => {
       body.insertBefore(node, body.firstChild);
@@ -325,7 +326,6 @@ nav {
 
   /* ── INJECT FOOTER ─────────────────────────────────────────── */
   function injectFooter() {
-    // Remove any existing <footer> so pages don't duplicate
     const existing = document.querySelector('footer');
     if (existing) existing.remove();
 

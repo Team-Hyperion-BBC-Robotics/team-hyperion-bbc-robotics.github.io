@@ -61,15 +61,8 @@
     }
 
     @keyframes blink-dot {
-
-      0%,
-      100% {
-        opacity: 1
-      }
-
-      50% {
-        opacity: 0.15
-      }
+      0%, 100% { opacity: 1 }
+      50% { opacity: 0.15 }
     }
 
     .ticker-track {
@@ -131,13 +124,8 @@
     }
 
     @keyframes ticker-scroll {
-      0% {
-        transform: translateX(0);
-      }
-
-      100% {
-        transform: translateX(-50%);
-      }
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
     }
 
     /* ══════════════════════════════════════════
@@ -196,17 +184,9 @@
       overflow: hidden;
     }
 
-    .boot-line.dim {
-      color: rgba(0, 200, 90, 0.4);
-    }
-
-    .boot-line.white {
-      color: rgba(255, 255, 255, 0.85);
-    }
-
-    .boot-line.warn {
-      color: #f0e060;
-    }
+    .boot-line.dim { color: rgba(0, 200, 90, 0.4); }
+    .boot-line.white { color: rgba(255, 255, 255, 0.85); }
+    .boot-line.warn { color: #f0e060; }
 
     .boot-line.big {
       font-size: clamp(1.4rem, 3.5vw, 2.2rem);
@@ -227,15 +207,8 @@
     }
 
     @keyframes blink {
-
-      0%,
-      100% {
-        opacity: 1
-      }
-
-      50% {
-        opacity: 0
-      }
+      0%, 100% { opacity: 1 }
+      50% { opacity: 0 }
     }
 
     /* ══════════════════════════════════════════
@@ -265,17 +238,8 @@
     }
 
     @keyframes orb {
-
-      0%,
-      100% {
-        transform: scale(1) translateY(0);
-        opacity: 0.7
-      }
-
-      50% {
-        transform: scale(1.1) translateY(-20px);
-        opacity: 1
-      }
+      0%, 100% { transform: scale(1) translateY(0); opacity: 0.7 }
+      50% { transform: scale(1.1) translateY(-20px); opacity: 1 }
     }
 
     .hero-school {
@@ -293,9 +257,7 @@
       filter: brightness(1.1) drop-shadow(0 0 10px rgba(0, 114, 63, 0.4));
     }
 
-    .hero-school-text {
-      text-align: left;
-    }
+    .hero-school-text { text-align: left; }
 
     .hero-school-name {
       font-family: 'Bebas Neue', sans-serif;
@@ -336,9 +298,7 @@
       animation: fadeUp 0.7s 0.45s forwards;
     }
 
-    .hero-title .green {
-      color: var(--green-bright);
-    }
+    .hero-title .green { color: var(--green-bright); }
 
     .hero-divider {
       width: 100px;
@@ -399,10 +359,7 @@
       pointer-events: none;
     }
 
-    .journey-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
+    .journey-inner { max-width: 1200px; margin: 0 auto; }
 
     .journey-map-wrap {
       position: relative;
@@ -501,9 +458,7 @@
       overflow: hidden;
     }
 
-    .journey-card:last-child {
-      border-right: none;
-    }
+    .journey-card:last-child { border-right: none; }
 
     .journey-card::after {
       content: '';
@@ -517,18 +472,12 @@
       transition: opacity 0.2s;
     }
 
-    .journey-card:hover {
-      background: rgba(0, 114, 63, 0.05);
-    }
+    .journey-card:hover { background: rgba(0, 114, 63, 0.05); }
 
     .journey-card:hover::after,
-    .journey-card.active::after {
-      opacity: 1;
-    }
+    .journey-card.active::after { opacity: 1; }
 
-    .journey-card.active {
-      background: rgba(0, 114, 63, 0.08);
-    }
+    .journey-card.active { background: rgba(0, 114, 63, 0.08); }
 
     .jc-num {
       font-family: 'Bebas Neue', sans-serif;
@@ -585,10 +534,7 @@
       padding: 80px 48px;
     }
 
-    .tl-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
+    .tl-inner { max-width: 1200px; margin: 0 auto; }
 
     .tl-controls {
       display: flex;
@@ -659,9 +605,7 @@
       white-space: nowrap;
     }
 
-    .tl-node.active .tl-node-year {
-      color: var(--green-bright);
-    }
+    .tl-node.active .tl-node-year { color: var(--green-bright); }
 
     .tl-btn {
       font-family: 'Share Tech Mono', monospace;
@@ -700,9 +644,7 @@
       transition: background 0.3s;
     }
 
-    .tl-card.future::before {
-      background: rgba(0, 255, 120, 0.8);
-    }
+    .tl-card.future::before { background: rgba(0, 255, 120, 0.8); }
 
     .tl-year {
       font-family: 'Share Tech Mono', monospace;
@@ -746,28 +688,10 @@
       border: 1px solid;
     }
 
-    .tl-badge.gold {
-      color: #d4a017;
-      border-color: rgba(212, 160, 23, 0.4);
-      background: rgba(212, 160, 23, 0.06);
-    }
-
-    .tl-badge.green {
-      color: var(--green-bright);
-      border-color: rgba(0, 200, 90, 0.35);
-      background: rgba(0, 200, 90, 0.06);
-    }
-
-    .tl-badge.future {
-      color: #00ff6a;
-      border-color: rgba(0, 255, 120, 0.4);
-      background: rgba(0, 255, 120, 0.06);
-    }
-
-    .tl-badge.grey {
-      color: rgba(240, 255, 244, 0.4);
-      border-color: var(--border);
-    }
+    .tl-badge.gold { color: #d4a017; border-color: rgba(212, 160, 23, 0.4); background: rgba(212, 160, 23, 0.06); }
+    .tl-badge.green { color: var(--green-bright); border-color: rgba(0, 200, 90, 0.35); background: rgba(0, 200, 90, 0.06); }
+    .tl-badge.future { color: #00ff6a; border-color: rgba(0, 255, 120, 0.4); background: rgba(0, 255, 120, 0.06); }
+    .tl-badge.grey { color: rgba(240, 255, 244, 0.4); border-color: var(--border); }
 
     .tl-desc {
       font-size: 0.92rem;
@@ -804,10 +728,7 @@
       padding: 100px 48px;
     }
 
-    .emu-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
+    .emu-inner { max-width: 1200px; margin: 0 auto; }
 
     .emu-frame-wrap {
       margin-top: 32px;
@@ -847,10 +768,7 @@
       pointer-events: none;
     }
 
-    .emu-overlay-icon {
-      font-size: 3rem;
-      opacity: 0.6;
-    }
+    .emu-overlay-icon { font-size: 3rem; opacity: 0.6; }
 
     .emu-overlay-title {
       font-family: 'Bebas Neue', sans-serif;
@@ -882,9 +800,7 @@
       transition: all 0.2s;
     }
 
-    .emu-launch-btn:hover {
-      background: #00ff6a;
-    }
+    .emu-launch-btn:hover { background: #00ff6a; }
 
     #emu-iframe {
       width: 100%;
@@ -906,9 +822,7 @@
       text-align: center;
     }
 
-    .emu-stat:last-child {
-      border-right: none;
-    }
+    .emu-stat:last-child { border-right: none; }
 
     .emu-stat-num {
       font-family: 'Bebas Neue', sans-serif;
@@ -963,9 +877,7 @@
       transition: border-color 0.2s;
     }
 
-    .intro-link:hover {
-      border-color: var(--green-bright);
-    }
+    .intro-link:hover { border-color: var(--green-bright); }
 
     .bbc-panel {
       background: var(--card-bg);
@@ -1082,15 +994,9 @@
       transform: translateY(-3px);
     }
 
-    .page-tile:hover::after {
-      opacity: 1;
-    }
+    .page-tile:hover::after { opacity: 1; }
 
-    .tile-icon {
-      font-size: 2.2rem;
-      margin-bottom: 14px;
-      display: block;
-    }
+    .tile-icon { font-size: 2.2rem; margin-bottom: 14px; display: block; }
 
     .tile-title {
       font-family: 'Bebas Neue', sans-serif;
@@ -1125,415 +1031,137 @@
     }
 
     /* ══════════════════════════════════════════
-       ROBOT DIAGRAM SECTION  ← NEW
+       COMPONENT RENDER (Fusion 360 video)
     ══════════════════════════════════════════ */
-    #robot-diagram {
+    #component-render {
       position: relative;
       z-index: 1;
       padding: 80px 48px;
       border-top: 1px solid var(--border);
     }
 
-    .rdiag-inner {
+    .crender-inner {
       max-width: 1200px;
       margin: 0 auto;
     }
 
-    .rdiag-shell {
+    .crender-shell {
       margin-top: 32px;
-      display: grid;
-      grid-template-columns: 1fr 340px;
-      gap: 2px;
-      border: 1px solid var(--border);
-      background: var(--border);
-    }
-
-    .rdiag-img-side {
-      background: var(--black2);
       position: relative;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
       overflow: hidden;
-      aspect-ratio: 1 / 1;
     }
 
-    .rdiag-img-side img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      filter: brightness(0.88) contrast(1.08) saturate(0.85);
+    .crender-shell::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--green-bright), transparent);
+      z-index: 1;
+      pointer-events: none;
     }
 
-    .rdiag-img-side::after {
+    .crender-shell::after {
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(ellipse at center, transparent 55%, rgba(5, 10, 5, 0.6) 100%);
       pointer-events: none;
       z-index: 1;
+      box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.4);
     }
 
-    .rdiag-pins-layer {
+    /* Corner brackets */
+    .crender-corner {
       position: absolute;
-      inset: 0;
-      z-index: 10;
-    }
-
-    .rdiag-pin {
-      position: absolute;
-      transform: translate(-50%, -50%);
-      cursor: pointer;
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .rdiag-pin-outer {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      border: 1.5px solid rgba(0, 200, 90, 0.5);
-      position: absolute;
-      animation: rdiag-ping 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
-      transition: border-color 0.2s;
-    }
-
-    .rdiag-pin-mid {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background: rgba(0, 40, 20, 0.92);
-      border: 1.5px solid var(--green-bright);
-      position: relative;
+      width: 20px;
+      height: 20px;
       z-index: 2;
-      transition: background 0.15s, border-color 0.15s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      pointer-events: none;
+    }
+    .crender-corner.tl { top: 10px; left: 10px; border-top: 2px solid var(--green-bright); border-left: 2px solid var(--green-bright); }
+    .crender-corner.tr { top: 10px; right: 10px; border-top: 2px solid var(--green-bright); border-right: 2px solid var(--green-bright); }
+    .crender-corner.bl { bottom: 10px; left: 10px; border-bottom: 2px solid var(--green-bright); border-left: 2px solid var(--green-bright); }
+    .crender-corner.br { bottom: 10px; right: 10px; border-bottom: 2px solid var(--green-bright); border-right: 2px solid var(--green-bright); }
+
+    #crender-video {
+      width: 100%;
+      display: block;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #000;
     }
 
-    .rdiag-pin-dot {
+    .crender-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 2px;
+      border-top: 1px solid var(--border);
+    }
+
+    .crender-meta-cell {
+      padding: 16px 20px;
+      border-right: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .crender-meta-cell:last-child { border-right: none; }
+
+    .crender-meta-dot {
       width: 5px;
       height: 5px;
       border-radius: 50%;
       background: var(--green-bright);
-      transition: background 0.15s;
+      box-shadow: 0 0 5px var(--green-bright);
+      flex-shrink: 0;
     }
 
-    .rdiag-pin:hover .rdiag-pin-outer,
-    .rdiag-pin.active .rdiag-pin-outer {
-      border-color: #00ff6a;
-    }
-
-    .rdiag-pin:hover .rdiag-pin-mid,
-    .rdiag-pin.active .rdiag-pin-mid {
-      background: rgba(0, 80, 30, 0.95);
-      border-color: #00ff6a;
-    }
-
-    .rdiag-pin:hover .rdiag-pin-dot,
-    .rdiag-pin.active .rdiag-pin-dot {
-      background: #00ff6a;
-    }
-
-    .rdiag-pin:nth-child(2) .rdiag-pin-outer {
-      animation-delay: 0.25s;
-    }
-
-    .rdiag-pin:nth-child(3) .rdiag-pin-outer {
-      animation-delay: 0.5s;
-    }
-
-    .rdiag-pin:nth-child(4) .rdiag-pin-outer {
-      animation-delay: 0.75s;
-    }
-
-    .rdiag-pin:nth-child(5) .rdiag-pin-outer {
-      animation-delay: 1.0s;
-    }
-
-    .rdiag-pin:nth-child(6) .rdiag-pin-outer {
-      animation-delay: 1.25s;
-    }
-
-    .rdiag-pin:nth-child(7) .rdiag-pin-outer {
-      animation-delay: 1.5s;
-    }
-
-    .rdiag-pin:nth-child(8) .rdiag-pin-outer {
-      animation-delay: 1.75s;
-    }
-
-    .rdiag-pin:nth-child(9) .rdiag-pin-outer {
-      animation-delay: 2.0s;
-    }
-
-    @keyframes rdiag-ping {
-      0% {
-        transform: scale(1);
-        opacity: 0.8;
-      }
-
-      80% {
-        transform: scale(2.4);
-        opacity: 0;
-      }
-
-      100% {
-        transform: scale(2.4);
-        opacity: 0;
-      }
-    }
-
-    .rdiag-pin-label {
-      position: absolute;
-      left: 50%;
-      bottom: calc(100% + 6px);
-      transform: translateX(-50%);
-      background: rgba(5, 10, 5, 0.97);
-      border: 1px solid rgba(0, 200, 90, 0.3);
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.5rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--green-bright);
-      padding: 3px 8px;
-      white-space: nowrap;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.15s;
-      z-index: 20;
-    }
-
-    .rdiag-pin-label::after {
-      content: '';
-      position: absolute;
-      top: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      border: 4px solid transparent;
-      border-top-color: rgba(0, 200, 90, 0.3);
-    }
-
-    .rdiag-pin:hover .rdiag-pin-label,
-    .rdiag-pin.active .rdiag-pin-label {
-      opacity: 1;
-    }
-
-    .rdiag-info-side {
-      background: rgba(6, 12, 6, 0.98);
-      display: flex;
-      flex-direction: column;
-      min-height: 400px;
-    }
-
-    .rdiag-info-header {
-      padding: 20px 22px 16px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .rdiag-info-eyebrow {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.52rem;
-      letter-spacing: 0.28em;
-      color: var(--green-bright);
-      text-transform: uppercase;
-      margin-bottom: 4px;
-    }
-
-    .rdiag-info-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 2rem;
-      letter-spacing: 0.08em;
-      color: var(--white);
-      line-height: 1;
-    }
-
-    .rdiag-info-sub {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.58rem;
-      letter-spacing: 0.14em;
-      color: rgba(0, 200, 90, 0.65);
-      text-transform: uppercase;
-      margin-top: 4px;
-    }
-
-    .rdiag-info-body {
-      padding: 18px 22px;
-      flex: 1;
-      overflow-y: auto;
-    }
-
-    .rdiag-info-desc {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.75rem;
-      line-height: 1.85;
-      color: rgba(240, 255, 244, 0.6);
-      margin-bottom: 16px;
-    }
-
-    .rdiag-specs-grid {
-      display: flex;
-      flex-direction: column;
-      border: 1px solid var(--border);
-    }
-
-    .rdiag-spec-row {
-      display: grid;
-      grid-template-columns: 100px 1fr;
-      border-bottom: 1px solid rgba(0, 200, 90, 0.07);
-    }
-
-    .rdiag-spec-row:last-child {
-      border-bottom: none;
-    }
-
-    .rdiag-spec-key {
-      padding: 7px 10px;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.54rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: rgba(240, 255, 244, 0.28);
-      border-right: 1px solid rgba(0, 200, 90, 0.07);
-      display: flex;
-      align-items: center;
-    }
-
-    .rdiag-spec-val {
-      padding: 7px 10px;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.66rem;
-      letter-spacing: 0.06em;
-      color: var(--green-bright);
-    }
-
-    .rdiag-info-nav {
-      padding: 12px 22px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .rdiag-nav-label {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.5rem;
-      letter-spacing: 0.2em;
-      color: rgba(240, 255, 244, 0.18);
-      margin-left: auto;
-      text-transform: uppercase;
-    }
-
-    .rdiag-placeholder {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      padding: 40px;
-      opacity: 0.3;
-    }
-
-    .rdiag-placeholder-ring {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      border: 1px solid var(--green-bright);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 1.4rem;
-      color: var(--green-bright);
-    }
-
-    .rdiag-placeholder-text {
+    .crender-meta-text {
       font-family: 'Share Tech Mono', monospace;
       font-size: 0.6rem;
-      letter-spacing: 0.2em;
+      letter-spacing: 0.12em;
+      color: rgba(240, 255, 244, 0.45);
       text-transform: uppercase;
-      color: rgba(240, 255, 244, 0.5);
-      text-align: center;
-      line-height: 2;
+      line-height: 1.5;
     }
 
-    .rdiag-info-content {
-      display: none;
-      flex-direction: column;
-      height: 100%;
+    .crender-meta-text strong {
+      display: block;
+      color: rgba(240, 255, 244, 0.8);
+      font-weight: normal;
     }
 
-    .rdiag-info-content.visible {
-      display: flex;
-    }
-
-    @media(max-width:900px) {
-      .rdiag-shell {
-        grid-template-columns: 1fr;
-      }
-
-      #robot-diagram {
-        padding: 70px 20px;
-      }
+    @media (max-width: 700px) {
+      .crender-meta { grid-template-columns: 1fr; }
+      .crender-meta-cell { border-right: none; border-bottom: 1px solid var(--border); }
+      .crender-meta-cell:last-child { border-bottom: none; }
+      #component-render { padding: 70px 20px; }
     }
 
     /* ══════════════════════════════════════════
        SHARED ANIMATIONS
     ══════════════════════════════════════════ */
     @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px)
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0)
-      }
+      from { opacity: 0; transform: translateY(20px) }
+      to { opacity: 1; transform: translateY(0) }
     }
 
     @media(max-width:1000px) {
-      .intro-grid {
-        grid-template-columns: 1fr;
-        gap: 40px;
-      }
-
-      .pages-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .journey-cards {
-        grid-template-columns: 1fr;
-      }
-
-      .journey-card {
-        border-right: none;
-        border-bottom: 1px solid var(--border);
-      }
-
-      .emu-preview-stats {
-        grid-template-columns: 1fr;
-      }
+      .intro-grid { grid-template-columns: 1fr; gap: 40px; }
+      .pages-grid { grid-template-columns: 1fr; }
+      .journey-cards { grid-template-columns: 1fr; }
+      .journey-card { border-right: none; border-bottom: 1px solid var(--border); }
+      .emu-preview-stats { grid-template-columns: 1fr; }
     }
 
     @media(max-width:600px) {
-
-      #intro,
-      #pages,
-      #journey,
-      #timeline,
-      #emulator-embed,
-      #watch {
-        padding: 70px 20px;
-      }
-
-      .tl-controls {
-        flex-direction: column;
-        align-items: stretch;
-      }
+      #intro, #pages, #journey, #timeline, #emulator-embed, #watch { padding: 70px 20px; }
+      .tl-controls { flex-direction: column; align-items: stretch; }
     }
   </style>
 </head>
@@ -1578,8 +1206,9 @@
     <p class="hero-greeting" id="hero-greeting" style="position:relative;z-index:1;"></p>
     <div class="hero-cta" style="position:relative;z-index:1;">
       <a href="robot.html" class="btn-primary">Our Robot</a>
-      <a href="team.html" class="btn-outline">Meet the Team</a>
+      <a href="team.html" class="btn-outline">The Team</a>
       <a href="achievements.html" class="btn-outline">Achievements</a>
+      <a href="logbook.html" class="btn-outline">Logbook</a>
     </div>
   </section>
 
@@ -1711,106 +1340,53 @@
     </div><br><br>
   </section>
 
-  <!-- ════ INTERACTIVE ROBOT DIAGRAM ════ -->
-  <section id="robot-diagram">
-    <div class="rdiag-inner">
-      <p class="section-label">Inspect the Machine</p>
+  <!-- ════ FUSION 360 COMPONENT RENDER ════ -->
+  <section id="component-render">
+    <div class="crender-inner">
+      <p class="section-label">3D Component Render</p>
       <h2 class="section-title">ROBOT <span class="accent">ANATOMY</span></h2>
       <p
         style="color:rgba(240,255,244,0.5);font-family:'Share Tech Mono',monospace;font-size:0.78rem;letter-spacing:0.12em;margin-top:8px;">
-        Click any pin to explore the components powering Hyperion 2026</p>
-      <p
-        style="color:rgba(240,255,244,0.5);font-family:'Share Tech Mono',monospace;font-size:0.78rem;letter-spacing:0.12em;margin-top:8px;">
-        <strong>[CURRENTLY UNDER DEVELOPMENT]</strong></p>
-      <div class="rdiag-shell">
-        <!-- IMAGE + PINS — swap src to your actual robot photo path -->
-        <div class="rdiag-img-side">
-          <img src="assets/robot.png" alt="Hyperion 2026 Component Overview"
-            onerror="this.onerror=null;this.src='assets/construction.png'" />
-          <div class="rdiag-pins-layer">
-            <div class="rdiag-pin" style="left:50.5%;top:14.5%;" data-id="kicker" onclick="rdiagSelect('kicker')">
-              <div class="rdiag-pin-outer"></div>
-              <div class="rdiag-pin-mid">
-                <div class="rdiag-pin-dot"></div>
-              </div>
-              <div class="rdiag-pin-label">Kicker</div>
-            </div>
-            <div class="rdiag-pin" style="left:53%;top:20%;" data-id="bno055" onclick="rdiagSelect('bno055')">
-              <div class="rdiag-pin-outer"></div>
-              <div class="rdiag-pin-mid">
-                <div class="rdiag-pin-dot"></div>
-              </div>
-              <div class="rdiag-pin-label">BNO055 IMU</div>
-            </div>
-            <div class="rdiag-pin" style="left:65%;top:30%;" data-id="teensy" onclick="rdiagSelect('teensy')">
-              <div class="rdiag-pin-outer"></div>
-              <div class="rdiag-pin-mid">
-                <div class="rdiag-pin-dot"></div>
-              </div>
-              <div class="rdiag-pin-label">Teensy 4.1</div>
-            </div>
-            <div class="rdiag-pin" style="left:39%;top:48%;" data-id="motors" onclick="rdiagSelect('motors')">
-              <div class="rdiag-pin-outer"></div>
-              <div class="rdiag-pin-mid">
-                <div class="rdiag-pin-dot"></div>
-              </div>
-              <div class="rdiag-pin-label">Motor Drivers</div>
-            </div>
-            <div class="rdiag-pin" style="left:48%;top:37%;" data-id="camera" onclick="rdiagSelect('camera')">
-              <div class="rdiag-pin-outer"></div>
-              <div class="rdiag-pin-mid">
-                <div class="rdiag-pin-dot"></div>
-              </div>
-              <div class="rdiag-pin-label">OpenMV Camera</div>
-            </div>
-            <div class="rdiag-pin" style="left:50%;top:68%;" data-id="battery" onclick="rdiagSelect('battery')">
-              <div class="rdiag-pin-outer"></div>
-              <div class="rdiag-pin-mid">
-                <div class="rdiag-pin-dot"></div>
-              </div>
-              <div class="rdiag-pin-label">Battery</div>
-            </div>
-            <div class="rdiag-pin" style="left:77.5%;top:50%;" data-id="tssp" onclick="rdiagSelect('tssp')">
-              <div class="rdiag-pin-outer"></div>
-              <div class="rdiag-pin-mid">
-                <div class="rdiag-pin-dot"></div>
-              </div>
-              <div class="rdiag-pin-label">TSSP IR Ring</div>
-            </div>
-            <div class="rdiag-pin" style="left:80%;top:27%;" data-id="wheels" onclick="rdiagSelect('wheels')">
-              <div class="rdiag-pin-outer"></div>
-              <div class="rdiag-pin-mid">
-                <div class="rdiag-pin-dot"></div>
-              </div>
-              <div class="rdiag-pin-label">Omni Wheels</div>
-            </div>
-            <div class="rdiag-pin" style="left:65%;top:60%;" data-id="bluetooth" onclick="rdiagSelect('bluetooth')">
-              <div class="rdiag-pin-outer"></div>
-              <div class="rdiag-pin-mid">
-                <div class="rdiag-pin-dot"></div>
-              </div>
-              <div class="rdiag-pin-label">Bluetooth</div>
+        Fusion 360 render of the Hyperion 2026 competition robot — full component overview</p>
+
+      <div class="crender-shell">
+        <!-- Corner brackets -->
+        <div class="crender-corner tl"></div>
+        <div class="crender-corner tr"></div>
+        <div class="crender-corner bl"></div>
+        <div class="crender-corner br"></div>
+
+        <video
+          id="crender-video"
+          src="assets/componentRender.mp4"
+          autoplay
+          loop
+          muted
+          playsinline
+          preload="metadata">
+          Your browser does not support the video tag.
+        </video>
+
+        <div class="crender-meta">
+          <div class="crender-meta-cell">
+            <div class="crender-meta-dot"></div>
+            <div class="crender-meta-text">
+              Software
+              <strong>Autodesk Fusion 360</strong>
             </div>
           </div>
-        </div>
-        <!-- INFO PANEL -->
-        <div class="rdiag-info-side">
-          <div id="rdiag-placeholder" class="rdiag-placeholder">
-            <div class="rdiag-placeholder-ring">&#8853;</div>
-            <div class="rdiag-placeholder-text">Select any<br>component pin<br>to inspect</div>
+          <div class="crender-meta-cell">
+            <div class="crender-meta-dot"></div>
+            <div class="crender-meta-text">
+              Robot
+              <strong>Hyperion 2026 · Lightweight Soccer</strong>
+            </div>
           </div>
-          <div class="rdiag-info-content" id="rdiag-info-content">
-            <div class="rdiag-info-header">
-              <div class="rdiag-info-eyebrow" id="rdiag-eyebrow"></div>
-              <div class="rdiag-info-title" id="rdiag-title"></div>
-              <div class="rdiag-info-sub" id="rdiag-sub"></div>
-            </div>
-            <div class="rdiag-info-body">
-              <div class="rdiag-info-desc" id="rdiag-desc"></div>
-              <div class="rdiag-specs-grid" id="rdiag-specs"></div>
-            </div>
-            <div class="rdiag-info-nav">
-              <div class="rdiag-nav-label" id="rdiag-nav-label"></div>
+          <div class="crender-meta-cell">
+            <div class="crender-meta-dot"></div>
+            <div class="crender-meta-text">
+              Team
+              <strong>Brisbane Boys' College · QLD, Australia</strong>
             </div>
           </div>
         </div>
@@ -2012,6 +1588,11 @@
         <p class="tile-desc">Have a look at some of the resources that we use to design our robot!</p><span
           class="tile-arrow">→ VIEW RESOURCES</span>
       </a>
+      <a href="logbook.html" class="page-tile"><span class="tile-icon"></span>
+        <div class="tile-title">LOGBOOK</div>
+        <p class="tile-desc">See our dedicated logbook diary that we use each session to log our progress!</p><span
+          class="tile-arrow">→ VIEW THE LOGBOOK</span>
+      </a>
     </div>
   </section>
 
@@ -2027,7 +1608,7 @@
       { tag: 'HISTORY', gold: false, text: '5+ Years Competing' },
       { tag: 'HISTORY', gold: false, text: '2× National Appearances' },
       { tag: '2026', gold: false, text: 'Qualified → Incheon, South Korea' },
-      { tag: 'BBC', gold: false, text: 'Brisbane Boys\' College · Est. 1902' },
+      { tag: 'BBC', gold: false, text: 'Brisbane Boys\'s College · Est. 1902' },
       { tag: 'DIVISION', gold: false, text: 'RoboCup Junior Lightweight Soccer' },
     ];
     function buildTicker() {
@@ -2177,39 +1758,6 @@
     function activateEmulator() { document.getElementById('emu-overlay').classList.add('hidden'); }
 
     /* ─────────────────────────────────────────
-       ROBOT DIAGRAM
-    ───────────────────────────────────────── */
-    const RDIAG_DATA = {
-      kicker: { eyebrow: 'Mechanism · Ball Striking', title: 'KICKER', sub: 'Front solenoid actuator', desc: 'The kicker fires when the OpenMV camera confirms the attack goal is within 8° of centre and the TSSP ring detects the ball at close range. This two-condition trigger prevents wasted shots. The solenoid receives a digital fire signal directly from the primary Teensy.', specs: [['Type', 'Solenoid actuator'], ['Trigger', 'Goal < 8° + ball close'], ['Control', 'Digital — Teensy 4.1'], ['Position', 'Front centre of chassis']] },
-      bno055: { eyebrow: 'Sensor · Orientation & Stability', title: 'BNO055 IMU', sub: '9-Axis Orientation · I²C', desc: 'Acts as the robot\'s inner ear. Running in IMUPLUS mode, it fuses accelerometer and gyroscope data to maintain a stable heading throughout a match. A PID controller reads the heading error every loop and applies a counter-rotation correction — keeping the robot facing the opponent goal even after hard collisions.', specs: [['Mode', 'IMUPLUS (Accel + Gyro)'], ['Output', 'Euler angles 0–360°'], ['Interface', 'I²C'], ['Clock', 'External crystal'], ['Role', 'Heading lock + drift comp.']] },
-      teensy: { eyebrow: 'Microcontroller · Primary Brain', title: 'TEENSY 4.1', sub: 'ARM Cortex-M7 · 600 MHz', desc: 'The central nervous system of Hyperion. Reads every sensor, computes PID corrections, executes attacker/defender strategy, and commands all four motors. Its 600 MHz ARM Cortex-M7 gives headroom to run complex exponential orbit math in real time without lag.', specs: [['MCU', 'ARM Cortex-M7 @ 600 MHz'], ['Flash', '7.9 MB + 8 MB PSRAM'], ['I/O', '55 digital + 18 analog'], ['Comms', 'UART ×8, I2C, SPI'], ['Role', 'Primary strategy + motors']] },
-      motors: { eyebrow: 'Actuation · Drive System', title: 'MOTOR DRIVERS', sub: '4× drivers · one per omni wheel', desc: 'Four motor driver boards (the green PCBs visible in the corners) each control one omni wheel. The holonomic 4-wheel layout lets the robot move in any direction instantly without rotating — critical for orbiting behind the ball and snap-positioning for shots.', specs: [['Layout', '4-wheel holonomic'], ['Wheels', 'Omni-directional'], ['Positions', 'NW · NE · SW · SE'], ['Control', 'PWM from Teensy 4.1']] },
-      camera: { eyebrow: 'Sensor · Computer Vision', title: 'OPENMV RT', sub: 'Machine Vision Module · UART', desc: 'Runs its own MicroPython colour blob tracking script on a dedicated processor. Detects yellow (attack goal) and blue (defend goal) blobs, computes the centroid angle, and streams it to the Teensy over UART. A DIP switch allows instant hardware disabling if venue lighting is unreliable.', specs: [['Platform', 'OpenMV RT (own CPU)'], ['Detects', 'Yellow + blue goal'], ['Output', 'Goal angle + blob size'], ['Interface', 'UART → Teensy'], ['Failsafe', 'DIP switch gate']] },
-      battery: { eyebrow: 'Power · Energy Storage', title: 'BATTERY', sub: 'LiPo pack · main power source', desc: 'The LiPo battery sits in the lower chassis bay. Its voltage is constantly monitored via a voltage divider ADC input and shared with the teammate robot over Bluetooth every packet. If voltage drops critically low, the role-weighting algorithm forces that robot into Defender mode.', specs: [['Type', 'LiPo rechargeable'], ['Monitoring', 'Voltage divider → ADC'], ['Low-batt', 'Force Defender role'], ['Shared via', 'Bluetooth packet'], ['Position', 'Lower chassis bay']] },
-      tssp: { eyebrow: 'Sensor · Ball Detection', title: 'TSSP IR RING', sub: 'TSSP77038 · 12× perimeter sensors', desc: 'A ring of 12 TSSP infrared receivers detect the IR-pulsing competition ball. Each sensor is sampled 255 times per cycle. The top 4 readings are treated as vectors and summed to produce a resultant angle (ball direction) and magnitude (ball strength). A dedicated secondary Teensy handles all reading.', specs: [['Sensor', 'TSSP77038TR (SMD)'], ['Count', '12× around perimeter'], ['Samples', '255 per sensor/cycle'], ['Output', 'Ball direction + strength'], ['Processor', 'Dedicated secondary Teensy']] },
-      wheels: { eyebrow: 'Mechanical · Drive', title: 'OMNI WHEELS', sub: '4× holonomic · corner-mounted', desc: 'Four omni-directional wheels at 45° in each corner give Hyperion full holonomic movement — the robot can strafe, rotate, and translate simultaneously with zero turning radius. Essential for the exponential orbit algorithm that curves behind the ball before driving toward goal.', specs: [['Type', 'Omni-directional'], ['Count', '4× corner mounted'], ['Angle', '45° to chassis'], ['Drive', 'Individual motor per wheel'], ['Benefit', 'Zero turning radius']] },
-      bluetooth: { eyebrow: 'Communication · Inter-Robot', title: 'BLUETOOTH', sub: 'HC-05 Module · Robot-to-Robot', desc: 'The two Hyperion robots share structured data packets every cycle — ball strength, direction, goal angle, battery level, and field coordinates. A score-based role-weighting algorithm elects which robot attacks and which defends. If the link drops the robot immediately falls back to Defender.', specs: [['Module', 'HC-05 Bluetooth'], ['Packet', 'Ball + goal + battery + XY'], ['Role logic', 'Score-based election'], ['Failsafe', 'Disconnect → Defender'], ['Interface', 'UART bridge → Teensy']] },
-    };
-    const RDIAG_ORDERED = ['kicker', 'bno055', 'teensy', 'motors', 'camera', 'battery', 'tssp', 'wheels', 'bluetooth'];
-    let rdiagActive = null;
-    function rdiagSelect(id) {
-      if (rdiagActive) document.querySelector('.rdiag-pin[data-id="' + rdiagActive + '"]').classList.remove('active');
-      rdiagActive = id;
-      document.querySelector('.rdiag-pin[data-id="' + id + '"]').classList.add('active');
-      const d = RDIAG_DATA[id];
-      document.getElementById('rdiag-eyebrow').textContent = d.eyebrow;
-      document.getElementById('rdiag-title').textContent = d.title;
-      document.getElementById('rdiag-sub').textContent = d.sub;
-      document.getElementById('rdiag-desc').textContent = d.desc;
-      const sp = document.getElementById('rdiag-specs');
-      sp.innerHTML = '';
-      d.specs.forEach(function (row) { sp.innerHTML += '<div class="rdiag-spec-row"><span class="rdiag-spec-key">' + row[0] + '</span><span class="rdiag-spec-val">' + row[1] + '</span></div>'; });
-      document.getElementById('rdiag-nav-label').textContent = (RDIAG_ORDERED.indexOf(id) + 1) + ' / ' + RDIAG_ORDERED.length + ' components';
-      document.getElementById('rdiag-placeholder').style.display = 'none';
-      document.getElementById('rdiag-info-content').classList.add('visible');
-    }
-
-    /* ─────────────────────────────────────────
        SCROLL ANIMATIONS
     ───────────────────────────────────────── */
     const observer = new IntersectionObserver((entries) => {
@@ -2218,7 +1766,7 @@
       });
     }, { threshold: 0.08 });
 
-    document.querySelectorAll('.page-tile, .bbc-panel, .journey-card, .journey-map-wrap, .tl-card, .emu-frame-wrap, .emu-stat, .rdiag-shell').forEach(el => {
+    document.querySelectorAll('.page-tile, .bbc-panel, .journey-card, .journey-map-wrap, .tl-card, .emu-frame-wrap, .emu-stat, .crender-shell').forEach(el => {
       el.style.opacity = '0';
       el.style.transform = 'translateY(18px)';
       el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
@@ -2238,29 +1786,17 @@
     }
 
     @keyframes ping {
-      0% {
-        transform: scale(1);
-        opacity: 0.8
-      }
-
-      100% {
-        transform: scale(2.4);
-        opacity: 0
-      }
+      0% { transform: scale(1); opacity: 0.8 }
+      100% { transform: scale(2.4); opacity: 0 }
     }
 
-    .journey-pin:nth-child(2) circle.pulse-ring {
-      animation-delay: 0.6s;
-    }
-
-    .journey-pin:nth-child(3) circle.pulse-ring {
-      animation-delay: 1.2s;
-    }
+    .journey-pin:nth-child(2) circle.pulse-ring { animation-delay: 0.6s; }
+    .journey-pin:nth-child(3) circle.pulse-ring { animation-delay: 1.2s; }
   </style>
 
   <script src="assets/nav-component.js"></script>
+
   <!-- ════ HYPERION AI CHAT WIDGET ════ -->
-  <!-- Paste this block just before </body> in index.html -->
   <style>
     /* ── FAB BUTTON ── */
     #hai-fab {
@@ -2283,10 +1819,7 @@
       clip-path: none;
     }
 
-    #hai-fab:hover {
-      transform: scale(1.1);
-      background: #00ff6a;
-    }
+    #hai-fab:hover { transform: scale(1.1); background: #00ff6a; }
 
     #hai-fab.open {
       background: rgba(5, 10, 5, 0.95);
@@ -2295,22 +1828,11 @@
     }
 
     @keyframes hai-pulse {
-
-      0%,
-      100% {
-        box-shadow: 0 0 0 0 rgba(0, 200, 90, 0.35);
-      }
-
-      50% {
-        box-shadow: 0 0 0 10px rgba(0, 200, 90, 0);
-      }
+      0%, 100% { box-shadow: 0 0 0 0 rgba(0, 200, 90, 0.35); }
+      50% { box-shadow: 0 0 0 10px rgba(0, 200, 90, 0); }
     }
 
-    .hai-fab-icon {
-      font-size: 1.3rem;
-      line-height: 1;
-      pointer-events: none;
-    }
+    .hai-fab-icon { font-size: 1.3rem; line-height: 1; pointer-events: none; }
 
     .hai-fab-close {
       font-family: 'Share Tech Mono', monospace;
@@ -2320,13 +1842,8 @@
       display: none;
     }
 
-    #hai-fab.open .hai-fab-icon {
-      display: none;
-    }
-
-    #hai-fab.open .hai-fab-close {
-      display: block;
-    }
+    #hai-fab.open .hai-fab-icon { display: none; }
+    #hai-fab.open .hai-fab-close { display: block; }
 
     /* ── TOOLTIP ── */
     #hai-tooltip {
@@ -2346,9 +1863,7 @@
       animation: hai-tooltip-in 0.3s 1.5s both;
     }
 
-    #hai-tooltip.hide {
-      display: none;
-    }
+    #hai-tooltip.hide { display: none; }
 
     #hai-tooltip::after {
       content: '';
@@ -2360,15 +1875,8 @@
     }
 
     @keyframes hai-tooltip-in {
-      from {
-        opacity: 0;
-        transform: translateY(6px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* ── PANEL ── */
@@ -2402,11 +1910,7 @@
       background: linear-gradient(90deg, transparent, var(--green-bright, #00c85a), transparent);
     }
 
-    #hai-panel.open {
-      transform: scale(1) translateY(0);
-      opacity: 1;
-      pointer-events: all;
-    }
+    #hai-panel.open { transform: scale(1) translateY(0); opacity: 1; pointer-events: all; }
 
     /* ── PANEL HEADER ── */
     .hai-header {
@@ -2464,15 +1968,8 @@
     }
 
     @keyframes hai-blink {
-
-      0%,
-      100% {
-        opacity: 1
-      }
-
-      50% {
-        opacity: 0.3
-      }
+      0%, 100% { opacity: 1 }
+      50% { opacity: 0.3 }
     }
 
     .hai-fullscreen-btn {
@@ -2504,34 +2001,15 @@
       scroll-behavior: smooth;
     }
 
-    .hai-messages::-webkit-scrollbar {
-      width: 3px;
-    }
+    .hai-messages::-webkit-scrollbar { width: 3px; }
+    .hai-messages::-webkit-scrollbar-thumb { background: rgba(0, 200, 90, 0.15); }
 
-    .hai-messages::-webkit-scrollbar-thumb {
-      background: rgba(0, 200, 90, 0.15);
-    }
-
-    .hai-msg {
-      display: flex;
-      gap: 8px;
-      animation: hai-msg-in 0.2s ease-out;
-    }
-
-    .hai-msg.user {
-      flex-direction: row-reverse;
-    }
+    .hai-msg { display: flex; gap: 8px; animation: hai-msg-in 0.2s ease-out; }
+    .hai-msg.user { flex-direction: row-reverse; }
 
     @keyframes hai-msg-in {
-      from {
-        opacity: 0;
-        transform: translateY(6px)
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0)
-      }
+      from { opacity: 0; transform: translateY(6px) }
+      to { opacity: 1; transform: translateY(0) }
     }
 
     .hai-av {
@@ -2547,18 +2025,8 @@
       letter-spacing: 0.05em;
     }
 
-    .hai-av.ai {
-      background: rgba(0, 40, 20, 0.9);
-      border: 1px solid var(--green-bright, #00c85a);
-      color: var(--green-bright, #00c85a);
-    }
-
-    .hai-av.usr {
-      background: rgba(20, 40, 20, 0.5);
-      border: 1px solid rgba(0, 200, 90, 0.2);
-      color: rgba(240, 255, 244, 0.4);
-      font-size: 0.65rem;
-    }
+    .hai-av.ai { background: rgba(0, 40, 20, 0.9); border: 1px solid var(--green-bright, #00c85a); color: var(--green-bright, #00c85a); }
+    .hai-av.usr { background: rgba(20, 40, 20, 0.5); border: 1px solid rgba(0, 200, 90, 0.2); color: rgba(240, 255, 244, 0.4); font-size: 0.65rem; }
 
     .hai-bubble {
       max-width: 80%;
@@ -2583,25 +2051,10 @@
       text-align: right;
     }
 
-    .hai-bubble strong {
-      color: var(--green-bright, #00c85a);
-      font-weight: normal;
-    }
-
-    .hai-bubble .hlt {
-      color: #00ff6a;
-    }
-
-    .hai-bubble ul {
-      padding: 0;
-      list-style: none;
-      margin-top: 4px;
-    }
-
-    .hai-bubble ul li::before {
-      content: '→ ';
-      color: var(--green-bright, #00c85a);
-    }
+    .hai-bubble strong { color: var(--green-bright, #00c85a); font-weight: normal; }
+    .hai-bubble .hlt { color: #00ff6a; }
+    .hai-bubble ul { padding: 0; list-style: none; margin-top: 4px; }
+    .hai-bubble ul li::before { content: '→ '; color: var(--green-bright, #00c85a); }
 
     /* ── TYPING ── */
     .hai-typing {
@@ -2624,36 +2077,16 @@
       animation: hai-td 1.2s ease-in-out infinite;
     }
 
-    .hai-tdot:nth-child(2) {
-      animation-delay: .2s
-    }
-
-    .hai-tdot:nth-child(3) {
-      animation-delay: .4s
-    }
+    .hai-tdot:nth-child(2) { animation-delay: .2s }
+    .hai-tdot:nth-child(3) { animation-delay: .4s }
 
     @keyframes hai-td {
-
-      0%,
-      60%,
-      100% {
-        opacity: 0.3;
-        transform: scale(1)
-      }
-
-      30% {
-        opacity: 1;
-        transform: scale(1.4)
-      }
+      0%, 60%, 100% { opacity: 0.3; transform: scale(1) }
+      30% { opacity: 1; transform: scale(1.4) }
     }
 
     /* ── CHIPS ── */
-    .hai-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-      margin-top: 6px;
-    }
+    .hai-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
 
     .hai-chip {
       background: rgba(0, 114, 63, 0.06);
@@ -2700,13 +2133,8 @@
       letter-spacing: 0.03em;
     }
 
-    #hai-input:focus {
-      border-color: rgba(0, 200, 90, 0.4);
-    }
-
-    #hai-input::placeholder {
-      color: rgba(240, 255, 244, 0.18);
-    }
+    #hai-input:focus { border-color: rgba(0, 200, 90, 0.4); }
+    #hai-input::placeholder { color: rgba(240, 255, 244, 0.18); }
 
     #hai-send {
       background: var(--green-bright, #00c85a);
@@ -2725,31 +2153,13 @@
       transition: background 0.15s;
     }
 
-    #hai-send:hover {
-      background: #00ff6a;
-    }
-
-    #hai-send:disabled {
-      background: rgba(0, 200, 90, 0.18);
-      color: rgba(0, 200, 90, 0.35);
-      cursor: not-allowed;
-    }
+    #hai-send:hover { background: #00ff6a; }
+    #hai-send:disabled { background: rgba(0, 200, 90, 0.18); color: rgba(0, 200, 90, 0.35); cursor: not-allowed; }
 
     @media (max-width: 420px) {
-      #hai-panel {
-        width: calc(100vw - 20px);
-        right: 10px;
-        bottom: 80px;
-      }
-
-      #hai-fab {
-        right: 14px;
-        bottom: 16px;
-      }
-
-      #hai-tooltip {
-        right: 14px;
-      }
+      #hai-panel { width: calc(100vw - 20px); right: 10px; bottom: 80px; }
+      #hai-fab { right: 14px; bottom: 16px; }
+      #hai-tooltip { right: 14px; }
     }
   </style>
 
@@ -2795,76 +2205,25 @@
       if (haiOpen) setTimeout(() => document.getElementById('hai-input').focus(), 280);
     }
 
-    /* ─── KNOWLEDGE BASE (mini version) ─── */
+    /* ─── KNOWLEDGE BASE ─── */
     const HAI_KB = [
-      {
-        tags: ['team', 'hyperion', 'who', 'name', 'us', 'we', 'squad'],
-        r: () => `<strong>Team Hyperion</strong> is a high school robotics squad from <strong>Brisbane Boys' College</strong>, Toowong, QLD. We compete in <strong>RoboCup Junior Lightweight Soccer</strong> — green, white, black, representing Australia.`
-      },
-      {
-        tags: ['members', 'people', 'students', 'sam', 'matthew', 'luke', 'thomas', 'names', 'roster'],
-        r: () => `Our four members are <strong>Sam, Matthew, Luke,</strong> and <strong>Thomas</strong> — all students at Brisbane Boys' College.`
-      },
-      {
-        tags: ['school', 'college', 'bbc', 'brisbane', 'boys', 'toowong', '1902'],
-        r: () => `<strong>Brisbane Boys' College</strong> — est. <span class="hlt">1902</span>, Toowong, Brisbane's inner west. A Presbyterian and Methodist school with a strong tradition of academic excellence. Home of Team Hyperion since 2021.`
-      },
-      {
-        tags: ['achievements', 'results', 'won', 'podium', 'record', 'best', 'success', 'ranked'],
-        r: () => `Our highlights:<ul><li><span class="hlt">1st Place</span> — Lightweight SuperTeam, 2025 Worlds (Brazil)</li><li><strong>14th Place</strong> — Individual, 2025 Worlds</li><li><span class="hlt">Undefeated</span> — 2025 Australian Nationals</li><li><strong>8×</strong> total podium finishes</li></ul>`
-      },
-      {
-        tags: ['2025', 'worlds', 'world', 'brazil', 'salvador', 'bahia', 'international'],
-        r: () => `At the <strong>2025 RoboCup Junior World Championship</strong> in Salvador, Brazil:<ul><li><span class="hlt">1st Place</span> — Lightweight SuperTeam</li><li><strong>14th Place</strong> — Individual</li></ul>Our first-ever Worlds appearance for BBC robotics.`
-      },
-      {
-        tags: ['2026', 'incheon', 'korea', 'south', 'upcoming', 'next', 'qualify', 'qualified'],
-        r: () => `The <strong>2026 RoboCup Junior World Championship</strong> is in <span class="hlt">Incheon, South Korea</span>. We qualified by going undefeated at the 2025 Australian Nationals. We're going back stronger — upgraded hardware, refined strategy.`
-      },
-      {
-        tags: ['nationals', 'national', 'australia', 'undefeated', '2025'],
-        r: () => `At the <strong>2025 Australian National Championship</strong>, Hyperion went <span class="hlt">completely undefeated</span> — zero losses — securing Australia's qualification spot for 2026 Worlds.`
-      },
-      {
-        tags: ['robot', 'machine', 'build', 'hardware', 'custom', 'overview'],
-        r: () => `The Hyperion robot is a custom <strong>holonomic soccer robot</strong>. Key systems:<ul><li><strong>Brain:</strong> Teensy 4.1 @ 600 MHz</li><li><strong>Drive:</strong> 4× omni wheels</li><li><strong>Ball:</strong> 12× TSSP77038 IR ring</li><li><strong>Vision:</strong> OpenMV RT camera</li><li><strong>Comms:</strong> HC-05 Bluetooth</li></ul>`
-      },
-      {
-        tags: ['teensy', 'microcontroller', 'brain', 'cpu', 'processor', 'arm', 'cortex'],
-        r: () => `Primary brain is the <strong>Teensy 4.1</strong> — ARM Cortex-M7 @ <span class="hlt">600 MHz</span>, 7.9 MB Flash + 8 MB PSRAM. Handles all strategy, PID, motor control, and sensor reading.`
-      },
-      {
-        tags: ['ball', 'detect', 'tssp', 'infrared', 'ir', 'sensor', 'ring'],
-        r: () => `Ball detection uses <strong>12× TSSP77038 IR sensors</strong> around the perimeter. Each sampled <span class="hlt">255 times</span> per cycle. Top 4 readings summed as vectors → ball direction + strength. Handled by a dedicated secondary Teensy.`
-      },
-      {
-        tags: ['camera', 'openmv', 'vision', 'goal', 'yellow', 'blue', 'colour'],
-        r: () => `An <strong>OpenMV RT</strong> camera runs its own MicroPython blob tracking script. Detects <span class="hlt">yellow</span> (attack goal) and <strong>blue</strong> (defend goal) blobs, streams goal angle to the Teensy via UART. Has a DIP switch failsafe.`
-      },
-      {
-        tags: ['kicker', 'kick', 'shoot', 'solenoid', 'strike', 'fire'],
-        r: () => `The <strong>kicker</strong> is a solenoid that fires when two conditions are met simultaneously: ① goal within <span class="hlt">8°</span> of centre (camera) and ② ball detected close (IR ring). Zero wasted shots.`
-      },
-      {
-        tags: ['imu', 'bno055', 'gyro', 'heading', 'orientation', 'stability', 'pid'],
-        r: () => `The <strong>BNO055 IMU</strong> runs in IMUPLUS mode (accel + gyro fusion). A <span class="hlt">PID controller</span> reads heading error every loop and counter-rotates — keeps the robot facing the opponent goal even after hard collisions.`
-      },
-      {
-        tags: ['wheels', 'omni', 'motor', 'drive', 'holonomic', 'move', 'strafe'],
-        r: () => `Four <strong>omni-directional wheels</strong> at 45° in each corner give <span class="hlt">full holonomic movement</span> — strafe, rotate, translate simultaneously. Zero turning radius. Each driven by its own motor driver PCB.`
-      },
-      {
-        tags: ['bluetooth', 'communicate', 'comms', 'two', 'robots', 'role', 'attacker', 'defender'],
-        r: () => `The two robots share <strong>HC-05 Bluetooth</strong> data packets every cycle (ball, goal, battery, XY). A <span class="hlt">score-based election</span> picks attacker vs defender. If link drops → auto Defender mode.`
-      },
-      {
-        tags: ['battery', 'power', 'lipo', 'voltage', 'energy'],
-        r: () => `Runs on a <strong>LiPo battery</strong>. Voltage monitored via ADC, shared with teammate every Bluetooth packet. If critically low → <span class="hlt">forced into Defender</span> mode automatically.`
-      },
-      {
-        tags: ['timeline', 'history', 'years', '2021', '2022', '2023', '2024', 'started', 'began', 'long'],
-        r: () => `<ul><li><strong>2021–22:</strong> Fundamentals in multiple RCJ divisions</li><li><strong>2023:</strong> Standard Soccer, State & National qualifiers</li><li><strong>2024:</strong> First custom robot, Nationals podiums</li><li><span class="hlt">2025:</span> 🌍 Worlds + Undefeated Nationals</li><li><strong>2026:</strong> ⭐ Incheon, South Korea</li></ul>`
-      },
+      { tags: ['team', 'hyperion', 'who', 'name', 'us', 'we', 'squad'], r: () => `<strong>Team Hyperion</strong> is a high school robotics squad from <strong>Brisbane Boys' College</strong>, Toowong, QLD. We compete in <strong>RoboCup Junior Lightweight Soccer</strong> — green, white, black, representing Australia.` },
+      { tags: ['members', 'people', 'students', 'sam', 'matthew', 'luke', 'thomas', 'names', 'roster'], r: () => `Our four members are <strong>Sam, Matthew, Luke,</strong> and <strong>Thomas</strong> — all students at Brisbane Boys' College.` },
+      { tags: ['school', 'college', 'bbc', 'brisbane', 'boys', 'toowong', '1902'], r: () => `<strong>Brisbane Boys' College</strong> — est. <span class="hlt">1902</span>, Toowong, Brisbane's inner west. A Presbyterian and Methodist school with a strong tradition of academic excellence. Home of Team Hyperion since 2021.` },
+      { tags: ['achievements', 'results', 'won', 'podium', 'record', 'best', 'success', 'ranked'], r: () => `Our highlights:<ul><li><span class="hlt">1st Place</span> — Lightweight SuperTeam, 2025 Worlds (Brazil)</li><li><strong>14th Place</strong> — Individual, 2025 Worlds</li><li><span class="hlt">Undefeated</span> — 2025 Australian Nationals</li><li><strong>8×</strong> total podium finishes</li></ul>` },
+      { tags: ['2025', 'worlds', 'world', 'brazil', 'salvador', 'bahia', 'international'], r: () => `At the <strong>2025 RoboCup Junior World Championship</strong> in Salvador, Brazil:<ul><li><span class="hlt">1st Place</span> — Lightweight SuperTeam</li><li><strong>14th Place</strong> — Individual</li></ul>Our first-ever Worlds appearance for BBC robotics.` },
+      { tags: ['2026', 'incheon', 'korea', 'south', 'upcoming', 'next', 'qualify', 'qualified'], r: () => `The <strong>2026 RoboCup Junior World Championship</strong> is in <span class="hlt">Incheon, South Korea</span>. We qualified by going undefeated at the 2025 Australian Nationals. We're going back stronger — upgraded hardware, refined strategy.` },
+      { tags: ['nationals', 'national', 'australia', 'undefeated', '2025'], r: () => `At the <strong>2025 Australian National Championship</strong>, Hyperion went <span class="hlt">completely undefeated</span> — zero losses — securing Australia's qualification spot for 2026 Worlds.` },
+      { tags: ['robot', 'machine', 'build', 'hardware', 'custom', 'overview'], r: () => `The Hyperion robot is a custom <strong>holonomic soccer robot</strong>. Key systems:<ul><li><strong>Brain:</strong> Teensy 4.1 @ 600 MHz</li><li><strong>Drive:</strong> 4× omni wheels</li><li><strong>Ball:</strong> 12× TSSP77038 IR ring</li><li><strong>Vision:</strong> OpenMV RT camera</li><li><strong>Comms:</strong> HC-05 Bluetooth</li></ul>` },
+      { tags: ['teensy', 'microcontroller', 'brain', 'cpu', 'processor', 'arm', 'cortex'], r: () => `Primary brain is the <strong>Teensy 4.1</strong> — ARM Cortex-M7 @ <span class="hlt">600 MHz</span>, 7.9 MB Flash + 8 MB PSRAM. Handles all strategy, PID, motor control, and sensor reading.` },
+      { tags: ['ball', 'detect', 'tssp', 'infrared', 'ir', 'sensor', 'ring'], r: () => `Ball detection uses <strong>12× TSSP77038 IR sensors</strong> around the perimeter. Each sampled <span class="hlt">255 times</span> per cycle. Top 4 readings summed as vectors → ball direction + strength. Handled by a dedicated secondary Teensy.` },
+      { tags: ['camera', 'openmv', 'vision', 'goal', 'yellow', 'blue', 'colour'], r: () => `An <strong>OpenMV RT</strong> camera runs its own MicroPython blob tracking script. Detects <span class="hlt">yellow</span> (attack goal) and <strong>blue</strong> (defend goal) blobs, streams goal angle to the Teensy via UART. Has a DIP switch failsafe.` },
+      { tags: ['kicker', 'kick', 'shoot', 'solenoid', 'strike', 'fire'], r: () => `The <strong>kicker</strong> is a solenoid that fires when two conditions are met simultaneously: ① goal within <span class="hlt">8°</span> of centre (camera) and ② ball detected close (IR ring). Zero wasted shots.` },
+      { tags: ['imu', 'bno055', 'gyro', 'heading', 'orientation', 'stability', 'pid'], r: () => `The <strong>BNO055 IMU</strong> runs in IMUPLUS mode (accel + gyro fusion). A <span class="hlt">PID controller</span> reads heading error every loop and counter-rotates — keeps the robot facing the opponent goal even after hard collisions.` },
+      { tags: ['wheels', 'omni', 'motor', 'drive', 'holonomic', 'move', 'strafe'], r: () => `Four <strong>omni-directional wheels</strong> at 45° in each corner give <span class="hlt">full holonomic movement</span> — strafe, rotate, translate simultaneously. Zero turning radius. Each driven by its own motor driver PCB.` },
+      { tags: ['bluetooth', 'communicate', 'comms', 'two', 'robots', 'role', 'attacker', 'defender'], r: () => `The two robots share <strong>HC-05 Bluetooth</strong> data packets every cycle (ball, goal, battery, XY). A <span class="hlt">score-based election</span> picks attacker vs defender. If link drops → auto Defender mode.` },
+      { tags: ['battery', 'power', 'lipo', 'voltage', 'energy'], r: () => `Runs on a <strong>LiPo battery</strong>. Voltage monitored via ADC, shared with teammate every Bluetooth packet. If critically low → <span class="hlt">forced into Defender</span> mode automatically.` },
+      { tags: ['timeline', 'history', 'years', '2021', '2022', '2023', '2024', 'started', 'began', 'long'], r: () => `<ul><li><strong>2021–22:</strong> Fundamentals in multiple RCJ divisions</li><li><strong>2023:</strong> Standard Soccer, State & National qualifiers</li><li><strong>2024:</strong> First custom robot, Nationals podiums</li><li><span class="hlt">2025:</span> 🌍 Worlds + Undefeated Nationals</li><li><strong>2026:</strong> ⭐ Incheon, South Korea</li></ul>` },
     ];
 
     const HAI_STOPS = new Set(['the', 'is', 'are', 'was', 'a', 'an', 'of', 'in', 'at', 'to', 'for', 'and', 'or', 'it', 'how', 'what', 'when', 'where', 'who', 'do', 'does', 'did', 'can', 'tell', 'me', 'us', 'about', 'your', 'our', 'please', 'know', 'could', 'would']);
@@ -2915,6 +2274,7 @@
       msgs.appendChild(wrap);
       msgs.scrollTop = msgs.scrollHeight;
     }
+
     function haiRemoveTyping() { const t = document.getElementById('hai-typing-row'); if (t) t.remove(); }
 
     function haiWelcome() {
