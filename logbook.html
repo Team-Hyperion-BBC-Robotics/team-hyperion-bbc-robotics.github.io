@@ -1221,10 +1221,11 @@ function renderDashboard(){
   const iss=entries.filter(e=>(e.tags||[]).includes('Issues & Fixes')),res=iss.filter(e=>e.resolved).length;
   const oReqs=requests.filter(r=>!r.done).length;
   const todaySec=TEAM_MEMBERS.reduce((a,m)=>a+getTodaySecs(m),0);
+  const weeklySec=TEAM_MEMBERS.reduce((a,m)=>a+getWeeklySecs(m),0);
   document.getElementById('dash-stats').innerHTML=[
     {n:total,l:'Total Entries'},{n:sess,l:'Sessions Logged'},
     {n:iss.length,l:'Issues Logged'},{n:res,l:'Issues Resolved'},
-    {n:oReqs,l:'Open Requests'},{n:fmtSecs(todaySec),l:'Team Hours Today'},
+    {n:oReqs,l:'Open Requests'},{n:fmtSecs(weeklySec),l:'Team Hours Weekly'},
   ].map(s=>`<div class="dash-stat-card"><div class="dash-stat-n">${s.n}</div><div class="dash-stat-l">${s.l}</div></div>`).join('');
   const allSubs=Object.values(subcats).flat(),maxC=Math.max(...allSubs.map(s=>entries.filter(e=>e.subcat===s).length),1);
   let h='<div style="font-size:.48rem;letter-spacing:.22em;text-transform:uppercase;color:var(--green-bright);margin-bottom:13px;">Category Breakdown</div>';
@@ -1405,6 +1406,13 @@ window.setReqStatus=async(id,newStatus,ev)=>{
 function localDate(){return new Date().toISOString().slice(0,10);}
 function getTodaySecs(member){
   return sessions.filter(s=>s.member===member&&s.date===localDate()).reduce((a,s)=>{
+    const st=s.clockIn?.seconds?s.clockIn.seconds*1000:0,en=s.clockOut?.seconds?s.clockOut.seconds*1000:Date.now();
+    return a+Math.floor((en-st)/1000);
+  },0);
+}
+function getWeeklySecs(member){
+  const now=Date.now();
+  return sessions.filter(s=>s.member===member&&(s.clockIn?.seconds?s.clockIn.seconds*1000:0)>=now-7*86400000).reduce((a,s)=>{
     const st=s.clockIn?.seconds?s.clockIn.seconds*1000:0,en=s.clockOut?.seconds?s.clockOut.seconds*1000:Date.now();
     return a+Math.floor((en-st)/1000);
   },0);
