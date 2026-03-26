@@ -1614,14 +1614,14 @@ function renderTTCards(){
     const as=active.find(s=>s.member===member),isActive=!!as;
     const todaySec=getTodaySecs(member),col=MEMBER_COLORS[member]||'#00c85a';
     const note=as?.note?`<div style="font-size:.48rem;color:rgba(240,255,244,.28);margin-bottom:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">▸ ${esc(as.note)}</div>`:'';
-    const isMe=currentUser===member;
+    const isMe=currentUser===member || currentUser==='Sam';
     let btn;
     if(!isMember){
       btn=isActive?`<button class="tt-btn-out" disabled>⏹ Clock Out</button>`:`<button class="tt-btn-in" disabled>▶ Clock In</button>`;
     }else if(isActive){
-      btn=`<button class="tt-btn-out" ${isMe?'':'disabled title="You can only clock yourself out"'} onclick="clockOut('${member}','${as.id}')">⏹ Clock Out</button>`;
+      btn=`<button class="tt-btn-out" ${isMe?'':'disabled title="Only ${member} or Sam can clock out"'} onclick="clockOut('${member}','${as.id}')">⏹ Clock Out</button>`;
     }else{
-      btn=`<button class="tt-btn-in" ${isMe?'':'disabled title="You can only clock yourself in"'} onclick="openClockInModal('${member}')">▶ Clock In</button>`;
+      btn=`<button class="tt-btn-in" ${isMe?'':'disabled title="Only ${member} or Sam can clock in"'} onclick="openClockInModal('${member}')">▶ Clock In</button>`;
     }
     const lockHint=isMember&&!isMe&&currentUser?`<div class="tt-locked-msg">🔒 ${esc(member)}'s card</div>`:(!isMember?`<div class="tt-locked-msg">👁 View only</div>`:'');
     return `<div class="tt-card ${isActive?'active-clock':''} ${(!isMe&&currentUser)?'locked-card':''}" id="ttc-${member}">
@@ -1691,7 +1691,7 @@ function startTick(){
 window.setTTPeriod=(p,el)=>{ttPeriod=p;document.querySelectorAll('.tt-period-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderTTSummary();renderSessionLog();};
 window.openClockInModal=member=>{
   if(!requireMember('clock in'))return;
-  if(currentUser!==member){toast(`You can only clock yourself in. Logged in as ${currentUser}.`,true);return;}
+  if(currentUser!==member && currentUser!=='Sam'){toast(`Only ${member} or Sam can clock in. Logged in as ${currentUser}.`,true);return;}
   clockingMember=member;
   document.getElementById('clockin-modal-title').textContent='Clock In — '+member;
   document.getElementById('clockin-member-display').textContent=member;
@@ -1702,7 +1702,7 @@ window.openClockInModal=member=>{
 window.confirmClockIn=async()=>{
   if(!clockingMember)return;
   if(!requireMember('clock in'))return;
-  if(currentUser!==clockingMember){toast('Identity mismatch.',true);closeModal('clockin-modal-bg');return;}
+  if(currentUser!==clockingMember && currentUser!=='Sam'){toast('Identity mismatch.',true);closeModal('clockin-modal-bg');return;}
   const note=document.getElementById('clockin-note').value.trim();
   if(sessions.find(s=>s.member===clockingMember&&!s.clockOut)){toast(clockingMember+' already clocked in',true);closeModal('clockin-modal-bg');return;}
   try{
@@ -1713,7 +1713,7 @@ window.confirmClockIn=async()=>{
 };
 window.clockOut=async(member,sessionId)=>{
   if(!requireMember('clock out'))return;
-  if(currentUser!==member){toast(`You can only clock yourself out. Logged in as ${currentUser}.`,true);return;}
+  if(currentUser!==member && currentUser!=='Sam'){toast(`Only ${member} or Sam can clock out. Logged in as ${currentUser}.`,true);return;}
   try{
     const s=sessions.find(x=>x.id===sessionId);if(!s)return;
     const dur=Math.floor((Date.now()-(s.clockIn?.seconds?s.clockIn.seconds*1000:0))/1000);
