@@ -9,19 +9,14 @@
 <style>
 /* ══════════════════════════════════════════
    LOGBOOK PAGE — inherits shared.css theming
-   Uses website's --green, --green-bright, --black etc.
 ══════════════════════════════════════════ */
-
-/* Override shared.css nav height offset for ticker */
 body { padding-top: 0; }
 
-/* ── SCANLINE OVERLAY ── */
 body::after {
   content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
   background:repeating-linear-gradient(to bottom,transparent 0,transparent 3px,rgba(0,0,0,0.03) 3px,rgba(0,0,0,0.04) 4px);
 }
 
-/* ── SYNC BAR ── */
 #sync-bar{position:fixed;top:64px;left:0;right:0;z-index:700;height:3px;background:transparent;transition:background .3s;}
 #sync-bar.syncing{background:linear-gradient(90deg,transparent,var(--green-bright),transparent);animation:sp 1s ease-in-out infinite;}
 #sync-bar.error{background:#ff5555;}
@@ -29,7 +24,6 @@ body::after {
 @keyframes sp{0%,100%{opacity:.4}50%{opacity:1}}
 @keyframes fb{0%{opacity:1}80%{opacity:1}100%{opacity:0}}
 
-/* ── LOGIN SCREEN ── */
 #login-screen{position:fixed;inset:0;background:var(--black);z-index:9000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;padding-top:64px;}
 #login-screen.hidden{display:none;}
 .login-title{font-family:'Bebas Neue',sans-serif;font-size:3rem;letter-spacing:.14em;text-align:center;color:var(--white);}
@@ -57,14 +51,10 @@ body::after {
 .login-spinner.show{display:block;}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* ── VIEWER BANNER ── */
 #viewer-banner{display:none;position:sticky;top:64px;z-index:490;background:rgba(255,165,0,.08);border-bottom:1px solid rgba(255,165,0,.25);padding:8px 28px;font-size:.55rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,185,50,.75);text-align:center;}
 #viewer-banner.show{display:block;}
 #viewer-banner span{color:rgba(255,185,50,.45);margin-left:8px;font-size:.5rem;}
 
-/* ══════════════════════════════════════════
-   LOGBOOK LAYOUT
-══════════════════════════════════════════ */
 .logbook-wrap{display:flex;min-height:calc(100vh - 64px);padding-top:64px;}
 
 aside.lb-sidebar{
@@ -77,7 +67,6 @@ aside.lb-sidebar{
 }
 .lb-main{flex:1;padding:28px 32px;min-width:0;}
 
-/* sidebar elements */
 .sb-section{padding:7px 16px 3px;font-size:.44rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(240,255,244,.2);margin-top:8px;}
 .sb-btn{display:flex;align-items:center;gap:9px;padding:9px 16px;cursor:pointer;
   font-family:'Share Tech Mono',monospace;font-size:.63rem;letter-spacing:.07em;
@@ -103,7 +92,6 @@ aside.lb-sidebar{
 .sb-sub-btn.active{background:rgba(0,114,63,.08);color:var(--green-bright);}
 .sb-sub-btn.active::before{opacity:1;}
 
-/* write-action buttons */
 #sb-write-actions .btn-lb-new{
   margin:8px 12px 0;font-family:'Bebas Neue',sans-serif;font-size:.9rem;letter-spacing:.14em;
   text-transform:uppercase;color:var(--black);background:var(--green-bright);border:none;cursor:pointer;
@@ -122,9 +110,6 @@ aside.lb-sidebar{
   cursor:pointer;padding:7px 14px;width:calc(100% - 24px);transition:all .15s;}
 #sb-write-actions .btn-lb-manage:hover{border-color:var(--green-bright);color:var(--green-bright);}
 
-/* ══════════════════════════════════════════
-   HEADER BAR
-══════════════════════════════════════════ */
 .lb-header-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;gap:12px;flex-wrap:wrap;}
 .lb-view-title{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:.08em;line-height:1;color:var(--white);}
 .lb-view-title span{color:var(--green-bright);}
@@ -133,14 +118,10 @@ aside.lb-sidebar{
 .lb-search input::placeholder{color:rgba(240,255,244,.18);}
 .lb-search-icon{padding:9px 10px;color:rgba(240,255,244,.22);font-size:.85rem;}
 
-/* ── header stats strip ── */
 .lb-stats-strip{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:22px;padding:12px 16px;background:rgba(6,12,6,.8);border:1px solid var(--border);}
 .lb-stat{font-family:'Share Tech Mono',monospace;font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);}
 .lb-stat strong{color:var(--green-bright);font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:.06em;display:block;}
 
-/* ══════════════════════════════════════════
-   DASHBOARD
-══════════════════════════════════════════ */
 .dash-countdown{margin-bottom:22px;}
 .dash-cd-label{font-size:.46rem;letter-spacing:.26em;text-transform:uppercase;color:var(--green-bright);margin-bottom:10px;}
 .dash-cd-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
@@ -179,9 +160,6 @@ aside.lb-sidebar{
 .dash-cat-bar{height:3px;transition:width .6s;}
 .dash-cat-cnt{font-size:.6rem;color:var(--grey);flex:0 0 26px;text-align:right;}
 
-/* ══════════════════════════════════════════
-   ENTRIES
-══════════════════════════════════════════ */
 .tag-filter-wrap{margin-bottom:14px;}
 .tag-filter-label{font-size:.44rem;letter-spacing:.24em;text-transform:uppercase;color:var(--grey);margin-bottom:7px;}
 .tag-filter-bar{display:flex;gap:5px;flex-wrap:wrap;}
@@ -228,6 +206,48 @@ aside.lb-sidebar{
 .entry-body-sec{font-size:.46rem;letter-spacing:.22em;text-transform:uppercase;color:var(--green-bright);margin:11px 0 5px;}
 .entry-resolution{background:rgba(0,114,63,.04);border-left:2px solid var(--green-bright);padding:8px 12px;font-size:.7rem;line-height:1.7;color:rgba(240,255,244,.62);white-space:pre-wrap;}
 
+/* ── LINKED ENTRIES DISPLAY ── */
+.linked-entries-section{margin-top:13px;}
+.linked-entries-label{font-size:.44rem;letter-spacing:.22em;text-transform:uppercase;color:var(--green-bright);margin-bottom:7px;display:flex;align-items:center;gap:7px;}
+.linked-entries-label .le-icon{font-size:.6rem;opacity:.7;}
+.linked-chips{display:flex;flex-wrap:wrap;gap:5px;}
+.linked-chip{font-family:'Share Tech Mono',monospace;font-size:.5rem;letter-spacing:.08em;padding:4px 10px;border:1px solid;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:5px;position:relative;}
+.linked-chip.type-session{border-color:rgba(0,200,90,.3);color:rgba(0,200,90,.7);background:rgba(0,200,90,.04);}
+.linked-chip.type-session:hover{border-color:var(--green-bright);color:var(--green-bright);background:rgba(0,200,90,.08);}
+.linked-chip.type-weekly{border-color:rgba(91,143,255,.3);color:rgba(91,143,255,.7);background:rgba(91,143,255,.04);}
+.linked-chip.type-weekly:hover{border-color:#5b8fff;color:#5b8fff;background:rgba(91,143,255,.08);}
+.linked-chip.type-entry{border-color:rgba(200,125,255,.3);color:rgba(200,125,255,.7);background:rgba(200,125,255,.04);}
+.linked-chip.type-entry:hover{border-color:#c87dff;color:#c87dff;background:rgba(200,125,255,.08);}
+.linked-chip.type-monthly{border-color:rgba(255,215,0,.3);color:rgba(255,215,0,.7);background:rgba(255,215,0,.04);}
+.linked-chip.type-monthly:hover{border-color:#ffd700;color:#ffd700;background:rgba(255,215,0,.08);}
+.linked-chip .lc-arrow{font-size:.55rem;opacity:.5;transition:transform .15s;}
+.linked-chip.open .lc-arrow{transform:rotate(90deg);}
+.linked-chip-expand{display:none;width:100%;margin-top:5px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.04);padding:9px 11px;font-size:.6rem;line-height:1.7;color:rgba(240,255,244,.5);white-space:pre-wrap;word-break:break-word;}
+.linked-chip-expand.show{display:block;}
+.linked-chip-wrap{display:flex;flex-direction:column;gap:0;}
+
+/* ── LINK PICKER (in modal) ── */
+.link-picker-section{margin-top:4px;}
+.link-picker-label{font-size:.46rem;letter-spacing:.22em;text-transform:uppercase;color:var(--green-bright);margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+.link-picker-label .lp-badge{font-size:.38rem;padding:1px 6px;border:1px solid rgba(0,200,90,.25);background:rgba(0,200,90,.06);color:rgba(0,200,90,.7);}
+.link-picker-search{background:rgba(0,0,0,.4);border:1px solid var(--border);outline:none;font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--white);padding:7px 11px;width:100%;margin-bottom:6px;transition:border-color .15s;}
+.link-picker-search:focus{border-color:rgba(0,200,90,.4);}
+.link-picker-search::placeholder{color:rgba(240,255,244,.17);}
+.link-picker-list{max-height:180px;overflow-y:auto;display:flex;flex-direction:column;gap:2px;border:1px solid var(--border);background:rgba(0,0,0,.2);}
+.link-picker-list:empty::after{content:'No entries available to link.';display:block;padding:14px;font-size:.55rem;color:rgba(240,255,244,.2);text-align:center;letter-spacing:.1em;}
+.link-picker-item{display:flex;align-items:center;gap:9px;padding:8px 11px;cursor:pointer;transition:background .15s;border-bottom:1px solid rgba(0,114,63,.05);}
+.link-picker-item:last-child{border-bottom:none;}
+.link-picker-item:hover{background:rgba(0,114,63,.06);}
+.link-picker-item.selected{background:rgba(0,114,63,.1);}
+.lp-check{width:13px;height:13px;border:1px solid rgba(240,255,244,.2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.link-picker-item.selected .lp-check{border-color:var(--green-bright);background:var(--green-bright);}
+.link-picker-item.selected .lp-check::after{content:'✔';font-size:.45rem;color:var(--black);}
+.lp-item-title{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.78rem;color:var(--white);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.lp-item-meta{font-size:.45rem;letter-spacing:.07em;color:rgba(240,255,244,.28);flex-shrink:0;}
+.lp-item-sub{font-size:.42rem;letter-spacing:.1em;text-transform:uppercase;padding:1px 5px;border:1px solid;flex-shrink:0;}
+.link-selected-count{font-size:.48rem;color:var(--green-bright);margin-top:5px;min-height:16px;letter-spacing:.1em;}
+.link-picker-empty{padding:18px;text-align:center;font-size:.55rem;color:rgba(240,255,244,.2);letter-spacing:.1em;}
+
 .skeleton{background:rgba(0,200,90,.02);border:1px solid var(--border);padding:17px;animation:shimmer 1.5s ease-in-out infinite;}
 @keyframes shimmer{0%,100%{opacity:.4}50%{opacity:.8}}
 .skel-line{height:8px;background:rgba(0,200,90,.06);margin-bottom:7px;border-radius:2px;}
@@ -235,9 +255,6 @@ aside.lb-sidebar{
 .empty-icon{font-size:2.4rem;margin-bottom:12px;opacity:.3;}
 .empty-text{font-size:.66rem;letter-spacing:.13em;line-height:2.1;}
 
-/* ══════════════════════════════════════════
-   REQUESTS — with In Progress status
-══════════════════════════════════════════ */
 .req-view-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px;flex-wrap:wrap;}
 .req-filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
 .req-filter-btn{font-family:'Share Tech Mono',monospace;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;
@@ -277,8 +294,6 @@ aside.lb-sidebar{
 .req-badge.dual{color:#c87dff;border-color:rgba(200,125,255,.35);background:rgba(200,125,255,.06);}
 .req-card-desc{display:none;font-size:.6rem;line-height:1.7;color:rgba(240,255,244,.5);white-space:pre-wrap;margin-top:6px;padding-top:6px;border-top:1px solid rgba(0,114,63,.08);}
 .req-card.expanded .req-card-desc{display:block;}
-
-/* Status action row */
 .req-status-row{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap;}
 .req-status-btn{background:transparent;font-family:'Share Tech Mono',monospace;font-size:.44rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;cursor:pointer;transition:all .15s;border:1px solid;}
 .req-status-btn.btn-progress{border-color:rgba(255,215,0,.3);color:rgba(255,215,0,.6);}
@@ -287,13 +302,9 @@ aside.lb-sidebar{
 .req-status-btn.btn-done:hover,.req-status-btn.btn-done.active-state{background:rgba(0,200,90,.1);border-color:var(--green-bright);color:var(--green-bright);}
 .req-status-btn.btn-reopen{border-color:rgba(240,255,244,.15);color:rgba(240,255,244,.3);}
 .req-status-btn.btn-reopen:hover{border-color:rgba(255,100,50,.4);color:#ff6b35;}
-
 .req-new-flash{animation:rqnf 1.2s ease-out;}
 @keyframes rqnf{0%{border-color:#5b8fff;box-shadow:0 0 14px rgba(91,143,255,.25)}100%{border-color:var(--border);box-shadow:none}}
 
-/* ══════════════════════════════════════════
-   TIME TRACKER
-══════════════════════════════════════════ */
 .tt-period-bar{display:flex;gap:6px;margin-bottom:20px;}
 .tt-period-btn{font-family:'Share Tech Mono',monospace;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;
   padding:5px 11px;border:1px solid var(--border);background:transparent;color:var(--grey);cursor:pointer;transition:all .15s;}
@@ -348,9 +359,6 @@ aside.lb-sidebar{
 .tt-sum-bar-wrap{margin-top:7px;height:2px;background:rgba(255,255,255,.04);}
 .tt-sum-bar{height:2px;background:var(--green-bright);transition:width .6s;}
 
-/* ══════════════════════════════════════════
-   MODALS
-══════════════════════════════════════════ */
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .2s;}
 .modal-bg.open{opacity:1;pointer-events:auto;}
 .modal{background:rgba(6,12,6,.98);border:1px solid var(--border);width:100%;max-width:700px;max-height:93vh;display:flex;flex-direction:column;position:relative;overflow:hidden;transform:translateY(13px);transition:transform .2s;}
@@ -424,14 +432,12 @@ aside.lb-sidebar{
 .tag-manage-item.builtin{background:rgba(255,107,53,.05);border-color:rgba(255,107,53,.22);color:rgba(255,107,53,.6);}
 .tag-manage-item.builtin .tag-manage-del{display:none;}
 
-/* ── TOAST + OFFLINE ── */
 .lb-toast{position:fixed;bottom:22px;right:22px;z-index:2000;background:rgba(6,12,6,.98);border:1px solid var(--green-bright);font-family:'Share Tech Mono',monospace;font-size:.62rem;letter-spacing:.1em;color:var(--green-bright);padding:10px 17px;transform:translateY(54px);opacity:0;transition:all .25s;pointer-events:none;}
 .lb-toast.show{transform:translateY(0);opacity:1;}
 .lb-toast.err{border-color:#ff5555;color:#ff5555;}
 .offline-banner{display:none;position:fixed;bottom:0;left:0;right:0;z-index:800;background:rgba(255,80,80,.08);border-top:1px solid rgba(255,80,80,.28);padding:7px 24px;font-size:.54rem;letter-spacing:.16em;text-transform:uppercase;color:#ff8080;text-align:center;}
 .offline-banner.show{display:block;}
 
-/* ── NOTIFICATION BELL ── */
 .notif-bell{position:relative;cursor:pointer;display:flex;align-items:center;gap:6px;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--grey);padding:6px 8px;border:1px solid var(--border);background:transparent;transition:all .15s;}
 .notif-bell:hover{border-color:var(--green-bright);color:var(--green-bright);}
 .notif-badge-dot{position:absolute;top:-4px;right:-4px;min-width:15px;height:15px;border-radius:8px;background:#ff6b35;font-size:.44rem;color:#fff;display:flex;align-items:center;justify-content:center;padding:0 3px;font-family:'Share Tech Mono',monospace;}
@@ -449,7 +455,6 @@ aside.lb-sidebar{
 .notif-item-meta{font-size:.46rem;letter-spacing:.07em;color:var(--grey);}
 .notif-empty{padding:22px 14px;text-align:center;font-size:.54rem;letter-spacing:.12em;color:rgba(240,255,244,.2);}
 
-/* ── ATTENDANCE ── */
 .att-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
 .att-card{background:rgba(6,12,6,.95);border:1px solid var(--border);padding:13px 14px;}
 .att-member{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:.12em;margin-bottom:5px;}
@@ -461,14 +466,12 @@ aside.lb-sidebar{
 .att-bar{height:2px;transition:width .6s;}
 .att-last{font-size:.44rem;letter-spacing:.08em;color:rgba(240,255,244,.2);margin-top:5px;border-top:1px solid rgba(0,114,63,.06);padding-top:5px;}
 
-/* ── SYNC ── */
 .sync-ind{display:flex;align-items:center;gap:6px;font-size:.5rem;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);}
 .sync-dot-el{width:7px;height:7px;border-radius:50%;background:rgba(240,255,244,.2);transition:background .3s;flex-shrink:0;}
 .sync-dot-el.live{background:var(--green-bright);box-shadow:0 0 6px var(--green-bright);animation:lp 2s ease-in-out infinite;}
 .sync-dot-el.error{background:#ff5555;}
 .sync-dot-el.connecting{background:var(--border);animation:lp .6s ease-in-out infinite;}
 
-/* ── RESPONSIVE ── */
 @media(max-width:1100px){
   .member-cols,.tt-grid,.tt-sum-grid,.att-grid,.dash-cd-grid{grid-template-columns:repeat(2,1fr);}
 }
@@ -493,7 +496,6 @@ aside.lb-sidebar{
     <div class="login-title">HYPERION <span>LOG</span></div>
     <div class="login-subtitle" style="margin-top:4px;">Brisbane Boys' College · Team Hyperion · Engineering Logbook</div>
   </div>
-  <!-- Sign In -->
   <div class="login-form-box" id="ls-signin">
     <div class="login-mode-title">Sign In</div>
     <label class="login-form-label" for="li-email">Email</label>
@@ -508,7 +510,6 @@ aside.lb-sidebar{
     <div class="login-toggle-label">Don't have an account?</div>
     <button class="login-toggle-link" onclick="showRegister()">Create Account →</button>
   </div>
-  <!-- Register -->
   <div class="login-form-box" id="ls-register" style="display:none;">
     <div class="login-mode-title">Create Account</div>
     <label class="login-form-label">Display Name</label>
@@ -526,7 +527,6 @@ aside.lb-sidebar{
     <div class="login-toggle-label">Already have an account?</div>
     <button class="login-toggle-link" onclick="showSignIn()">← Back to Sign In</button>
   </div>
-  <!-- Forgot -->
   <div class="login-form-box" id="ls-forgot" style="display:none;">
     <div class="login-mode-title">Reset Password</div>
     <label class="login-form-label">Email</label>
@@ -547,8 +547,6 @@ aside.lb-sidebar{
 
 <!-- ═════ LOGBOOK APP ═════ -->
 <div class="logbook-wrap" id="logbook-app">
-
-  <!-- SIDEBAR -->
   <aside class="lb-sidebar" id="lb-sidebar">
     <div id="sb-write-actions" style="display:none;">
       <button class="btn-lb-new" onclick="openEntryModal()">+ New Entry</button>
@@ -556,7 +554,6 @@ aside.lb-sidebar{
       <button class="btn-lb-manage" onclick="openManageModal()">⚙ Categories &amp; Tags</button>
     </div>
     <div class="sb-divider"></div>
-
     <div class="sb-section">Views</div>
     <button class="sb-btn active" id="sb-dashboard" onclick="setView('dashboard')">
       <span class="sb-dot" style="background:rgba(240,255,244,.3)"></span>Dashboard
@@ -581,10 +578,7 @@ aside.lb-sidebar{
     <button class="sb-btn" onclick="exportCSV()"><span class="sb-dot" style="background:rgba(240,255,244,.15)"></span>Export CSV</button>
   </aside>
 
-  <!-- MAIN -->
   <main class="lb-main">
-
-    <!-- header strip -->
     <div style="display:flex;align-items:center;justify-content:flex-end;gap:12px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);">
       <div class="lb-stats-strip" style="flex:1;margin-bottom:0;">
         <div class="lb-stat" id="hdr-total"><strong>—</strong>Entries</div>
@@ -694,7 +688,6 @@ aside.lb-sidebar{
         <div id="tt-session-list"></div>
       </div>
     </div>
-
   </main>
 </div>
 
@@ -727,16 +720,33 @@ aside.lb-sidebar{
       <div class="field-group"><label class="field-label">Notes / Description <span class="field-req">*</span></label>
         <textarea class="field-textarea" id="f-notes" style="min-height:110px;" placeholder="What happened?" oninput="updateCharCount()"></textarea>
         <div style="display:flex;justify-content:flex-end;"><span class="char-count" id="char-count">0 chars</span></div></div>
+      <!-- Session Log extras -->
       <div id="session-extra" style="display:none;">
         <div class="field-row">
           <div class="field-group"><label class="field-label">Duration</label><input type="text" class="field-input" id="f-duration" placeholder="e.g. 2 hours"/></div>
           <div class="field-group"><label class="field-label">Next Session Goal</label><input type="text" class="field-input" id="f-next" placeholder="What to tackle next"/></div>
-        </div></div>
+        </div>
+      </div>
+      <!-- Issues section -->
       <div id="resolved-section" style="display:none;">
         <div class="field-group"><label class="field-label">Issue Status</label>
           <button type="button" class="resolved-toggle" id="resolved-toggle" onclick="this.classList.toggle('on')"><span class="rt-box"></span>Mark as Resolved</button></div>
         <div class="field-group" style="margin-top:8px;"><label class="field-label">Resolution / Fix Applied</label>
-          <textarea class="field-textarea" id="f-resolution" style="min-height:70px;" placeholder="Root cause, fix, what you learned."></textarea></div></div>
+          <textarea class="field-textarea" id="f-resolution" style="min-height:70px;" placeholder="Root cause, fix, what you learned."></textarea></div>
+      </div>
+      <!-- ── LINK PICKER (shown for Session Log / Weekly Blogs / Monthly Blogs) ── -->
+      <div id="link-picker-wrap" style="display:none;">
+        <div class="field-group">
+          <label class="field-label link-picker-label">
+            <span class="le-icon">⛓</span>
+            <span id="link-picker-heading">Link Entries</span>
+            <span class="lp-badge" id="link-picker-badge">0 linked</span>
+          </label>
+          <input type="text" class="link-picker-search" id="link-picker-search" placeholder="Search to filter…" oninput="filterLinkPicker()"/>
+          <div class="link-picker-list" id="link-picker-list"></div>
+          <div class="link-selected-count" id="link-selected-count"></div>
+        </div>
+      </div>
       <div class="field-group"><label class="field-label">Tags</label><div class="tags-grid" id="tag-toggles"></div></div>
     </div>
     <div class="modal-footer">
@@ -852,7 +862,7 @@ const DEFAULT_SUBCATS = {
   software:['Tuning & Testing','Code Development'],
   electrical:['PCBs','Electrical Decisions','Wiring & Connections'],
   structural:['Structural Decisions','Assembly Notes','CAD & Design'],
-  general:['Session Log','Milestones'],
+  general:['Session Log','Milestones','Weekly Blogs','Monthly Blogs'],
 };
 const BUILTIN_TAGS = ['Issues & Fixes'];
 const TEAM_MEMBERS = ['Sam','Matthew','Luke','Thomas'];
@@ -862,6 +872,18 @@ const COMPETITIONS = [
   {id:'qld-state', label:'state',    title:'RCJA Queensland State',         date:'2026-08-01', dateTBC:true, location:'QLD'},
   {id:'national',  label:'national', title:'RCJA National Championships',   date:'2026-10-02', location:'Canberra'},
 ];
+
+// ── LINK HIERARCHY ──
+// Session Log  → can link: all regular entries (non-session, non-blog)
+// Weekly Blogs → can link: Session Logs
+// Monthly Blogs→ can link: Weekly Blogs
+const LINK_RULES = {
+  'Session Log':   { label:'Link Regular Entries & Weekly Blogs', sourceSubcats: null,                        chipType:'type-entry'   },
+  'Weekly Blogs':  { label:'Link Session Logs & Monthly Blogs',   sourceSubcats:['Session Log'], chipType:'type-session' },
+  'Monthly Blogs': { label:'Link Weekly Blogs & Other Entries',   sourceSubcats:['Weekly Blogs'],               chipType:'type-weekly'  },
+};
+// subcats that ARE linkable types (excluded from "regular entries")
+const BLOG_SUBCATS = new Set(['Session Log','Weekly Blogs','Monthly Blogs']);
 
 /* ── STATE ── */
 let entries=[], requests=[], sessions=[], notifications=[];
@@ -873,6 +895,8 @@ let reqPriority='normal', clockingMember=null;
 let tickInterval=null, cdInterval=null;
 let currentUser=null, currentUserEmail=null, isMember=false;
 let notifUnsub=null;
+let selectedLinkIds=new Set(); // tracks selected IDs in link picker
+let linkPickerSearchVal='';
 
 const colEntries  = collection(db,'entries');
 const colRequests = collection(db,'requests');
@@ -1046,6 +1070,11 @@ setSyncState('connecting');
 onSnapshot(metaRef,async snap=>{
   if(snap.exists()){const d=snap.data();subcats=Object.assign({},DEFAULT_SUBCATS,d.subcats||{});customTags=d.customTags||[];}
   else{subcats=structuredClone(DEFAULT_SUBCATS);customTags=[];try{await setDoc(metaRef,{subcats,customTags});}catch(e){}}
+  // Ensure Monthly Blogs exists in general
+  if(!(subcats.general||[]).includes('Monthly Blogs')){
+    subcats.general=[...(subcats.general||[]),'Monthly Blogs'];
+    try{await setDoc(metaRef,{subcats,customTags});}catch(e){}
+  }
   buildSidebar();buildTagFilterBar();
   if(document.getElementById('manage-modal-bg').classList.contains('open'))renderManageBody();
   const mc=document.getElementById('f-main-cat');if(mc)populateSubcats(mc.value);
@@ -1220,7 +1249,6 @@ function renderDashboard(){
   const total=entries.length,sess=entries.filter(e=>e.subcat==='Session Log').length;
   const iss=entries.filter(e=>(e.tags||[]).includes('Issues & Fixes')),res=iss.filter(e=>e.resolved).length;
   const oReqs=requests.filter(r=>!r.done).length;
-  const todaySec=TEAM_MEMBERS.reduce((a,m)=>a+getTodaySecs(m),0);
   const weeklySec=TEAM_MEMBERS.reduce((a,m)=>a+getWeeklySecs(m),0);
   document.getElementById('dash-stats').innerHTML=[
     {n:total,l:'Total Entries'},{n:sess,l:'Sessions Logged'},
@@ -1274,10 +1302,59 @@ window.renderEntries=()=>{
 window.setSort=(mode,el)=>{sortMode=mode;document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderEntries();};
 window.toggleExpand=(id,ev)=>{if(ev.target.closest('.entry-act-btn'))return;document.getElementById('ec-'+id)?.classList.toggle('expanded');};
 
+/* ══════════════════════════════════════════
+   LINKED ENTRIES DISPLAY HELPERS
+══════════════════════════════════════════ */
+function getLinkedChipType(subcat){
+  if(subcat==='Session Log') return 'type-session';
+  if(subcat==='Weekly Blogs') return 'type-weekly';
+  if(subcat==='Monthly Blogs') return 'type-monthly';
+  return 'type-entry';
+}
+
+function linkedEntriesHTML(linkedIds){
+  if(!linkedIds||!linkedIds.length) return '';
+  const linked=linkedIds.map(id=>entries.find(e=>e.id===id)).filter(Boolean);
+  if(!linked.length) return '';
+  const chips=linked.map(le=>{
+    const chipType=getLinkedChipType(le.subcat);
+    const snippet=(le.notes||'').slice(0,200);
+    const meta=le.date?fmtDate(le.date):'';
+    const authorStr=le.author?` · ${le.author}`:'';
+    return `<div class="linked-chip-wrap">
+      <div class="linked-chip ${chipType}" onclick="toggleLinkedChip(this)" data-entry-id="${esc(le.id)}">
+        <span style="font-size:.55rem;opacity:.55">⛓</span>
+        <span>${esc(le.title||'Untitled')}</span>
+        <span style="opacity:.4;font-size:.45rem;">${esc(le.subcat||'')} · ${esc(meta)}${esc(authorStr)}</span>
+        <span class="lc-arrow">▶</span>
+      </div>
+      <div class="linked-chip-expand" id="lce-${le.id}">
+        <div style="font-size:.44rem;letter-spacing:.14em;text-transform:uppercase;color:var(--green-bright);margin-bottom:5px;">${esc(le.subcat||'')} · ${esc(meta)}${esc(authorStr)}</div>
+        ${esc(snippet)}${snippet.length===200?'…':''}
+      </div>
+    </div>`;
+  }).join('');
+  // label based on parent subcat context — we just show a generic label here
+  const labelIcon = '⛓';
+  return `<div class="linked-entries-section">
+    <div class="linked-entries-label"><span class="le-icon">${labelIcon}</span> Linked Entries <span style="font-size:.44rem;opacity:.5;">(${linked.length})</span></div>
+    <div class="linked-chips">${chips}</div>
+  </div>`;
+}
+
+window.toggleLinkedChip=(chip)=>{
+  chip.classList.toggle('open');
+  const id=chip.dataset.entryId;
+  const exp=document.getElementById('lce-'+id);
+  if(exp) exp.classList.toggle('show');
+};
+
 function entryHTML(e){
   const m=MAIN_CATS[e.mainCat]||MAIN_CATS.general;
   const snippet=(e.notes||'').replace(/\n/g,' ').slice(0,180);
   const tags=e.tags||[],isIssue=tags.includes('Issues & Fixes'),other=tags.filter(t=>t!=='Issues & Fixes');
+  const linkedIds=e.linkedEntryIds||[];
+  const linkedCountBadge=linkedIds.length?`<span style="font-size:.38rem;letter-spacing:.13em;text-transform:uppercase;padding:2px 6px;border:1px solid rgba(0,200,90,.25);background:rgba(0,200,90,.05);color:rgba(0,200,90,.6);">⛓ ${linkedIds.length} linked</span>`:'';
   const resSection=e.resolution?`<div class="entry-body-sec">Resolution</div><div class="entry-resolution">${esc(e.resolution)}</div>`:'';
   const sessExtra=e.subcat==='Session Log'&&(e.duration||e.next)?
     `${e.duration?`<div class="entry-body-sec">Duration</div><div class="entry-body-text">${esc(e.duration)}</div>`:''}
@@ -1296,6 +1373,7 @@ function entryHTML(e){
           <span class="entry-main-badge">${m.label}</span>
           ${isIssue?'<span class="issue-badge">⚑ Issues &amp; Fixes</span>':''}
           ${(isIssue&&e.resolved)?'<span class="resolved-badge">Resolved</span>':''}
+          ${linkedCountBadge}
         </div>
         <div class="entry-row2">
           <span class="entry-date">${fmtDate(e.date)}</span>
@@ -1310,12 +1388,106 @@ function entryHTML(e){
       <div class="entry-body-sec">Full Notes</div>
       <div class="entry-body-text">${esc(e.notes)}</div>
       ${resSection}${sessExtra}
+      ${linkedEntriesHTML(linkedIds)}
     </div>
   </div>`;
 }
 
 /* ══════════════════════════════════════════
-   REQUESTS — with In Progress
+   LINK PICKER LOGIC
+══════════════════════════════════════════ */
+
+// Returns the pool of entries that can be linked for a given subcat
+function getLinkableEntries(subcat){
+  if(subcat==='Session Log'){
+    // Link regular entries + Weekly Blogs
+    // Excludes: Session Log itself, Monthly Blogs
+    return entries.filter(e=>{
+      if(e.id===editingEntryId) return false;
+      if(e.subcat==='Session Log' || e.subcat==='Monthly Blogs') return false;
+      return true;
+    });
+  }
+  if(subcat==='Weekly Blogs'){
+    // Link Session Logs + Monthly Blogs
+    return entries.filter(e=>{
+      if(e.id===editingEntryId) return false;
+      return e.subcat==='Session Log' || e.subcat==='Monthly Blogs';
+    });
+  }
+  if(subcat==='Monthly Blogs'){
+    // Link Weekly Blogs + all regular entries (non-session, non-blog)
+    return entries.filter(e=>{
+      if(e.id===editingEntryId) return false;
+      if(e.subcat==='Session Log' || e.subcat==='Monthly Blogs') return false;
+      return true;
+    });
+  }
+  return [];
+}
+
+function showLinkPicker(subcat){
+  const rule=LINK_RULES[subcat];
+  const wrap=document.getElementById('link-picker-wrap');
+  if(!rule){wrap.style.display='none';return;}
+  wrap.style.display='';
+  document.getElementById('link-picker-heading').textContent=rule.label;
+  document.getElementById('link-picker-search').value='';
+  linkPickerSearchVal='';
+  renderLinkPickerList(subcat);
+}
+
+function hideLinkPicker(){
+  document.getElementById('link-picker-wrap').style.display='none';
+}
+
+function renderLinkPickerList(subcat){
+  subcat=subcat||getCurrentSubcat();
+  const pool=getLinkableEntries(subcat);
+  const q=linkPickerSearchVal.toLowerCase();
+  const filtered=q?pool.filter(e=>(e.title||'').toLowerCase().includes(q)||(e.notes||'').toLowerCase().includes(q)||(e.date||'').includes(q)):pool;
+  const list=document.getElementById('link-picker-list');
+  if(!filtered.length){
+    list.innerHTML=`<div class="link-picker-empty">${pool.length?'No matches found.':'No entries available to link.'}</div>`;
+    updateLinkCount();return;
+  }
+  const m=MAIN_CATS;
+  list.innerHTML=filtered.map(e=>{
+    const cat=m[e.mainCat]||m.general;
+    const selected=selectedLinkIds.has(e.id)?'selected':'';
+    return `<div class="link-picker-item ${selected}" onclick="toggleLinkItem('${e.id}','${subcat}')" data-id="${e.id}">
+      <div class="lp-check"></div>
+      <span class="lp-item-title">${esc(e.title||'Untitled')}</span>
+      <span class="lp-item-sub" style="color:${cat.hex};border-color:${cat.hex}44">${esc(e.subcat||'')}</span>
+      <span class="lp-item-meta">${fmtDate(e.date)||'—'}</span>
+    </div>`;
+  }).join('');
+  updateLinkCount();
+}
+
+window.toggleLinkItem=(id,subcat)=>{
+  if(selectedLinkIds.has(id)) selectedLinkIds.delete(id);
+  else selectedLinkIds.add(id);
+  renderLinkPickerList(subcat);
+};
+
+window.filterLinkPicker=()=>{
+  linkPickerSearchVal=document.getElementById('link-picker-search').value||'';
+  renderLinkPickerList(getCurrentSubcat());
+};
+
+function updateLinkCount(){
+  const n=selectedLinkIds.size;
+  document.getElementById('link-picker-badge').textContent=n+' linked';
+  document.getElementById('link-selected-count').textContent=n>0?`${n} entr${n===1?'y':'ies'} linked`:'';
+}
+
+function getCurrentSubcat(){
+  return (document.getElementById('f-sub-cat')||{}).value||'';
+}
+
+/* ══════════════════════════════════════════
+   REQUESTS
 ══════════════════════════════════════════ */
 window.setReqFilter=(f,el)=>{reqFilter=f;document.querySelectorAll('.req-filter-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderRequests();};
 
@@ -1354,7 +1526,6 @@ function reqCardHTML(r,member){
     <button class="req-card-btn" onclick="editRequest('${r.id}',event)">✎</button>
     <button class="req-card-btn del" onclick="deleteRequest('${r.id}',event)">✕</button>
   </div>`:'';
-  // Status buttons — only for members
   let statusBtns='';
   if(isMember){
     if(isDone){
@@ -1571,6 +1742,7 @@ window.confirmClearSessions=async()=>{
 window.openEntryModal=prefill=>{
   if(!requireMember('create entries'))return;
   editingEntryId=null;
+  selectedLinkIds=new Set();
   document.getElementById('entry-modal-title').textContent='New Entry';
   const mc=document.getElementById('f-main-cat');mc.value=prefill||'software';
   document.getElementById('f-date').value=new Date().toISOString().slice(0,10);
@@ -1580,10 +1752,13 @@ window.openEntryModal=prefill=>{
   updateCharCount();populateSubcats(mc.value);rebuildTagToggles([]);onMainCatChange();
   document.getElementById('entry-modal-bg').classList.add('open');
 };
+
 window.editEntry=(id,ev)=>{
   if(!requireMember('edit entries'))return;
   ev.stopPropagation();const e=entries.find(x=>x.id===id);if(!e)return;
-  editingEntryId=id;document.getElementById('entry-modal-title').textContent='Edit Entry';
+  editingEntryId=id;
+  selectedLinkIds=new Set(e.linkedEntryIds||[]);
+  document.getElementById('entry-modal-title').textContent='Edit Entry';
   document.getElementById('f-main-cat').value=e.mainCat||'general';
   populateSubcats(e.mainCat||'general',e.subcat);
   document.getElementById('f-date').value=e.date||'';
@@ -1596,7 +1771,9 @@ window.editEntry=(id,ev)=>{
   updateCharCount();rebuildTagToggles(e.tags||[]);onMainCatChange();
   document.getElementById('entry-modal-bg').classList.add('open');
 };
+
 window.onMainCatChange=()=>populateSubcats(document.getElementById('f-main-cat').value);
+
 function populateSubcats(mainCat,sel){
   const s=document.getElementById('f-sub-cat');if(!s)return;
   const subs=subcats[mainCat]||[];
@@ -1604,12 +1781,23 @@ function populateSubcats(mainCat,sel){
   if(sel&&subs.includes(sel))s.value=sel;
   onSubcatChange();
 }
+
 window.onSubcatChange=()=>{
   const sub=(document.getElementById('f-sub-cat')||{}).value||'';
-  document.getElementById('session-extra').style.display=sub==='Session Log'?'block':'none';syncResolved();
+  document.getElementById('session-extra').style.display=sub==='Session Log'?'block':'none';
+  syncResolved();
+  // Show/hide link picker
+  if(LINK_RULES[sub]){
+    showLinkPicker(sub);
+  } else {
+    hideLinkPicker();
+    selectedLinkIds=new Set();
+  }
 };
+
 function syncResolved(){const on=[...document.querySelectorAll('#tag-toggles .tag-toggle.issue-tag.on')].length>0;document.getElementById('resolved-section').style.display=on?'block':'none';}
 window.syncResolved=syncResolved;
+
 function rebuildTagToggles(sel){
   if(!sel)sel=[];
   document.getElementById('tag-toggles').innerHTML=[...BUILTIN_TAGS,...customTags].map(t=>{
@@ -1617,6 +1805,7 @@ function rebuildTagToggles(sel){
     return `<button class="tag-toggle ${cls} ${on}" onclick="this.classList.toggle('on');syncResolved()">${esc(t)}</button>`;
   }).join('');syncResolved();
 }
+
 window.updateCharCount=()=>{document.getElementById('char-count').textContent=(document.getElementById('f-notes').value||'').length+' chars';};
 function getSelTags(){return[...document.querySelectorAll('#tag-toggles .tag-toggle.on')].map(b=>b.textContent.trim());}
 
@@ -1638,7 +1827,10 @@ window.saveEntry=async(silent=false)=>{
   const btn=document.getElementById('btn-save-entry'),si=document.getElementById('save-ind');
   btn.disabled=true;si.classList.add('show');setSyncState('connecting');
   const authorVal=editingEntryId?(document.getElementById('f-author').value.trim()||currentUser):currentUser;
+  // Collect linked IDs
+  const linkedEntryIds=[...selectedLinkIds];
   const payload={mainCat,subcat,date,title,notes,tags,resolved,author:authorVal,
+    linkedEntryIds,
     resolution:isIssue?(document.getElementById('f-resolution').value.trim()):'',
     duration:subcat==='Session Log'?(document.getElementById('f-duration')?.value.trim()||''):'',
     next:subcat==='Session Log'?(document.getElementById('f-next')?.value.trim()||''):'',
@@ -1647,9 +1839,11 @@ window.saveEntry=async(silent=false)=>{
     if(editingEntryId){await updateDoc(doc(db,'entries',editingEntryId),{...payload,updatedAt:serverTimestamp()});toast('Entry updated ✓');}
     else{payload.createdAt=serverTimestamp();await addDoc(colEntries,payload);toast('Entry saved ✓');}
     closeModal('entry-modal-bg');
+    selectedLinkIds=new Set();
   }catch(err){toast('Save failed: '+err.message,true);setSyncState('error');}
   finally{btn.disabled=false;si.classList.remove('show');}
 };
+
 window.deleteEntry=async(id,ev)=>{
   ev.stopPropagation();if(!requireMember('delete entries'))return;
   if(!confirm('Delete this entry? Cannot be undone.'))return;
@@ -1740,7 +1934,10 @@ window.delTag=async idx=>{const tag=customTags[idx],used=entries.filter(e=>(e.ta
 /* ══════════════════════════════════════════
    MODAL HELPERS
 ══════════════════════════════════════════ */
-window.closeModal=id=>document.getElementById(id).classList.remove('open');
+window.closeModal=id=>{
+  document.getElementById(id).classList.remove('open');
+  if(id==='entry-modal-bg'){selectedLinkIds=new Set();}
+};
 window.bgClick=(ev,id)=>{
   if(ev.target!==document.getElementById(id))return;
   if(id==='entry-modal-bg'&&isMember)saveEntry(true);
@@ -1756,8 +1953,8 @@ window.exportJSON=()=>{
 };
 window.exportCSV=()=>{
   if(!requireLogin('export data'))return;
-  const h=['Date','Main Cat','Sub-category','Title','Author','Notes','Tags','Resolved','Resolution'];
-  const rows=entries.map(e=>[e.date,MAIN_CATS[e.mainCat]?.label||e.mainCat,e.subcat,e.title,e.author,(e.notes||'').replace(/"/g,'""'),(e.tags||[]).join('; '),e.resolved?'Yes':'No',(e.resolution||'').replace(/"/g,'""')].map(v=>`"${v||''}"`).join(','));
+  const h=['Date','Main Cat','Sub-category','Title','Author','Notes','Tags','Resolved','Resolution','Linked Entry IDs'];
+  const rows=entries.map(e=>[e.date,MAIN_CATS[e.mainCat]?.label||e.mainCat,e.subcat,e.title,e.author,(e.notes||'').replace(/"/g,'""'),(e.tags||[]).join('; '),e.resolved?'Yes':'No',(e.resolution||'').replace(/"/g,'""'),(e.linkedEntryIds||[]).join('; ')].map(v=>`"${v||''}"`).join(','));
   dl(new Blob([[h.join(','),...rows].join('\n')],{type:'text/csv'}),'hyperion-logbook-'+td()+'.csv');toast('CSV exported ✓');
 };
 function dl(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();}
@@ -1782,15 +1979,12 @@ document.addEventListener('keydown',e=>{
 });
 document.addEventListener('click',e=>{if(!e.target.closest('#notif-bell')&&!e.target.closest('#notif-dd'))document.getElementById('notif-dd')?.classList.add('hidden');});
 
-// Hide write actions until role determined
 document.getElementById('sb-write-actions').style.display='none';
-// Hide hdr-user initially
 const hu=document.getElementById('hdr-user');if(hu)hu.style.display='none';
 
 setView('dashboard');
 </script>
 
-<!-- Nav component injects nav + footer -->
 <script src="assets/nav-component.js"></script>
 </body>
 </html>
