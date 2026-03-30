@@ -300,8 +300,8 @@ aside.lb-sidebar{
 .lb-search input::placeholder{color:rgba(240,255,244,.18);}
 .lb-search-icon{padding:9px 10px;color:rgba(240,255,244,.22);font-size:.85rem;}
 
-.lb-stats-strip{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:22px;padding:12px 16px;background:rgba(6,12,6,.8);border:1px solid var(--border);}
-.lb-stat{font-family:'Share Tech Mono',monospace;font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);}
+.lb-stats-strip{display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin-bottom:22px;padding:12px 16px;background:rgba(6,12,6,.8);border:1px solid var(--border);}
+.lb-stat{font-family:'Share Tech Mono',monospace;font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);position:relative;}
 .lb-stat strong{color:var(--green-bright);font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:.06em;display:block;}
 
 .dash-countdown{margin-bottom:22px;}
@@ -444,7 +444,7 @@ aside.lb-sidebar{
 .entry-act-btn:hover{color:var(--green-bright);background:rgba(0,114,63,.06);}
 .entry-act-btn.del:hover{color:#ff5555;background:rgba(255,50,50,.06);}
 .entry-body{display:none;padding:13px 17px 17px;border-top:1px solid rgba(0,114,63,.08);}
-.entry-card.expanded .entry-body{display:block;}
+.entry-card.expanded .entry-body,.chr-entry-card.expanded .entry-body{display:block;}
 .entry-body-text{font-size:.72rem;line-height:1.85;color:rgba(240,255,244,.62);white-space:pre-wrap;word-break:break-word;}
 .entry-body-sec{font-size:.46rem;letter-spacing:.22em;text-transform:uppercase;color:var(--green-bright);margin:11px 0 5px;}
 
@@ -860,7 +860,7 @@ aside.lb-sidebar{
   content:'//';
   font-family:'Share Tech Mono',monospace;
   font-size:.44rem;color:rgba(0,200,90,.15);
-  margin-right:18px;
+  position:absolute;left:-13px;top:50%;transform:translateY(-50%);
 }
 
 /* ── Entry body section headings — left tick ── */
