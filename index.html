@@ -8,127 +8,6 @@
   <link rel="stylesheet" href="assets/shared.css" />
   <style>
     /* ══════════════════════════════════════════
-       STATS TICKER
-    ══════════════════════════════════════════ */
-    #ticker {
-      position: fixed;
-      top: 64px;
-      left: 0;
-      right: 0;
-      z-index: 999;
-      height: 26px;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      background: rgba(5, 10, 5, 0.97);
-      border-bottom: 1px solid rgba(0, 200, 90, 0.18);
-      border-top: 1px solid rgba(0, 200, 90, 0.1);
-    }
-
-    #ticker::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: repeating-linear-gradient(to bottom, transparent 0px, transparent 1px, rgba(0, 200, 90, 0.03) 1px, rgba(0, 200, 90, 0.03) 2px);
-    }
-
-    .ticker-label {
-      flex-shrink: 0;
-      height: 100%;
-      background: var(--green-bright, #00c85a);
-      color: #001a0e;
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 0.72rem;
-      letter-spacing: 0.25em;
-      padding: 0 14px;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      border-right: 1px solid rgba(0, 0, 0, 0.25);
-      z-index: 1;
-      position: relative;
-    }
-
-    .ticker-label::before {
-      content: '';
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: #001a0e;
-      animation: blink-dot 1.4s step-end infinite;
-      flex-shrink: 0;
-    }
-
-    @keyframes blink-dot {
-      0%, 100% { opacity: 1 }
-      50% { opacity: 0.15 }
-    }
-
-    .ticker-track {
-      flex: 1;
-      overflow: hidden;
-      position: relative;
-      height: 100%;
-    }
-
-    .ticker-inner {
-      display: flex;
-      gap: 0;
-      height: 100%;
-      animation: ticker-scroll 50s linear infinite;
-      white-space: nowrap;
-      will-change: transform;
-    }
-
-    .ticker-inner:hover {
-      animation-play-state: paused;
-    }
-
-    .ticker-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 0 24px;
-      height: 100%;
-      flex-shrink: 0;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.6rem;
-      letter-spacing: 0.1em;
-      color: rgba(240, 255, 244, 0.55);
-      border-right: 1px solid rgba(0, 200, 90, 0.08);
-    }
-
-    .ticker-item .ti-tag {
-      font-size: 0.48rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      background: rgba(0, 200, 90, 0.12);
-      border: 1px solid rgba(0, 200, 90, 0.2);
-      padding: 1px 6px;
-      color: var(--green-bright, #00c85a);
-      flex-shrink: 0;
-    }
-
-    .ticker-item .ti-tag.gold {
-      background: rgba(212, 160, 23, 0.1);
-      border-color: rgba(212, 160, 23, 0.25);
-      color: #d4a017;
-    }
-
-    .ticker-sep {
-      width: 1px;
-      height: 10px;
-      background: rgba(0, 200, 90, 0.2);
-      flex-shrink: 0;
-    }
-
-    @keyframes ticker-scroll {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-
-    /* ══════════════════════════════════════════
        BOOT SCREEN
     ══════════════════════════════════════════ */
     #boot-screen {
@@ -1168,14 +1047,6 @@
 
 <body>
 
-  <!-- ════ STATS TICKER ════ -->
-  <div id="ticker">
-    <div class="ticker-label">LIVE</div>
-    <div class="ticker-track">
-      <div class="ticker-inner" id="ticker-inner"></div>
-    </div>
-  </div>
-
   <!-- ════ BOOT SCREEN ════ -->
   <div id="boot-screen">
     <div class="boot-scanlines"></div>
@@ -1597,32 +1468,6 @@
   </section>
 
   <script>
-    /* ─────────────────────────────────────────
-       STATS TICKER
-    ───────────────────────────────────────── */
-    const TICKER_ITEMS = [
-      { tag: '2025 WORLDS', gold: true, text: '1st Place · Lightweight SuperTeam' },
-      { tag: '2025 WORLDS', gold: false, text: '14th Place · Individual' },
-      { tag: '2025 NATIONALS', gold: true, text: 'Undefeated · No Losses' },
-      { tag: 'HISTORY', gold: true, text: '8× Total Podium Finishes' },
-      { tag: 'HISTORY', gold: false, text: '5+ Years Competing' },
-      { tag: 'HISTORY', gold: false, text: '2× National Appearances' },
-      { tag: '2026', gold: false, text: 'Qualified → Incheon, South Korea' },
-      { tag: 'BBC', gold: false, text: 'Brisbane Boys\'s College · Est. 1902' },
-      { tag: 'DIVISION', gold: false, text: 'RoboCup Junior Lightweight Soccer' },
-    ];
-    function buildTicker() {
-      const inner = document.getElementById('ticker-inner');
-      const items = [...TICKER_ITEMS, ...TICKER_ITEMS];
-      items.forEach(item => {
-        const el = document.createElement('div');
-        el.className = 'ticker-item';
-        el.innerHTML = `<span class="ti-tag${item.gold ? ' gold' : ''}">${item.tag}</span>${item.text}`;
-        inner.appendChild(el);
-      });
-    }
-    buildTicker();
-
     /* ─────────────────────────────────────────
        BOOT SCREEN
     ───────────────────────────────────────── */
