@@ -2365,6 +2365,28 @@ function getFilteredReqs(member){
   if(reqFilter==='progress') list=list.filter(r=>r.status==='progress'&&!r.done);
   if(reqFilter==='urgent') list=list.filter(r=>r.priority==='urgent'&&!r.done);
   if(reqFilter==='done') list=list.filter(r=>r.done);
+
+  list.sort((a,b)=>{
+    // Tier 1: In-progress floats to very top
+    const aProgress=(!a.done&&a.status==='progress'), bProgress=(!b.done&&b.status==='progress');
+    if(aProgress!==bProgress) return aProgress?-1:1;
+
+    // Tier 2: Done sinks to bottom
+    if(a.done!==b.done) return a.done?1:-1;
+
+    // Tier 3: Urgent before normal
+    const aUrgent=(a.priority==='urgent'), bUrgent=(b.priority==='urgent');
+    if(aUrgent!==bUrgent) return aUrgent?-1:1;
+
+    // Tier 4: Sort by due date (no due date sinks within tier)
+    const aHasDue=!!a.due, bHasDue=!!b.due;
+    if(aHasDue!==bHasDue) return aHasDue?-1:1;
+    if(aHasDue&&bHasDue) return a.due.localeCompare(b.due);
+
+    // Tier 5: Fallback to creation order
+    return (b.createdAt?.seconds||0)-(a.createdAt?.seconds||0);
+  });
+
   return list;
 }
 function renderRequests(){
