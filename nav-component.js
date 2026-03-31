@@ -97,7 +97,7 @@
     <a href="https://www.youtube.com/@hyperion-bbcrobotics" target="_blank" rel="noopener" class="footer-social-link">
       <span class="footer-social-icon">▶</span>YouTube
     </a>
-    <a href="https://github.com/SamGargRobotics/Hyperion-BBC-Robotics" target="_blank" rel="noopener" class="footer-social-link">
+    <a href="https://github.com/Team-Hyperion-BBC-Robotics" target="_blank" rel="noopener" class="footer-social-link">
       <span class="footer-social-icon">⌥</span>GitHub
     </a>
     <a href="mailto:bbchyperion@gmail.com" class="footer-social-link">
