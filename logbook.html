@@ -4222,7 +4222,7 @@ window.toggleStep=(protocolId,stepIdx,ev)=>{
   if(cb)cb.checked=done;
 };
 
-function addProtocolStep(text=''){
+function addProtocolStep(text='',silent=false){
   const list=document.getElementById('proto-steps-list');
   const idx=list.children.length;
   const row=document.createElement('div');
@@ -4231,7 +4231,7 @@ function addProtocolStep(text=''){
     `<button class="proto-step-remove" onclick="removeProtocolStep(this)">✕</button>`;
   list.appendChild(row);
   _updateRemoveBtns();
-  row.querySelector('input').focus();
+  if(!silent)row.querySelector('input').focus();
 }
 window.addProtocolStep=addProtocolStep;
 
@@ -4262,16 +4262,16 @@ window.openProtocolModal=()=>{
 };
 
 window.editProtocol=(id,ev)=>{
-  if(!requireMember('edit protocols'))return;
   ev.stopPropagation();
+  if(!requireMember('edit protocols'))return;
   const p=protocols.find(x=>x.id===id);if(!p)return;
   editingProtocolId=id;
   document.getElementById('protocol-modal-title').textContent='EDIT PROTOCOL';
   document.getElementById('proto-title').value=p.title||'';
   document.getElementById('proto-desc').value=p.description||'';
   document.getElementById('proto-steps-list').innerHTML='';
-  (p.steps||[]).forEach(s=>addProtocolStep(s.text));
-  if(!(p.steps||[]).length)addProtocolStep();
+  (p.steps||[]).forEach(s=>addProtocolStep(s.text,true));
+  if(!(p.steps||[]).length)addProtocolStep('',true);
   document.getElementById('btn-del-proto').style.display='';
   document.getElementById('protocol-modal-bg').classList.add('open');
   setTimeout(()=>document.getElementById('proto-title').focus(),150);
