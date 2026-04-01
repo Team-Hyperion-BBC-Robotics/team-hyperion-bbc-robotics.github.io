@@ -4160,6 +4160,68 @@ window.exportPDF = async () => {
   toast('PDF report generated ✓');
 };
 
+/* ══════════════════════════════════════════
+   PROTOCOLS
+══════════════════════════════════════════ */
+window.renderProtocols=()=>{
+  const grid=document.getElementById('protocols-grid');if(!grid)return;
+  const addBtn=document.getElementById('btn-add-proto');
+  if(addBtn)addBtn.style.display=isMember?'':'none';
+  const q=protocolSearch.trim().toLowerCase();
+  const filtered=protocols.filter(p=>!q||p.title.toLowerCase().includes(q)||(p.description||'').toLowerCase().includes(q));
+  if(!filtered.length){
+    grid.innerHTML=`<div class="proto-empty">${q?'[ NO MATCHES ]':'[ NO PROTOCOLS DEFINED ]'}</div>`;
+    return;
+  }
+  grid.innerHTML=filtered.map(p=>{
+    const steps=p.steps||[];
+    const memberActions=isMember?`<div class="entry-actions">
+      <button class="entry-act-btn" title="Edit" onclick="editProtocol('${p.id}',event)">✎</button>
+      <button class="entry-act-btn del" title="Delete" onclick="deleteProtocol('${p.id}',event)">✕</button>
+    </div>`:'';
+    const stepsList=steps.length
+      ?`<div class="protocol-steps-label">Checklist</div>
+        <ul class="protocol-step-list">
+          ${steps.map((s,i)=>`<li class="protocol-step" id="ps-${p.id}-${i}" onclick="toggleStep('${p.id}',${i},event)">
+            <input type="checkbox" id="psc-${p.id}-${i}" onclick="event.stopPropagation();toggleStep('${p.id}',${i},event)"/>
+            <span class="protocol-step-text">${esc(s.text)}</span>
+          </li>`).join('')}
+        </ul>`
+      :'<div class="proto-empty" style="padding:14px 0;font-size:.52rem;">No steps defined</div>';
+    return `<div class="entry-card protocol-card stat-card-glitch" id="pc-${p.id}">
+      <div class="entry-top">
+        <div class="entry-stripe" style="background:#ffd700"></div>
+        <div class="protocol-header" onclick="toggleProtocol('${p.id}')">
+          <span class="protocol-title">${esc(p.title)}</span>
+          <span class="protocol-step-count">${steps.length} step${steps.length!==1?'s':''}</span>
+          <span class="protocol-chevron" id="pc-chev-${p.id}">▶</span>
+        </div>
+        ${memberActions}
+      </div>
+      <div class="protocol-body" id="pb-${p.id}">
+        ${p.description?`<div class="protocol-desc">${esc(p.description)}</div>`:''}
+        ${stepsList}
+      </div>
+    </div>`;
+  }).join('');
+};
+
+window.toggleProtocol=id=>{
+  const card=document.getElementById('pc-'+id);if(!card)return;
+  const open=card.classList.toggle('expanded');
+  const chev=document.getElementById('pc-chev-'+id);
+  if(chev)chev.textContent=open?'▼':'▶';
+};
+
+window.toggleStep=(protocolId,stepIdx,ev)=>{
+  if(ev)ev.stopPropagation();
+  const item=document.getElementById('ps-'+protocolId+'-'+stepIdx);
+  const cb=document.getElementById('psc-'+protocolId+'-'+stepIdx);
+  if(!item)return;
+  const done=item.classList.toggle('done');
+  if(cb)cb.checked=done;
+};
+
 </script>
 
 <script src="assets/nav-component.js"></script>
