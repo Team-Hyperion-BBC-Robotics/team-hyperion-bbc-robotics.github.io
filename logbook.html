@@ -3036,7 +3036,7 @@ function toast(msg,err=false){const el=document.getElementById('lb-toast');el.te
 window.addEventListener('online',()=>document.getElementById('offline-banner').classList.remove('show'));
 window.addEventListener('offline',()=>document.getElementById('offline-banner').classList.add('show'));
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){['entry-modal-bg','manage-modal-bg','req-modal-bg','clockin-modal-bg'].forEach(id=>closeModal(id));document.getElementById('notif-dd').classList.add('hidden');}
+  if(e.key==='Escape'){['entry-modal-bg','manage-modal-bg','req-modal-bg','clockin-modal-bg','protocol-modal-bg'].forEach(id=>closeModal(id));document.getElementById('notif-dd').classList.add('hidden');}
   if((e.metaKey||e.ctrlKey)&&e.key==='n'){e.preventDefault();if(isMember)openEntryModal();}
   if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();document.getElementById('search-input')?.focus();}
 });
@@ -4285,7 +4285,7 @@ window.saveProtocol=async()=>{
   const steps=[...document.querySelectorAll('#proto-steps-list .protocol-step-row input')]
     .map(i=>i.value.trim()).filter(Boolean).map(text=>({text,done:false}));
   const btn=document.getElementById('btn-save-proto');
-  btn.disabled=true;
+  btn.disabled=true;setSyncState('connecting');
   try{
     if(editingProtocolId){
       await updateDoc(doc(db,'protocols',editingProtocolId),{title,description,steps,updatedAt:serverTimestamp()});
@@ -4295,7 +4295,7 @@ window.saveProtocol=async()=>{
       toast('Protocol saved ✓');
     }
     closeModal('protocol-modal-bg');
-  }catch(err){toast('Save failed: '+err.message,true);}
+  }catch(err){toast('Save failed: '+err.message,true);setSyncState('error');}
   finally{btn.disabled=false;}
 };
 
