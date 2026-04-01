@@ -4222,6 +4222,61 @@ window.toggleStep=(protocolId,stepIdx,ev)=>{
   if(cb)cb.checked=done;
 };
 
+function addProtocolStep(text=''){
+  const list=document.getElementById('proto-steps-list');
+  const idx=list.children.length;
+  const row=document.createElement('div');
+  row.className='protocol-step-row';
+  row.innerHTML=`<input type="text" class="field-input" placeholder="Step ${idx+1}…" value="${esc(text)}"/>` +
+    `<button class="proto-step-remove" onclick="removeProtocolStep(this)">✕</button>`;
+  list.appendChild(row);
+  _updateRemoveBtns();
+  row.querySelector('input').focus();
+}
+window.addProtocolStep=addProtocolStep;
+
+window.removeProtocolStep=btn=>{
+  btn.closest('.protocol-step-row').remove();
+  [...document.querySelectorAll('#proto-steps-list .protocol-step-row')].forEach((r,i)=>{
+    r.querySelector('input').placeholder=`Step ${i+1}…`;
+  });
+  _updateRemoveBtns();
+};
+
+function _updateRemoveBtns(){
+  const rows=document.querySelectorAll('#proto-steps-list .protocol-step-row');
+  rows.forEach(r=>r.querySelector('.proto-step-remove').style.display=rows.length<=1?'none':'');
+}
+
+window.openProtocolModal=()=>{
+  if(!requireMember('manage protocols'))return;
+  editingProtocolId=null;
+  document.getElementById('protocol-modal-title').textContent='NEW PROTOCOL';
+  document.getElementById('proto-title').value='';
+  document.getElementById('proto-desc').value='';
+  document.getElementById('proto-steps-list').innerHTML='';
+  document.getElementById('btn-del-proto').style.display='none';
+  addProtocolStep();
+  document.getElementById('protocol-modal-bg').classList.add('open');
+  setTimeout(()=>document.getElementById('proto-title').focus(),150);
+};
+
+window.editProtocol=(id,ev)=>{
+  if(!requireMember('edit protocols'))return;
+  ev.stopPropagation();
+  const p=protocols.find(x=>x.id===id);if(!p)return;
+  editingProtocolId=id;
+  document.getElementById('protocol-modal-title').textContent='EDIT PROTOCOL';
+  document.getElementById('proto-title').value=p.title||'';
+  document.getElementById('proto-desc').value=p.description||'';
+  document.getElementById('proto-steps-list').innerHTML='';
+  (p.steps||[]).forEach(s=>addProtocolStep(s.text));
+  if(!(p.steps||[]).length)addProtocolStep();
+  document.getElementById('btn-del-proto').style.display='';
+  document.getElementById('protocol-modal-bg').classList.add('open');
+  setTimeout(()=>document.getElementById('proto-title').focus(),150);
+};
+
 </script>
 
 <script src="assets/nav-component.js"></script>
