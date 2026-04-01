@@ -1362,6 +1362,21 @@ aside.lb-sidebar{
         <div id="tt-session-list"></div>
       </div>
     </div>
+
+    <!-- PROTOCOLS VIEW -->
+    <div id="view-protocols" style="display:none;">
+      <div class="lb-header-bar">
+        <div class="lb-view-title glitch-title" data-text="ROBOT PROTOCOLS">ROBOT <span>PROTOCOLS</span></div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="lb-search">
+            <span class="lb-search-icon">⌕</span>
+            <input type="text" placeholder="Search protocols…" id="proto-search" oninput="protocolSearch=this.value;renderProtocols()"/>
+          </div>
+          <button class="proto-add-btn" id="btn-add-proto" onclick="openProtocolModal()" style="display:none;">+ Add Protocol</button>
+        </div>
+      </div>
+      <div class="protocols-grid" id="protocols-grid"></div>
+    </div>
   </main>
 </div>
 
@@ -1543,6 +1558,38 @@ aside.lb-sidebar{
     <div class="modal-footer">
       <button class="btn-cancel" onclick="closeModal('clockin-modal-bg')">Cancel</button>
       <button class="btn-save" onclick="confirmClockIn()">Clock In</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROTOCOL MODAL -->
+<div class="modal-bg" id="protocol-modal-bg" onclick="bgClick(event,'protocol-modal-bg')">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title" id="protocol-modal-title">NEW PROTOCOL</div>
+      <button class="modal-close" onclick="closeModal('protocol-modal-bg')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field-group">
+        <label class="field-label">Behavior Name <span class="field-req">*</span></label>
+        <input type="text" class="field-input" id="proto-title" placeholder="e.g. Drive Train Jitter" maxlength="120"/>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Description <span style="font-size:.42rem;color:var(--grey);">(optional)</span></label>
+        <textarea class="field-textarea" id="proto-desc" style="min-height:60px;" placeholder="Brief summary of when this protocol applies…"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Diagnostic Steps</label>
+        <div id="proto-steps-list"></div>
+        <button class="proto-step-add" onclick="addProtocolStep()">+ Add Step</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-del-proto" id="btn-del-proto" style="display:none;" onclick="deleteProtocolFromModal()">Delete Protocol</button>
+      <div style="display:flex;gap:9px;margin-left:auto;">
+        <button class="btn-cancel" onclick="closeModal('protocol-modal-bg')">Cancel</button>
+        <button class="btn-save" id="btn-save-proto" onclick="saveProtocol()">Save Protocol</button>
+      </div>
     </div>
   </div>
 </div>
