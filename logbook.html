@@ -4277,6 +4277,46 @@ window.editProtocol=(id,ev)=>{
   setTimeout(()=>document.getElementById('proto-title').focus(),150);
 };
 
+window.saveProtocol=async()=>{
+  if(!requireMember('save protocols'))return;
+  const title=document.getElementById('proto-title').value.trim();
+  if(!title){toast('Behavior name is required',true);return;}
+  const description=document.getElementById('proto-desc').value.trim();
+  const steps=[...document.querySelectorAll('#proto-steps-list .protocol-step-row input')]
+    .map(i=>i.value.trim()).filter(Boolean).map(text=>({text,done:false}));
+  const btn=document.getElementById('btn-save-proto');
+  btn.disabled=true;
+  try{
+    if(editingProtocolId){
+      await updateDoc(doc(db,'protocols',editingProtocolId),{title,description,steps,updatedAt:serverTimestamp()});
+      toast('Protocol updated ✓');
+    }else{
+      await addDoc(colProtocols,{title,description,steps,createdAt:serverTimestamp(),updatedAt:serverTimestamp(),createdBy:currentUser});
+      toast('Protocol saved ✓');
+    }
+    closeModal('protocol-modal-bg');
+  }catch(err){toast('Save failed: '+err.message,true);}
+  finally{btn.disabled=false;}
+};
+
+window.deleteProtocol=async(id,ev)=>{
+  ev.stopPropagation();if(!requireMember('delete protocols'))return;
+  if(!confirm('Delete this protocol? Cannot be undone.'))return;
+  try{await deleteDoc(doc(db,'protocols',id));toast('Protocol deleted');}
+  catch(err){toast('Delete failed: '+err.message,true);}
+};
+
+window.deleteProtocolFromModal=async()=>{
+  if(!requireMember('delete protocols'))return;
+  if(!editingProtocolId)return;
+  if(!confirm('Delete this protocol? Cannot be undone.'))return;
+  try{
+    await deleteDoc(doc(db,'protocols',editingProtocolId));
+    toast('Protocol deleted');
+    closeModal('protocol-modal-bg');
+  }catch(err){toast('Delete failed: '+err.message,true);}
+};
+
 </script>
 
 <script src="assets/nav-component.js"></script>
