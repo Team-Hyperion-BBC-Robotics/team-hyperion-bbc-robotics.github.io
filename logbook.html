@@ -1664,12 +1664,16 @@ let notifUnsub=null;
 let selectedLinkIds=new Set();
 let linkPickerSearchVal='';
 let sessionResultVal='', milestoneStatusVal='';
+let protocols=[];
+let protocolSearch='';
+let editingProtocolId=null;
 
-const colEntries  = collection(db,'entries');
-const colRequests = collection(db,'requests');
-const colSessions = collection(db,'timeSessions');
-const colNotifs   = collection(db,'notifications');
-const metaRef     = doc(db,'_meta','config');
+const colEntries   = collection(db,'entries');
+const colRequests  = collection(db,'requests');
+const colSessions  = collection(db,'timeSessions');
+const colNotifs    = collection(db,'notifications');
+const colProtocols = collection(db,'protocols');
+const metaRef      = doc(db,'_meta','config');
 
 /* ── GUARDS ── */
 function requireMember(a='do this'){
@@ -1948,6 +1952,12 @@ function startFirestoreListeners() {
     if(currentView==='timetracker')renderTT();
     if(currentView==='dashboard')renderDashboard();
   },err=>console.error('sessions',err));
+
+  onSnapshot(query(colProtocols,orderBy('createdAt','asc')),snap=>{
+    protocols=snap.docs.map(d=>({id:d.id,...d.data()}));
+    updateStats();
+    if(currentView==='protocols')renderProtocols();
+  },err=>console.error('protocols',err));
 }
 
 function setSyncState(s){
