@@ -2001,6 +2001,8 @@ function updateStats(){
   document.getElementById('hdr-issues').innerHTML=`<strong>${entries.filter(e=>(e.tags||[]).includes('Issues & Fixes')&&e.resolved).length}</strong>Resolved`;
   document.getElementById('hdr-reqs').innerHTML=`<strong>${requests.filter(r=>!r.done).length}</strong>Open Requests`;
   document.getElementById('hdr-ci').innerHTML=`<strong>${ci}</strong>Clocked In`;
+  const cntProto=document.getElementById('cnt-protocols');
+  if(cntProto)cntProto.textContent=protocols.length||'—';
 }
 
 /* ══════════════════════════════════════════
@@ -2118,7 +2120,7 @@ function renderAll(){
 window.setView=v=>{
   currentView=v;
   document.querySelectorAll('.sb-btn,.sb-sub-btn,.sb-chronicle-btn').forEach(b=>b.classList.remove('active'));
-  ['view-dashboard','view-entries','view-chronicles','view-requests','view-tt'].forEach(id=>document.getElementById(id).style.display='none');
+  ['view-dashboard','view-entries','view-chronicles','view-requests','view-tt','view-protocols'].forEach(id=>document.getElementById(id).style.display='none');
 
   if(v==='dashboard'){
     document.getElementById('sb-dashboard')?.classList.add('active');
@@ -2148,6 +2150,10 @@ window.setView=v=>{
     const titles={'Session Log':'SESSION <span>LOGS</span>','Weekly Blogs':'WEEKLY <span>BLOGS</span>','Monthly Blogs':'MONTHLY <span>BLOGS</span>'};
     document.getElementById('chronicles-title').innerHTML=titles[subcat]||'CHRONICLES';
     renderChronicles();
+  } else if(v==='protocols'){
+    document.getElementById('sb-protocols')?.classList.add('active');
+    document.getElementById('view-protocols').style.display='block';
+    renderProtocols();
   } else {
     if(v==='all') document.getElementById('sb-all')?.classList.add('active');
     else document.getElementById('sb-sub-'+slug(v.slice(4)))?.classList.add('active');
