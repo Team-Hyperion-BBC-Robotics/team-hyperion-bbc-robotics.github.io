@@ -1812,7 +1812,7 @@ window.doLogout=async()=>{
   currentUser=null;currentUserEmail=null;isMember=false;isGuest=false;
   listenersStarted=false;
   if(notifUnsub){notifUnsub();notifUnsub=null;}
-  notifications=[];renderNotifBadge();
+  notifications=[];protocols=[];renderNotifBadge();
   const hu=document.getElementById('hdr-user');if(hu)hu.style.display='none';
   document.getElementById('viewer-banner').classList.remove('show');
   document.getElementById('sb-write-actions').style.display='none';
@@ -1834,7 +1834,8 @@ window.doGuestLogout=async()=>{
   if(unsubEntries){ unsubEntries(); unsubEntries=null; }
   if(unsubRequests){ unsubRequests(); unsubRequests=null; }
   if(unsubSessions){ unsubSessions(); unsubSessions=null; }
-  entries=[]; requests=[]; sessions=[]; notifications=[];
+  if(unsubProtocols){ unsubProtocols(); unsubProtocols=null; }
+  entries=[]; requests=[]; sessions=[]; notifications=[]; protocols=[];
   document.getElementById('viewer-banner').classList.remove('show');
   document.getElementById('sb-write-actions').style.display='none';
   const hu=document.getElementById('hdr-user'); if(hu) hu.style.display='none';
@@ -1907,7 +1908,7 @@ async function sendNotifications(assignees,from,title,reqId){
 setSyncState('connecting');
 
 let listenersStarted = false;
-let unsubMeta=null, unsubEntries=null, unsubRequests=null, unsubSessions=null;
+let unsubMeta=null, unsubEntries=null, unsubRequests=null, unsubSessions=null, unsubProtocols=null;
 
 function startFirestoreListeners() {
   if(listenersStarted) return;
@@ -1953,7 +1954,7 @@ function startFirestoreListeners() {
     if(currentView==='dashboard')renderDashboard();
   },err=>console.error('sessions',err));
 
-  onSnapshot(query(colProtocols,orderBy('createdAt','asc')),snap=>{
+  unsubProtocols=onSnapshot(query(colProtocols,orderBy('createdAt','asc')),snap=>{
     protocols=snap.docs.map(d=>({id:d.id,...d.data()}));
     updateStats();
     if(currentView==='protocols')renderProtocols();
