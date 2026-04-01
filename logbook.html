@@ -4183,7 +4183,7 @@ window.renderProtocols=()=>{
       ?`<div class="protocol-steps-label">Checklist</div>
         <ul class="protocol-step-list">
           ${steps.map((s,i)=>`<li class="protocol-step" id="ps-${p.id}-${i}" onclick="toggleStep('${p.id}',${i},event)">
-            <input type="checkbox" id="psc-${p.id}-${i}" onclick="event.stopPropagation();toggleStep('${p.id}',${i},event)"/>
+            <input type="checkbox" id="psc-${p.id}-${i}" onclick="event.stopPropagation();event.preventDefault();toggleStep('${p.id}',${i},event)"/>
             <span class="protocol-step-text">${esc(s.text)}</span>
           </li>`).join('')}
         </ul>`
