@@ -163,29 +163,28 @@
   <!-- STRUCTURAL -->
   <div class="panel active" id="panel-structural">
     <div class="prose-wrap">
-      <p class="prose-eyebrow">Structural · CAD Design</p>
-      <h2 class="prose-h1">CHASSIS &amp; <span class="accent">FORM</span></h2>
+      <p class="prose-eyebrow">CAD Design</p>
+      <h2 class="prose-h1">STRUCTURAL &amp; <span class="accent">DESIGN</span></h2>
       <div class="prose-rule"></div>
       <figure class="inline-img wide">
         <img src="assets/robot.jpg" alt="Hyperion 2026" onerror="this.onerror=null;this.src='assets/robot.png'"/>
         <figcaption>Hyperion 2026 — Full Assembly</figcaption>
       </figure>
       <p class="prose-h3">Overview</p>
+      <p class="prose-body">For Structural and Electrical we use the CAD program Autodesk Fusion 360 to 3D model and design our PCB’s. The machinery used to make and manufacture our design was the Bambu Lab 3D printer with PLA and ABS filament, as well as a CNC miller with 3mm thick aluminum. We order PCBs from the company JLCPCB. The components of these boards are ordered from a variety of websites and companies, but we try and order them from Digikey, making them our main website for ordering components.</p>
+      <p class="prose-h3">Chassis</p>
+      <p class="prose-body">The two main plates of the robot are CNC-machined from 3 mm 6061 aluminium. This design helps keep the centre of mass low to the ground, improving stability during rapid movement, while also providing increased strength and durability during impacts.</p>
+      <p class="prose-h3">Movement System</p>
+      <p class="prose-body">The drive system consists of four motors arranged in a diagonal cross (X-shape), providing improved power, speed, and balance for full 360-degree movement of the robot. The motors are secured using custom motor brackets to ensure proper alignment and structural stability.</p>
+      <p class="prose-body">To enable this omnidirectional movement, the motors are paired with double omnidirectional wheels. These allow the robot to move smoothly in any direction while maintaining good grip due to increased surface contact with the field. The wheel frames are made from ABS filament, while the rollers are made from silicone with a metal core. The rollers are mounted around a metal axle to keep them securely in place.</p>
+      <p class="prose-body">DCX19 16:1 9V Maxon motors were selected for their compact size and relatively high torque. They are powered at 12 V to increase their overall power output.</p>
+      <p class="prose-h3">Vision / Detection Systems</p>
+      <p class="prose-body">For ball detection, 24 infrared sensors are soldered onto the main board and arranged in a circular pattern. A custom 3D-printed mount separates the sensors, allowing for accurate and precise detection of the ball’s direction and signal strength.</p>
+      <p class="prose-body">For line detection, a custom-made PCB is mounted to the underside of the robot. It features two concentric rings, enabling fast and reliable detection of the white boundary line.</p>
+      <p class="prose-body">The vision system uses an OpenMV camera pointed upwards towards a cone-shaped reflective foil surface. This reflector is supported by a clear acrylic tube, allowing for full 360-degree vision of the field and clear detection of the coloured goals. The acrylic tube is mounted on an adjustable plate, enabling calibration of the mirror’s position to account for small inconsistencies in the camera setup.</p>
+      <p class="prose-h3">Ball Control System</p>
       <p class="prose-body">Coming Soon.</p>
-      <p class="prose-h3">Drive System</p>
-      <p class="prose-body">Coming Soon.</p>
-      <p class="prose-h3">Weight Management</p>
-      <p class="prose-body">Coming Soon.</p>
-      <hr class="prose-divider"/>
-      <p class="prose-eyebrow">Key Components</p>
-      <h2 class="prose-h1" style="font-size:2rem;">STRUCTURAL <span class="accent">BREAKDOWN</span></h2>
-      <p class="prose-h3">Chassis Plates</p>
-      <p class="prose-body">Coming Soon.</p>
-      <p class="prose-h3">Omni Wheels &amp; Motor Mounts</p>
-      <p class="prose-body">Coming Soon.</p>
-      <p class="prose-h3">Electronics Enclosure &amp; Battery Bay</p>
-      <p class="prose-body">Coming Soon.</p>
-      <p class="prose-h3">Sensor Ring</p>
+      <p class="prose-h3">Kicker System</p>
       <p class="prose-body">Coming Soon.</p>
     </div>
   </div>
@@ -200,35 +199,15 @@
         <img src="assets/pcb.jpg" alt="Custom PCB" onerror="this.style.display='none';this.parentElement.style.display='none'"/>
         <figcaption>Custom PCB — Main Control Board</figcaption>
       </figure>
+      <p class="prose-h3">Main Board</p>
+      <p class="prose-body">The main board consists of a power regulation circuit, ball detection sensors, a camera, a Bluetooth module, a compass, dual microcontrollers, and motor driver circuits. The robot is powered by a 12.6 V, 1300 mAh LiPo battery, which is connected to the main board via an XT-60 extension cable.</p>
+      <p class="prose-body">The 12 V supply is connected to five motor controllers (VNH7070). Four of these control the drive motors, while the fifth controls the dribbler motor. The 12 V supply, along with 3.3 V and ground, is also connected via a three-pin JST connector to a custom kicker control circuit.</p>
+      <p class="prose-body">The 12 V supply is stepped down to 5 V and then to 3.3 V. The 5 V rail powers the dual microcontrollers (Teensy 4.1), camera (OpenMV H7), Bluetooth module (HC-05), and photogate. The 3.3 V rail supplies the 24 infrared sensors (TSSP77038TR), the compass (BNO055), and a custom light ring PCB through a 12-pin FFC cable.</p>
+      <p class="prose-h3">Light Ring Board</p>
+      <p class="prose-body">The Light Sensor Board consists of 48 groups of components, each including phototransistors, LEDs, resistors, and smoothing capacitors. The first 16 groups are arranged into four segments, with each segment containing four groups positioned near the outer edges of the robot between the wheels. This placement allows the robot to detect and respond to the line more quickly.</p>
+      <p class="prose-body">The remaining 32 groups are arranged in a circular pattern in front of the wheels, enabling the defender to position itself closer to the goal without entering the goal box. Each group produces a signal that is routed through three 16-bit multiplexers, which output four analog pins. Therefore, reducing the number of pins required on the main processor.</p>
+      <p class="prose-h3">Kicker Board</p>
       <p class="prose-body">Coming Soon.</p>
-      <p class="prose-h3">Main Microcontroller — Teensy 4.1</p>
-      <p class="prose-body">Coming Soon.</p>
-      <p class="prose-h3">Motor Drivers</p>
-      <p class="prose-body">Coming Soon.</p>
-      <p class="prose-h3">Power System</p>
-      <p class="prose-body">Coming Soon.</p>
-      <table class="prose-table">
-        <tr><td>MCU</td><td>Teensy 4.1 — ARM Cortex-M7 @ 600MHz</td></tr>
-        <tr><td>Motor Drivers</td><td>Coming Soon.</td></tr>
-        <tr><td>IMU</td><td>Coming Soon.</td></tr>
-        <tr><td>Vision</td><td>Coming Soon.</td></tr>
-        <tr><td>Ball Detection</td><td>Coming Soon.</td></tr>
-        <tr><td>Line Detection</td><td>Coming Soon.</td></tr>
-        <tr><td>Comms</td><td>Coming Soon.</td></tr>
-        <tr><td>Power</td><td>Coming Soon.</td></tr>
-        <tr><td>Actuators</td><td>Coming Soon.</td></tr>
-      </table>
-      <hr class="prose-divider"/>
-      <p class="prose-eyebrow">Sensor Suite</p>
-      <h2 class="prose-h1" style="font-size:2rem;">ALL <span class="accent">SENSORS</span></h2>
-      <div class="prose-sensor-grid">
-        <div class="prose-sensor-card"><span class="psc-icon"></span><div class="psc-name">BNO055</div><div class="psc-part">9-Axis IMU · I²C</div><p class="psc-desc">Coming Soon.</p></div>
-        <div class="prose-sensor-card"><span class="psc-icon"></span><div class="psc-name">TSSP4038</div><div class="psc-part">IR Ball Detection · Digital Array</div><p class="psc-desc">Coming Soon.</p></div>
-        <div class="prose-sensor-card"><span class="psc-icon"></span><div class="psc-name">IR Phototransistors</div><div class="psc-part">Line Detection · Underside Array</div><p class="psc-desc">Coming Soon.</p></div>
-        <div class="prose-sensor-card"><span class="psc-icon"></span><div class="psc-name">OpenMV RT</div><div class="psc-part">Machine Vision · UART</div><p class="psc-desc">Coming Soon.</p></div>
-        <div class="prose-sensor-card"><span class="psc-icon"></span><div class="psc-name">Bluetooth Module</div><div class="psc-part">Inter-Robot Comms · UART Bridge</div><p class="psc-desc">Coming Soon.</p></div>
-        <div class="prose-sensor-card"><span class="psc-icon"></span><div class="psc-name">Voltage Divider</div><div class="psc-part">Battery Monitor · ADC Input</div><p class="psc-desc">Coming Soon.</p></div>
-      </div>
     </div>
   </div>
 
