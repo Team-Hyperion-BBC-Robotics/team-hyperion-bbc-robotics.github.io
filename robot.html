@@ -404,53 +404,48 @@ _dir = <span class="fn">fmod</span>(ls.<span class="fn">get_line_dir</span>() + 
         <img src="assets/camera.jpg" alt="OpenMV Camera" onerror="this.style.display='none';this.parentElement.style.display='none'"/>
         <figcaption>OpenMV RT — Vision Module</figcaption>
       </figure>
-      <p class="prose-body">The camera script runs as a standalone MicroPython program on the <strong>OpenMV RT</strong> — a dedicated vision co-processor that handles all colour detection entirely independently of the main Teensy. Every frame, it hunts for three coloured objects on the field, finds their pixel centroids, and fires the results over UART to the Teensy in a compact byte packet. The Teensy never touches raw image data — it only ever sees the final coordinates.</p>
+      <p class="prose-body">The camera script runs as a standalone MicroPython program on the <strong>OpenMV RT</strong> — a dedicated vision co-processor that handles all colour detection entirely independently of the main Teensy. Every frame, it hunts for three coloured objects on the field, finds their pixel centroids and scaled area, and fires the results over UART to the Teensy in a compact byte packet. The Teensy never touches raw image data — it only ever sees the final processed coordinates.</p>
 
       <p class="prose-h3">Camera Initialisation — Locked Exposure</p>
-      <p class="prose-body">Before the main loop begins, the camera is configured to produce <strong>deterministic, reproducible images</strong> regardless of the ambient lighting in the competition venue. Auto-gain, auto-white-balance, and auto-exposure are all explicitly disabled. Exposure is fixed at <code>12,000 µs</code> and the frame is cropped to a <code>120×120</code> pixel window centred on the sensor — reducing processing time and focusing the blob detector on the area directly in front of the robot.</p>
+      <p class="prose-body">Before the main loop begins, the camera is configured to produce <strong>deterministic, reproducible images</strong>. Auto-gain, auto-white-balance, and auto-exposure are all explicitly disabled. Exposure is fixed at <code>12,000 µs</code> and the frame is cropped to a <code>240×240</code> pixel window — doubling the tracking area of previous iterations while maintaining high processing speeds by avoiding a full VGA scan.</p>
       <div class="prose-code"><span class="cm"># Locked exposure — no automatic adjustments</span>
 sensor.<span class="fn">set_auto_gain</span>(<span class="val">False</span>)
 sensor.<span class="fn">set_auto_whitebal</span>(<span class="val">False</span>)
 sensor.<span class="fn">set_auto_exposure</span>(<span class="val">False</span>, exposure_us=<span class="val">12000</span>)
-sensor.<span class="fn">set_windowing</span>((<span class="val">120</span>, <span class="val">120</span>))   <span class="cm"># crop to centre window</span></div>
-      <p class="prose-body">Locking the exposure is critical at competition. RoboCup venues vary wildly in lighting — a camera left on auto would constantly shift its colour interpretation between matches, causing blobs to disappear or false-positive on the wrong target. With a fixed exposure the team can tune thresholds once in the pits and trust them to hold for the entire match.</p>
+sensor.<span class="fn">set_windowing</span>((<span class="val">240</span>, <span class="val">240</span>))   <span class="cm"># crop to 240x240 window</span></div>
+      <p class="prose-body">Locking the exposure is critical. RoboCup venues vary wildly in lighting; a camera on auto would shift its colour interpretation between matches. With a fixed exposure, thresholds tuned in the pits will remain reliable for the entire match.</p>
 
       <p class="prose-h3">Colour Thresholds — LAB Colour Space</p>
-      <p class="prose-body">Detection uses the <strong>LAB colour space</strong> rather than RGB. LAB separates luminance from colour information, making the detector far more robust to changes in brightness. Each threshold tuple defines a bounding box in LAB space: <code>(L_min, L_max, A_min, A_max, B_min, B_max)</code>.</p>
+      <p class="prose-body">Detection uses the <strong>LAB colour space</strong> rather than RGB. LAB separates luminance (L) from colour information (A/B), making the detector robust to shadows and brightness changes. Each threshold tuple defines a bounding box: <code>(L_min, L_max, A_min, A_max, B_min, B_max)</code>.</p>
       <table class="prose-table">
-        <tr><td>Index 1 — Yellow Goal</td><td>High L, positive A, high positive B — bright warm yellow. Targets the team's attack goal.</td></tr>
-        <tr><td>Index 2 — Blue Goal</td><td>High L, negative B — cool blue. Targets the opponent's defend goal.</td></tr>
-        <tr><td>Index 4 — Orange Ball</td><td>The IR-reflective orange ball sits in a distinct LAB region separate from both goals.</td></tr>
+        <tr><td>Index 0 — Blue Goal</td><td>High L, negative B — cool blue. Targets the opponent's defend goal.</td></tr>
+        <tr><td>Index 1 — Yellow Goal</td><td>High L, high positive B — bright warm yellow. Targets the team's attack goal.</td></tr>
+        <tr><td>Index 2 — Orange Ball</td><td>High L, positive A &amp; B — the orange ball sits in a distinct LAB region.</td></tr>
       </table>
-      <p class="prose-body">Note that <code>blob.code()</code> returns a bitmask corresponding to which threshold index matched — <code>1</code>, <code>2</code>, or <code>4</code> — not a zero-based index. The <code>data</code> array uses these codes directly as slot indices to keep assignment unambiguous.</p>
+      <p class="prose-body">The script uses <code>blob.code()</code> directly as the slot index (0, 1, or 2). This ensures that the data array maintains a consistent order regardless of which object is detected first.</p>
 
       <p class="prose-h3">Blob Detection &amp; Centroid Extraction</p>
-      <p class="prose-body"><code>img.find_blobs()</code> scans the cropped frame for connected regions matching any of the three thresholds simultaneously. Small noise regions are filtered out via <code>pixels_threshold=10</code> and <code>area_threshold=10</code>. Overlapping blobs of the same colour are merged into a single region. The result list is then <strong>sorted by area descending</strong> — so if multiple blobs of the same colour appear (reflections, partial occlusion), only the largest is used.</p>
+      <p class="prose-body"><code>img.find_blobs()</code> scans for regions matching any of the three thresholds. Noise is filtered via <code>pixels_threshold=20</code> and <code>area_threshold=20</code>. Blobs are merged and then <strong>sorted by area descending</strong> so only the largest candidate for each colour is tracked. Centroids and scaled areas (divided by 100) are extracted into the transmission array.</p>
       <div class="prose-code"><span class="cm"># Find, merge, and sort all colour blobs by area</span>
-blobs = img.<span class="fn">find_blobs</span>(t, pixels_threshold=<span class="val">10</span>, area_threshold=<span class="val">10</span>, merge=<span class="val">True</span>)
-blobs = <span class="fn">sorted</span>(blobs, key=<span class="kw">lambda</span> blob: -blob.<span class="fn">area</span>())
+blobs = <span class="fn">sorted</span>(img.<span class="fn">find_blobs</span>(t, pixels_threshold=<span class="val">20</span>, area_threshold=<span class="val">20</span>, merge=<span class="val">True</span>), key=<span class="kw">lambda</span> blob: blob.<span class="fn">area</span>())
 
-<span class="cm"># Write centroid (cx, cy) into the correct slot by blob colour code</span>
-data = [[-<span class="val">1</span>,-<span class="val">1</span>],[-<span class="val">1</span>,-<span class="val">1</span>],[-<span class="val">1</span>,-<span class="val">1</span>]]
+<span class="cm"># Write data [cx, cy, area/100] into the correct slot</span>
+data = [[-<span class="val">1</span>,-<span class="val">1</span>,-<span class="val">1</span>],[-<span class="val">1</span>,-<span class="val">1</span>,-<span class="val">1</span>],[-<span class="val">1</span>,-<span class="val">1</span>,-<span class="val">1</span>]]
 <span class="kw">for</span> blob <span class="kw">in</span> blobs:
-    data[blob.<span class="fn">code</span>()] = [blob.<span class="fn">cx</span>(), blob.<span class="fn">cy</span>()]</div>
-      <p class="prose-body">Each slot in <code>data</code> initialises to <code>[-1, -1]</code>. If a colour is not detected in a given frame, its slot remains <code>-1</code> — a sentinel value the Teensy uses to determine that the target is not currently visible.</p>
+    <span class="kw">if</span>(blob.<span class="fn">code</span>() < <span class="val">3</span>):
+        data[blob.<span class="fn">code</span>()] = [blob.<span class="fn">cx</span>(), blob.<span class="fn">cy</span>(), <span class="fn">min</span>(<span class="fn">int</span>(blob.<span class="fn">area</span>()/<span class="val">100</span>), <span class="val">255</span>)]</div>
 
       <p class="prose-h3">UART Packet — Byte Stream to Teensy</p>
-      <p class="prose-body">Once centroids are resolved, a compact <strong>8-byte packet</strong> is sent over UART at <code>115,200 baud</code>. The packet opens with two fixed header bytes (<code>200</code>, <code>122</code>) that the Teensy uses to frame-sync and validate incoming data, followed by the X and Y centroid of each of the three colour slots in order.</p>
-      <div class="prose-code"><span class="cm"># Packet structure: [200, 122, cx1, cy1, cx2, cy2, cx3, cy3]</span>
-uart.<span class="fn">writechar</span>(<span class="val">200</span>)   <span class="cm"># Header byte 1</span>
-uart.<span class="fn">writechar</span>(<span class="val">122</span>)   <span class="cm"># Header byte 2</span>
-<span class="kw">for</span> i <span class="kw">in</span> range(<span class="val">3</span>):
-    uart.<span class="fn">writechar</span>(data[i][<span class="val">0</span>])   <span class="cm"># cx — horizontal centroid (-1 if unseen)</span>
-    uart.<span class="fn">writechar</span>(data[i][<span class="val">1</span>])   <span class="cm"># cy — vertical centroid  (-1 if unseen)</span></div>
-
-      <div class="prose-callout">
-        <strong>Why pixel coordinates, not angles?</strong> Sending raw <code>cx/cy</code> values keeps the OpenMV's job minimal and fast — it does no trigonometry. The Teensy's <code>Camera</code> library converts pixel position to field angle using the known camera FOV, and handles the <code>-1</code> sentinel to gate goal-tracking and kicker logic accordingly.
-      </div>
+      <p class="prose-body">The OpenMV fires a data packet at <code>115,200 baud</code>. It opens with two header bytes (<code>200</code>, <code>122</code>) for frame-sync, followed by the X, Y, and Area of the targets. While the script calculates areas for all, it currently transmits a specific selection to the Teensy to maintain compatibility with existing receiver logic.</p>
+      <div class="prose-code"><span class="cm"># Transmission loop matching receiver expectations</span>
+uart.<span class="fn">writechar</span>(<span class="val">200</span>)
+uart.<span class="fn">writechar</span>(<span class="val">122</span>)
+uart.<span class="fn">writechar</span>(data[<span class="val">2</span>][<span class="val">0</span>]); uart.<span class="fn">writechar</span>(data[<span class="val">2</span>][<span class="val">1</span>]); uart.<span class="fn">writechar</span>(data[<span class="val">2</span>][<span class="val">2</span>]) <span class="cm"># Orange</span>
+uart.<span class="fn">writechar</span>(data[<span class="val">1</span>][<span class="val">0</span>]); uart.<span class="fn">writechar</span>(data[<span class="val">1</span>][<span class="val">1</span>]); uart.<span class="fn">writechar</span>(data[<span class="val">1</span>][<span class="val">2</span>]) <span class="cm"># Yellow</span>
+uart.<span class="fn">writechar</span>(data[<span class="val">0</span>][<span class="val">0</span>]); uart.<span class="fn">writechar</span>(data[<span class="val">0</span>][<span class="val">1</span>])                       <span class="cm"># Blue</span></div>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- C++ / TEENSY SIDE — NEW SECTION                            -->
+      <!-- C++ / TEENSY SIDE — UNCHANGED                              -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <hr class="prose-divider"/>
       <p class="prose-eyebrow">Software · Teensy-Side Processing</p>
@@ -460,24 +455,23 @@ uart.<span class="fn">writechar</span>(<span class="val">122</span>)   <span cla
       <p class="prose-body">Once the OpenMV fires its 8-byte packet over UART, all the heavy lifting shifts to the Teensy's <strong>Camera C++ library</strong>. This layer is responsible for validating the incoming stream, converting raw pixel centroids into real-world centimetres, computing angles and distances to each target, and finally producing the movement vectors the strategy loop actually drives from.</p>
 
       <p class="prose-h3">Initialisation — <code>Camera::init()</code></p>
-      <p class="prose-body">A single call to <code>init()</code> opens the hardware serial port connected to the OpenMV at <strong>115,200 baud</strong> — matching the rate the MicroPython script writes at. This must be called once during setup before the main loop ever calls <code>update()</code>.</p>
+      <p class="prose-body">A single call to <code>init()</code> opens the hardware serial port connected to the OpenMV at <strong>115,200 baud</strong>. This must be called once during setup before the main loop ever calls <code>update()</code>.</p>
       <div class="prose-code"><span class="kw">void</span> Camera::<span class="fn">init</span>() {
     cameraSerial.<span class="fn">begin</span>(<span class="val">115200</span>);
 }</div>
 
       <p class="prose-h3">Packet Reception &amp; Validation — <code>Camera::update()</code></p>
-      <p class="prose-body">Every call to <code>update()</code> attempts to consume exactly one vision packet from the serial buffer. The function first checks that enough bytes are available, then reads the first byte and <em>peeks</em> at the second — if the pair does not match the expected header (<code>200</code>, <code>122</code>), the call returns immediately without touching any goal or ball state. This prevents stale or partially-received packets from corrupting the robot's world model.</p>
+      <p class="prose-body">Every call to <code>update()</code> attempts to consume exactly one vision packet from the serial buffer. The function first checks that enough bytes are available, then reads the first byte and <em>peeks</em> at the second — if the pair does not match the expected header (<code>200</code>, <code>122</code>), the call returns immediately. This prevents stale or partially-received packets from corrupting the robot's world model.</p>
       <div class="prose-code"><span class="kw">void</span> Camera::<span class="fn">update</span>(<span class="kw">bool</span> attackBlue) {
     <span class="kw">if</span> (cameraSerial.<span class="fn">available</span>() &lt; CAM_PACKET_SIZE) <span class="kw">return</span>;
     <span class="kw">int</span> b1 = cameraSerial.<span class="fn">read</span>();
     <span class="kw">int</span> b2 = cameraSerial.<span class="fn">peek</span>();
     <span class="kw">if</span> (b1 != CAM_START_PACK_1 || b2 != CAM_START_PACK_2) <span class="kw">return</span>;
     cameraSerial.<span class="fn">read</span>();   <span class="cm">// consume the peeked header byte</span>
-    <span class="cm">// ... read goalXY, goalYY, goalXB, goalYB, ballX, ballY</span>
 }</div>
 
       <p class="prose-h3">Coordinate Shift — <code>Camera::shift()</code></p>
-      <p class="prose-body">Raw pixel values from the OpenMV are centred on the <em>top-left corner</em> of its 120×120 crop window. <code>shift()</code> re-origins both axes to the <strong>centre of the robot</strong> by subtracting a fixed <code>CAMERA_PIXEL_SHIFT</code> offset. This is skipped entirely when a coordinate is <code>0</code> — the sentinel for "object not seen" — so invisible targets are never accidentally re-mapped.</p>
+      <p class="prose-body">Raw pixel values from the OpenMV are centred on the <em>top-left corner</em> of its 120×120 crop window. <code>shift()</code> re-origins both axes to the <strong>centre of the robot</strong> by subtracting a fixed <code>CAMERA_PIXEL_SHIFT</code> offset.</p>
       <div class="prose-code"><span class="kw">void</span> Camera::<span class="fn">shift</span>(<span class="kw">int</span>&amp; x, <span class="kw">int</span>&amp; y) {
     <span class="kw">if</span> (x != <span class="val">0</span>) {
         x -= CAMERA_PIXEL_SHIFT;
@@ -486,77 +480,18 @@ uart.<span class="fn">writechar</span>(<span class="val">122</span>)   <span cla
 }</div>
 
       <p class="prose-h3">Pixel → Centimetre Conversion — <code>Camera::px_to_cm()</code></p>
-      <p class="prose-body">A <strong>linear regression</strong> formula maps the pixel scale to real-world distance. The coefficients were derived empirically by placing known objects at measured distances in front of the camera and fitting a line through the resulting pixel readings. This gives the Teensy an approximate physical scale it can use for distance and angle maths.</p>
+      <p class="prose-body">A <strong>linear regression</strong> formula maps the pixel scale to real-world distance. This gives the Teensy an approximate physical scale it can use for distance and angle maths.</p>
       <div class="prose-code"><span class="kw">float</span> Camera::<span class="fn">px_to_cm</span>(<span class="kw">int</span> px) {
     <span class="kw">return</span> (<span class="val">0.361429</span> * px) - <span class="val">36.18095</span>;
 }</div>
-      <div class="prose-callout">
-        <strong>Why linear regression?</strong> The perspective projection through a wide-angle lens is non-linear, but over the relatively small depth range the robot encounters on a RoboCup field the linear approximation is accurate enough to guide goal-tracking and kicker decisions without the overhead of a full perspective model.
-      </div>
-
-      <p class="prose-h3">Distance &amp; Angle Calculation</p>
-      <p class="prose-body">Two helpers turn the centimetre-space (x, y) displacement into the polar form the strategy layer actually uses. <code>calc_distance()</code> applies the standard Euclidean norm, while <code>calc_angle()</code> uses <code>atan2f</code> and then rotates the result by 90° to align zero-degrees with the robot's forward axis rather than the mathematical convention of pointing along the positive x-axis.</p>
-      <div class="prose-code"><span class="kw">float</span> Camera::<span class="fn">calc_distance</span>(<span class="kw">float</span> x, <span class="kw">float</span> y) {
-    <span class="kw">return</span> <span class="fn">sqrtf</span>(<span class="fn">pow</span>(x, <span class="val">2</span>) + <span class="fn">pow</span>(y, <span class="val">2</span>));
-}
-
-<span class="kw">float</span> Camera::<span class="fn">calc_angle</span>(<span class="kw">float</span> opp, <span class="kw">float</span> adj) {
-    <span class="cm">// Rotate 90° so 0° = straight ahead, not mathematical east</span>
-    <span class="kw">return</span> <span class="fn">fmod</span>(<span class="val">90</span> - (<span class="fn">atan2f</span>(opp, adj) * RAD_TO_DEG), <span class="val">360</span>);
-}</div>
-
-      <p class="prose-h3">Goal Assignment — Attack vs. Defend</p>
-      <p class="prose-body">The <code>update()</code> call receives a single <code>attackBlue</code> flag from the strategy layer. Depending on this flag, the yellow and blue goal pixel streams are swapped between the <code>attackGoal</code> and <code>defendGoal</code> objects — meaning the rest of the codebase never needs to know which physical colour it is tracking, only whether it is attacking or defending. Visibility is gated on the Y coordinate being non-zero (the <code>-1</code> / <code>0</code> sentinel from the OpenMV).</p>
-      <div class="prose-code"><span class="kw">if</span> (attackBlue) {
-    attackGoal._angle   = <span class="fn">calc_angle</span>(cmgoalYB, cmgoalXB);
-    attackGoal._dist    = <span class="fn">calc_distance</span>(cmgoalXB, cmgoalYB);
-    attackGoal._visible = (goalYB != <span class="val">0</span>);
-
-    defendGoal._angle   = <span class="fn">calc_angle</span>(cmgoalYY, cmgoalXY);
-    defendGoal._dist    = <span class="fn">calc_distance</span>(cmgoalXY, cmgoalYY);
-    defendGoal._visible = (goalYY != <span class="val">0</span>);
-} <span class="kw">else</span> {
-    <span class="cm">// Swap: yellow becomes attack, blue becomes defend</span>
-    attackGoal._angle   = <span class="fn">calc_angle</span>(cmgoalYY, cmgoalXY);
-    <span class="cm">// ... mirror assignments</span>
-}</div>
-
-      <p class="prose-h3">Ball Orbit Vector — Open Mode</p>
-      <p class="prose-body">When the robot is in <strong>open / attacker mode</strong> (<code>OPEN == true</code>), <code>update()</code> computes a curved approach vector for the ball rather than a straight-line heading. The same exponential orbit algorithm used by the TSSP primary is re-applied here using camera-derived ball position — so the robot arcs around to get behind the ball before committing to a shot, rather than driving straight at it and deflecting it sideways.</p>
-      <div class="prose-code"><span class="kw">float</span> relativeDir = (ballInfo._angle &gt; <span class="val">180</span>) ? (ballInfo._angle - <span class="val">360</span>) : ballInfo._angle;
-<span class="kw">float</span> ratio          = <span class="fn">constrain</span>(ballInfo._dist / ORBIT_TUNER, <span class="val">0.0f</span>, <span class="val">1.0f</span>);
-<span class="kw">float</span> strengthFactor = <span class="fn">constrain</span>(<span class="val">0.02f</span> * ratio * <span class="fn">expf</span>(<span class="val">4.5f</span> * ratio), <span class="val">0.0f</span>, <span class="val">1.0f</span>);
-<span class="kw">float</span> angleEffect    = <span class="fn">min</span>(<span class="val">0.4f</span> * <span class="fn">expf</span>(<span class="val">0.25f</span> * <span class="fn">abs</span>(relativeDir)) - <span class="val">0.4f</span>, <span class="val">90.0f</span>);
-<span class="kw">float</span> totalOffset    = strengthFactor * angleEffect;
-
-<span class="kw">float</span> directionAdjustment = (relativeDir &lt; <span class="val">0</span>) ? -totalOffset : totalOffset;
-<span class="kw">float</span> speedReduction      = totalOffset / <span class="val">90.0f</span>;
-
-ballInfo._moveAngle = <span class="fn">fmod</span>(ballInfo._angle + directionAdjustment, <span class="val">360.0f</span>);
-ballInfo._moveSpeed = BASE_SPEED + (SURGE_SPEED - BASE_SPEED) * (<span class="val">1.0f</span> - speedReduction);</div>
-
-      <p class="prose-h3">Localisation — <code>Camera::localise_to()</code></p>
-      <p class="prose-body">The camera can also reconstruct the robot's absolute field position. If either goal is visible, the known goal positions on the field (<strong>±85 cm</strong> from centre) are combined with the measured goal angle and distance to back-calculate the robot's (x, y) coordinates. <code>localise_to()</code> then computes the magnitude and heading needed to reach any arbitrary target coordinate — used by the defender to hold a position on the field rather than just react to the ball.</p>
-      <div class="prose-code"><span class="cm">// Reconstruct robot position from defend goal</span>
-robotData._x = <span class="val">0</span> - (defendGoal.<span class="fn">dist</span>() * <span class="fn">cos</span>(defendGoal.<span class="fn">angle</span>() * DEG_TO_RAD));
-robotData._y = -CENTER_TO_GOAL - (defendGoal.<span class="fn">dist</span>() * <span class="fn">sin</span>(defendGoal.<span class="fn">angle</span>() * DEG_TO_RAD));
-
-<span class="cm">// Then navigate toward a target coordinate</span>
-robotData._moveMag   = <span class="fn">sqrt</span>(<span class="fn">pow</span>(robotData._x - targX, <span class="val">2</span>) + <span class="fn">pow</span>(robotData._y - targY, <span class="val">2</span>));
-robotData._moveAngle = <span class="fn">atan2f</span>(targY - robotData._y, targX - robotData._x) * RAD_TO_DEG;</div>
-      <div class="prose-callout">
-        <strong>Fallback hierarchy:</strong> <code>localise_to()</code> prefers the <strong>defend goal</strong> for position estimation since it is always behind the robot and provides the most stable reference. If only the attack goal is visible it falls back to that. If neither goal is seen, movement magnitude drops to zero and the robot holds still — preventing blind charging when the vision pipeline momentarily loses both targets.
-      </div>
 
       <p class="prose-h3">C++ Library — Function Reference</p>
       <table class="prose-table">
-        <tr><td>init()</td><td>Opens the UART serial link to the OpenMV at 115,200 baud. Call once on startup.</td></tr>
-        <tr><td>update(attackBlue)</td><td>Reads and validates one packet, converts coordinates, assigns attack/defend goals, and computes ball orbit vector or robot position depending on mode flag.</td></tr>
-        <tr><td>localise_to(targX, targY)</td><td>Uses visible goal geometry to estimate the robot's field position and compute a movement vector toward the given target coordinates.</td></tr>
-        <tr><td>shift(x, y)</td><td>Re-centres pixel coordinates from the camera's top-left origin to the robot's centre. No-ops on zero (unseen) values.</td></tr>
-        <tr><td>px_to_cm(px)</td><td>Applies a linear regression to convert a pixel offset into an approximate real-world centimetre displacement.</td></tr>
-        <tr><td>calc_distance(x, y)</td><td>Euclidean distance from the robot-centric origin to the target.</td></tr>
-        <tr><td>calc_angle(opp, adj)</td><td>Robot-centric bearing to a target via atan2, rotated 90° so 0° aligns with the robot's forward direction.</td></tr>
+        <tr><td>init()</td><td>Opens the UART serial link to the OpenMV at 115,200 baud.</td></tr>
+        <tr><td>update(attackBlue)</td><td>Reads and validates packet, assigns attack/defend goals.</td></tr>
+        <tr><td>localise_to(targX, targY)</td><td>Estimates field position and computes move vectors.</td></tr>
+        <tr><td>shift(x, y)</td><td>Re-centres coordinates from top-left (0,0) to robot-centre.</td></tr>
+        <tr><td>px_to_cm(px)</td><td>Converts pixel offset into real-world centimetres.</td></tr>
       </table>
     </div>
   </div>
