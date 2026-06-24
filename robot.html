@@ -571,6 +571,20 @@
       height: auto;
     }
 
+    .prose-math {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(0, 114, 63, 0.15);
+      padding: 16px 22px;
+      margin: 20px 0;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.82rem;
+      line-height: 1.8;
+      color: rgba(240, 255, 244, 0.78);
+      text-align: center;
+      overflow-x: auto;
+      clear: both;
+    }
+
     .prose-diag-label {
       font-family: 'Share Tech Mono', monospace;
       font-size: 0.6rem;
@@ -654,7 +668,7 @@
 
     <div class="secondary-tabs" id="sec-software">
       <div class="s-tab active" data-panel="bno055" onclick="switchSub('software','bno055')">BNO055 &amp; IMU</div>
-      <div class="s-tab" data-panel="tssp" onclick="switchSub('software','tssp')">TSSP System</div>
+      <div class="s-tab" data-panel="tssp" onclick="switchSub('software','tssp')">Ball Detection</div>
       <div class="s-tab" data-panel="drive" onclick="switchSub('software','drive')">Drive System</div>
       <div class="s-tab" data-panel="light" onclick="switchSub('software','light')">Light System</div>
       <div class="s-tab" data-panel="camera" onclick="switchSub('software','camera')">Camera</div>
@@ -680,7 +694,7 @@
           components of these boards are ordered from a variety of websites and companies, but we try and order them
           from Digikey, making them our main website for ordering components.</p>
         <p class="prose-h3">Chassis</p>
-        <p class="prose-body">The two main plates of the robot are CNC-machined from 3 mm 6061 aluminium. This design
+        <p class="prose-body">The two main plates of the robot are CNC-machined from 3 mm 6061 AND 1.6mm 7075 aluminium. This design
           helps keep the centre of mass low to the ground, improving stability during rapid movement, while also
           providing increased strength and durability during impacts.</p>
         <p class="prose-h3">Movement System</p>
@@ -704,7 +718,7 @@
           field and clear detection of the coloured goals. The acrylic tube is mounted on an adjustable plate, enabling
           calibration of the mirror’s position to account for small inconsistencies in the camera setup.</p>
         <p class="prose-h3">Ball Control System</p>
-        <p class="prose-body">Coming soon.</p>
+        <p class="prose-body">The dribbler mechanism builds upon previous Small-Size League (SSL) designs. The assembly features a 3D-printed housing that accommodates a three-gear drivetrain. Configured with a 1:4 speed-multiplying gear ratio, allowing the motor to operate at a lower, more efficient RPM while driving the dribbler roller at high velocities to optimize power consumption. To ensure reliable ball control, the roller is moulded around a 3D printed rod in silicone, maximizing grip ensuring ball stays the capture zone to prevent slippage.</p>
       </div>
     </div>
 
@@ -839,83 +853,204 @@
     <div class="panel" id="panel-tssp">
       <div class="prose-wrap">
         <p class="prose-eyebrow">Software · Ball Detection</p>
-        <h2 class="prose-h1">TSSP <span class="accent">System</span></h2>
+        <h2 class="prose-h1">Advanced IR Ball <span class="accent">Detection</span></h2>
         <div class="prose-rule"></div>
         <figure class="inline-img">
           <img src="assets/tssp.jpg" alt="TSSP IR Array"
             onerror="this.style.display='none';this.parentElement.style.display='none'" />
           <figcaption>TSSP77038TR (SMD) IR Receiver</figcaption>
         </figure>
-        <p class="prose-h3">An Overview</p>
-        <p class="prose-body">Imagine our robot is standing in the middle of a dark room. Somewhere in that room, there
-          is a glowing orange ball. Our goal is to find that ball and kick it into a goal. We use two electronic
-          "brains" (called Teensys) to do this. One brain acts like the Eyes, and the other acts like the Captain.</p>
-        <p class="prose-h3">The "Secondary" Teensy</p>
-        <p class="prose-body">This part of the code is responsible for looking around. We have several sensors (TSSP
-          sensors) placed in a circle around the robot. These sensors are like little eyes that can only see infrared
-          light from the ball.</p>
+        <p class="prose-body">Welcome to the definitive technical breakdown of our robot's Ball Detection and Tracking
+          System. This comprehensive overview details how our robot perceives its environment, filters sensory noise,
+          and implements advanced mathematical algorithms to navigate the field with aggressive, pinpoint precision.</p>
+
+        <p class="prose-h2">System Architecture <span class="accent">Overview</span></p>
+        <p class="prose-body">Our robot distributes its computational workload across two high-performance
+          microcontrollers (<strong>Teensy 4.1 boards</strong>) connected via a high-speed UART serial interface
+          operating at <strong>115,200 baud</strong>.</p>
         <ul class="prose-body" style="padding-left:40px;">
-          <li>The infrared ball blinks very fast. The "Eyes" look at each sensor 255 times in a row. Every time a sensor
-            sees a flash of light, it adds a point.</li>
-          <li>If the sensor on the front-right has 200 points and the one on the back has 0, the robot knows the ball is
-            somewhere to the front-right.</li>
-          <li>The code takes the top four strongest sensor readings and combines them using vector summation to
-            calculate both the angle and strength of the ball signal.</li>
+          <li><strong>The Secondary Teensy ("The Eyes"):</strong> Dedicated exclusively to low-level hardware
+            interaction. It constantly samples an array of 24 infrared sensors, applies digital filtering, and
+            calculates the ball's relative angle and signal strength.</li>
+          <li><strong>The Primary Teensy ("The Captain"):</strong> Responsible for high-level tactical decisions. It
+            ingests the filtered data from the Secondary Teensy and uses complex orbital algorithms to drive the robot's
+            holonomic drivetrain.</li>
         </ul>
-        <p class="prose-h3">The "Eyes" Math</p>
-        <p class="prose-body">The system identifies the ball's position by isolating the four highest sensor readings.
-          Each sensor is treated as a vector, where the physical orientation of the sensor represents the angle and the
-          point count represents the magnitude. By plotting these on a Cartesian plane and performing a vector
-          summation, the robot calculates a single resultant vector.</p>
-        <div class="prose-code"><span class="cm">// TSSP Update — Ball Direction and Strength Calculation</span>
-          <span class="kw">for</span> (i = <span class="val">0</span>; i &lt; <span class="val">255</span>; i++) {
-          tsspValues[j] += <span class="val">1</span> - <span class="fn">digitalRead</span>(tsspPins[j]);
-          }
+        <div class="prose-code">[24 TSSP IR Sensors] -&gt; (Asynchronous Sampling) -&gt; [Secondary Teensy]
+                                                          |  (High-Speed UART)
+                                                          v
+[Drivetrain Motors]  &lt;-  (Exponential Orbit)   &lt;-  [Primary Teensy]</div>
 
-          x = <span class="fn">sum</span>(tsspSortedValues * <span class="fn">cos</span>(sensorAngle));
-          y = <span class="fn">sum</span>(tsspSortedValues * <span class="fn">sin</span>(sensorAngle));
+        <p class="prose-h2">1. The Physics of the IR Ball &amp; <span class="accent">Waveform Analysis</span></p>
+        <p class="prose-body">To track the soccer ball, we must first understand the signal it transmits. The ball
+          emits a digitally modulated infrared light at a wavelength of <strong>940nm</strong>, powered by a
+          high-capacity 18350 Lithium-Ion battery.</p>
+        <p class="prose-h3">Waveform Characteristics</p>
+        <ul class="prose-body" style="padding-left:40px;">
+          <li><strong>Carrier Frequency:</strong> <strong>40kHz</strong> (each individual pulse period lasts exactly
+            <strong>25µs</strong>).</li>
+          <li><strong>Burst Modulation:</strong> The ball transmits a burst of <strong>8 pulses</strong> at 40kHz,
+            which creates an active "on" window of exactly <strong>200µs</strong>.</li>
+          <li><strong>Repetition Rate:</strong> The burst repeats at a frequency of <strong>1.2kHz</strong>, meaning
+            the total signal period (from the start of one burst to the next) is <strong>833.33µs</strong>.</li>
+        </ul>
+        <p class="prose-h3">Calculating the Duty Cycle</p>
+        <p class="prose-body">Based on these physical parameters, we can calculate the exact percentage of time the ball
+          is actively transmitting light:</p>
+        <div class="prose-math">Duty Cycle = Active Burst Duration / Total Period = 200µs / 833.33µs ≈ 24%</div>
+        <p class="prose-body"><em>Note: While the pure physical waveform equates to a ~24% duty cycle, our software
+            utilizes a tuned normalization factor (<code>BALL_DUTY_CYCLE = 0.35f</code>) to perfectly calibrate raw
+            sensor sensitivity against real-world ambient conditions.</em></p>
 
-          ballStr = ((<span class="val">3</span> * top[<span class="val">0</span>]) + (<span class="val">2</span> *
-          top[<span class="val">1</span>]) + top[<span class="val">2</span>] + top[<span class="val">3</span>]) / <span
-            class="val">7.0</span>;
-
-          <span class="kw">if</span> (ballStr != <span class="val">0</span>) {
-          ballDir = <span class="val">360</span> - <span class="fn">fmod</span>((RAD_TO_DEG * <span
-            class="fn">atan2f</span>(y, x)) - <span class="val">90</span>, <span class="val">360</span>);
-          } <span class="kw">else</span> {
-          ballDir = <span class="val">0</span>;
-          }
+        <p class="prose-h2">2. "The Eyes": Asynchronous <span class="accent">Data Acquisition</span></p>
+        <p class="prose-h3">Correcting the Misconceptions</p>
+        <p class="prose-body">Our previous website documentation contained several critical inaccuracies regarding how
+          the "Eyes" process data.</p>
+        <div class="prose-callout">
+          <strong>What the old documentation claimed:</strong> The code polled each sensor 255 times sequentially using
+          a blocking loop (<code>for(i=0; i&lt;255; i++)</code>) and only used the top four strongest sensors for
+          vector summation.<br><br>
+          <strong>The Reality:</strong> Standard blocking loops freeze the processor, leading to massive data loss and
+          lag. Our production code uses an <strong>asynchronous, non-blocking hardware timer</strong> that monitors
+          <strong>all 24 sensors</strong> simultaneously across a continuous sampling window.
         </div>
-        <p class="prose-h3">The "Captain" (Primary's) Math</p>
-        <p class="prose-body">The Captain's brain uses exponential functions to make decisions. Instead of a simple
-          turn, it calculates a Strength Factor based on the ball's signal intensity. This factor determines the Angle
-          Shift — the mathematical curve required to orbit the ball.</p>
-        <div class="prose-code"><span class="cm">// 1. Normalize ball direction to [-180, 180]</span>
-          <span class="kw">float</span> relativeDir = (bInfo.<span class="fn">dir</span>() &gt; <span
-            class="val">180</span>) ? (bInfo.<span class="fn">dir</span>() - <span class="val">360</span>) : bInfo.<span
-            class="fn">dir</span>();
+        <p class="prose-h3">Non-Blocking Sampling Loop</p>
+        <p class="prose-body">The Secondary Teensy leverages a hardware interrupt timer (<code>readTimer</code>) that
+          fires every <strong>20µs</strong> (<code>READ_PERIOD = 20</code>).</p>
+        <div class="prose-code"><span class="kw">void</span> <span class="fn">read</span>() {
+    <span class="fn">noInterrupts</span>();
+    <span class="kw">for</span>(<span class="ty">uint8_t</span> i = <span class="val">0</span>; i &lt; TSSP_NUM; i++) {
+        rawValues[i] += <span class="val">1</span> - <span class="fn">digitalReadFast</span>(tsspPins[i]);
+    }
+    sampleCount++;
+    <span class="fn">interrupts</span>();
+}</div>
+        <p class="prose-body">Because the TSSP77038TR IR receiver outputs a <code>LOW</code> logic state when it detects
+          40kHz infrared light, subtracting the reading from 1 inverts it (<code>1 - digitalReadFast</code>). This
+          ensures that an active detection adds a point to our accumulator, while no signal adds zero.</p>
+        <p class="prose-body">Every <strong>10ms</strong> (<code>PROCESS_PERIOD = 10000</code>), a second timer
+          triggers the data processing sequence, normalizing the raw counts against the total <code>sampleCount</code>
+          collected during that window.</p>
 
-          <span class="cm">// 2. Calculate Strength Factor</span>
-          <span class="kw">float</span> ratio = <span class="fn">constrain</span>(bInfo.<span class="fn">str</span>() /
-          ORBIT_TUNER, <span class="val">0.0</span>, <span class="val">1.0</span>);
-          <span class="kw">float</span> strengthFactor = <span class="fn">constrain</span>(<span class="val">0.02</span>
-          * ratio * <span class="fn">expf</span>(<span class="val">4.5</span> * ratio), <span class="val">0.0</span>,
-          <span class="val">1.0</span>);
+        <p class="prose-h2">3. Digital Signal Filtering: Exponential Moving Averages <span
+            class="accent">(EMA)</span></p>
+        <p class="prose-body">In a raw robotic environment, infrared data is notoriously noisy due to stadium lighting,
+          reflections off the field surface, and minor sensor misalignments. Because a physical ball moves continuously
+          and cannot instantaneously teleport, we filter out erratic data spikes using an <strong>Exponential Moving
+            Average (EMA)</strong> filter.</p>
+        <p class="prose-body">The EMA blends the current instantaneous processed sensor reading with the historical
+          weighted average of that specific sensor. The behavior is governed by the smoothing factor α (set to
+          <code>0.4f</code> in our firmware):</p>
+        <div class="prose-math">Y<sub>t</sub> = α · X<sub>t</sub> + (1 − α) · Y<sub>t−1</sub></div>
+        <p class="prose-body">Where <em>Y<sub>t</sub></em> is the new filtered value, <em>X<sub>t</sub></em> is the
+          newly calculated raw reading, <em>Y<sub>t−1</sub></em> is the previous filtered value, and α = 0.4 balances
+          real-time responsiveness against structural stability.</p>
 
-          <span class="cm">// 3. Calculate Angle Shift (Orbit Offset)</span>
-          <span class="kw">float</span> angleEffect = <span class="fn">min</span>(<span class="val">0.4</span> * <span
-            class="fn">expf</span>(<span class="val">0.25</span> * <span class="fn">abs</span>(relativeDir)) - <span
-            class="val">0.4</span>, <span class="val">90.0</span>);
-          <span class="kw">float</span> totalOffset = strengthFactor * angleEffect;
-
-          <span class="cm">// 4. Apply direction adjustment and scale speed</span>
-          <span class="kw">float</span> adjustment = (relativeDir &lt; <span class="val">0</span>) ? -totalOffset :
-          totalOffset;
-          mInfo.<span class="fn">dir</span> = <span class="fn">fmod</span>(bInfo.<span class="fn">dir</span>() +
-          adjustment, <span class="val">360.0</span>);
-          mInfo.<span class="fn">spd</span> = BASE_SPEED + (SURGE_SPEED - BASE_SPEED) * (<span class="val">1.0</span> -
-          totalOffset / <span class="val">90.0</span>);
+        <p class="prose-h3">Telemetry Performance Analysis</p>
+        <p class="prose-body">The real-world impact of our EMA filter is clearly visible when comparing raw vs.
+          filtered telemetry data:</p>
+        <p class="prose-h3">Direction Stabilization</p>
+        <p class="prose-body">Without a filter, directional readings constantly flutter by several degrees and
+          experience severe dropouts. Implementing the EMA smooths out the curve, giving the navigation systems a clean
+          trajectory.</p>
+        <div class="img-pair">
+          <figure class="inline-img">
+            <img src="assets/ball-dir-no-ema.png" alt="Ball direction over time without EMA filter"
+              onerror="this.style.display='none';this.parentElement.style.display='none'" />
+            <figcaption>No Filter — erratic spikes between 345° and 353°</figcaption>
+          </figure>
+          <figure class="inline-img">
+            <img src="assets/ball-dir-ema.png" alt="Ball direction over time with EMA filter"
+              onerror="this.style.display='none';this.parentElement.style.display='none'" />
+            <figcaption>With EMA — smooth tracking around 41°</figcaption>
+          </figure>
         </div>
+
+        <p class="prose-h3">Strength Stabilization</p>
+        <p class="prose-body">Raw signal strength data drops significantly when the ball is positioned between two
+          sensors. The EMA filter eliminates these severe dropouts, ensuring the robot maintains a stable perception
+          of how close the ball is.</p>
+        <div class="img-pair">
+          <figure class="inline-img">
+            <img src="assets/ball-str-no-ema.png" alt="Ball strength over time without EMA filter"
+              onerror="this.style.display='none';this.parentElement.style.display='none'" />
+            <figcaption>No Filter — jitter dropping as low as 60% intensity</figcaption>
+          </figure>
+          <figure class="inline-img">
+            <img src="assets/ball-str-ema.png" alt="Ball strength over time with EMA filter"
+              onerror="this.style.display='none';this.parentElement.style.display='none'" />
+            <figcaption>With EMA — stable tracking at 100% intensity</figcaption>
+          </figure>
+        </div>
+
+        <p class="prose-h2">4. The Math Behind Ball <span class="accent">Vector Tracking</span></p>
+        <p class="prose-body">Once every sensor's value has been cleaned via the EMA filter, we execute a comprehensive
+          <strong>Vector Summation</strong> across the entire 24-sensor ring to isolate the exact angle and distance of
+          the ball.</p>
+        <p class="prose-h3">Step 1: Spatial Vector Mapping</p>
+        <p class="prose-body">During initialization, each of the 24 sensors is assigned a permanent spatial coordinate
+          on a Cartesian plane based on its physical location around the perimeter of the robot:</p>
+        <div class="prose-math">X<sub>i</sub> = cos(i · 360° / 24),&nbsp;&nbsp;Y<sub>i</sub> = sin(i · 360° / 24)
+        </div>
+        <p class="prose-h3">Step 2: Full-Ring Vector Summation</p>
+        <p class="prose-body">Rather than taking a limited subset of sensors, we multiply every sensor's spatial
+          coordinate by its filtered signal intensity (<code>weightedValues[i]</code>), calculating a unified resultant
+          vector:</p>
+        <div class="prose-math">x<sub>sum</sub> = (1/24) Σ X<sub>i</sub> · weightedValues[i]<br>y<sub>sum</sub> =
+          (1/24) Σ Y<sub>i</sub> · weightedValues[i]</div>
+        <p class="prose-h3">Step 3: Direction &amp; Remapped Strength Calculations</p>
+        <p class="prose-body">The final relative ball direction (θ) is derived using a four-quadrant arctangent
+          calculation, adjusted for our chassis orientation coordinate system:</p>
+        <div class="prose-math">θ = 450° − atan2(y<sub>sum</sub>, x<sub>sum</sub>)</div>
+        <p class="prose-body">The raw magnitude of this vector (√(x<sub>sum</sub>² + y<sub>sum</sub>²)) initially sits
+          within a highly compressed window due to environmental factors. To give our navigation systems the
+          high-resolution feedback necessary for precise tracking, we apply a linear remap using a safety floor threshold
+          (<code>TSSP_STR_FLOOR = 20.0f</code>):</p>
+        <div class="prose-math">ballStr = (Magnitude · 4.0) − TSSP_STR_FLOOR<br>ballStr<sub>normalized</sub> = ballStr
+          · (100.0 / (100.0 − TSSP_STR_FLOOR))</div>
+        <p class="prose-body">This scales our usable range cleanly from <strong>0%</strong> (out of range/noise) to
+          <strong>100%</strong> (directly touching the robot).</p>
+
+        <p class="prose-h2">5. "The Captain": Exponential <span class="accent">Orbit Control</span></p>
+        <p class="prose-body">The Primary Teensy receives the clean <code>ballDir</code> and <code>ballStr</code>
+          packets via UART and immediately handles navigation. Instead of charging blindly at the ball, the robot must
+          smoothly <strong>orbit</strong> around it to approach it from behind, lining up a clean shot toward the
+          opponent's goal. To execute this fluid movement, the "Captain" uses specialized exponential curves rather
+          than simple linear adjustments.</p>
+
+        <p class="prose-h3">1. Vector Normalization</p>
+        <p class="prose-body">We first convert the absolute direction of the ball into a relative system ranging from
+          [−180°, 180°]:</p>
+        <div class="prose-math">θ<sub>relative</sub> = θ<sub>ball</sub> − 360°&nbsp;&nbsp;if θ<sub>ball</sub> &gt;
+          180°,&nbsp;&nbsp;else θ<sub>ball</sub></div>
+
+        <p class="prose-h3">2. Strength Factor Calculation</p>
+        <p class="prose-body">The closer the robot gets to the ball, the more aggressively it needs to orbit around it.
+          We track this proximity via an exponential curve bounded between 0.0 and 1.0:</p>
+        <div class="prose-math">ratio = constrain(ballStr / ORBIT_TUNER, 0.0, 1.0)<br>strengthFactor = constrain(0.02
+          · ratio · e<sup>4.5·ratio</sup>, 0.0, 1.0)</div>
+
+        <p class="prose-h3">3. Calculating the Angle Shift</p>
+        <p class="prose-body">Next, we calculate the <code>angleEffect</code>. If the ball is directly in front of us
+          (0°), the angle effect is small. If the ball is off to the side or behind us, the effect exponentially
+          increases to force a sharp, defensive wrapping maneuver, capped at a maximum offset of 90°:</p>
+        <div class="prose-math">angleEffect = min(0.4 · e<sup>0.25·|θ<sub>relative</sub>|</sup> − 0.4,
+          90.0)<br>totalOffset = strengthFactor · angleEffect</div>
+
+        <p class="prose-h3">4. Directing the Drivetrain Direction and Speed</p>
+        <p class="prose-body">The final movement angle (<code>mInfo._dir</code>) and overall travel speed
+          (<code>mInfo._spd</code>) are dynamically modulated based on this calculated offset:</p>
+        <div class="prose-math">Movement Direction = (θ<sub>ball</sub> ± totalOffset) mod 360°<br>Movement Speed =
+          BASE_SPEED + (SURGE_SPEED − BASE_SPEED) · (1.0 − totalOffset / 90.0°)</div>
+
+        <p class="prose-h3">Tactical Summary</p>
+        <ul class="prose-body" style="padding-left:40px;">
+          <li><strong>When Far Away:</strong> The <code>strengthFactor</code> drops toward zero. The robot ignores the
+            orbit offset and charges directly toward the ball at high speed (<code>SURGE_SPEED</code>).</li>
+          <li><strong>When Up Close:</strong> The <code>strengthFactor</code> scales up aggressively. The robot
+            dynamically slows its forward momentum and shifts its drive angle up to 90° perpendicular to the ball,
+            creating a seamless, high-speed tracking arc right around the ball's circumference.</li>
+        </ul>
       </div>
     </div>
 
@@ -995,131 +1130,77 @@
             onerror="this.style.display='none';this.parentElement.style.display='none'" />
           <figcaption>Underside Light Sensor Array</figcaption>
         </figure>
-        <p class="prose-body">The LightSystem library detects the white boundary lines of the RoboCup field via an
-          underside IR phototransistor array. Each sensor emits IR light downward and measures the reflected intensity —
-          the white field lines reflect significantly more than the dark playing surface, producing a clear contrast
-          spike that the library converts into a line direction and state value. In the state selection priority chain,
-          <code>STATE_LINE_AVOID</code> sits immediately after calibration — meaning it pre-empts both attack and defend
-          behaviour the instant any line is detected.
-        </p>
-        <p class="prose-h3">Avoidance Logic</p>
-        <p class="prose-body">When <code>ls.get_line_dir()</code> returns anything other than <code>-1</code>, the robot
-          is on the line. The avoidance direction is computed as <code>(line_dir + 180°) mod 360</code> — the exact
-          opposite of where the line was detected.</p>
-        <p class="prose-h3">Vertical Correction in Defend</p>
-        <p class="prose-body">The light system also plays a role in the defender's vector sub-state outside of full line
-          avoidance mode. The <code>get_line_state()</code> value feeds a vertical PID (<code>vert</code>) that gently
-          pushes the defender away from the back wall.</p>
-        <p class="prose-h3">Hardware — Multiplexed Sensor Ring</p>
-        <p class="prose-body">Rather than dedicating one microcontroller pin per sensor, the system uses a <strong>4-bit
-            binary multiplexer</strong> scheme. Four digital output pins (<code>inPin[0–3]</code>) select which of up to
-          32 sensors to read, addressed via two shared analog pins (<code>LIGHT_PIN</code> / <code>LIGHT_PIN2</code>).
-          Sensors 0–15 are read from one channel; 16–31 from the other. This allows the full sensor ring to be polled
-          using only <strong>6 GPIO pins total</strong>.</p>
-        <div class="prose-code"><span class="cm">// inner_read() — Binary multiplexer selection</span>
-          <span class="kw">for</span> (<span class="ty">uint8_t</span> i = <span class="val">0</span>; i &lt; <span
-            class="val">4</span>; i++) {
-          <span class="fn">digitalWrite</span>(inPin[i], (sNum &gt;&gt; i) &amp; <span class="val">1</span>);
-          }
-          <span class="kw">return</span> (sNum &gt;= <span class="val">16</span>) ? <span
-            class="fn">analogRead</span>(LIGHT_PIN) : <span class="fn">analogRead</span>(LIGHT_PIN2);
-        </div>
+        <p class="prose-body">The updated <code>LightSystem</code> library detects the white boundary lines of the
+          RoboCup field to actively steer the robot away from the edges. The system preempts standard behaviors the
+          instant a line is detected to prevent out-of-bounds penalties.</p>
 
-        <p class="prose-h3">Direction Algorithm — Cluster Detection</p>
-        <p class="prose-body">The core of <code>calculate_line_dir()</code> works in three stages. First, sensors above
-          the white threshold (<code>LS_THRESH</code>) that are contiguous with their neighbours are grouped into
-          <strong>clusters</strong> — arcs of sensors simultaneously seeing the line. Up to 4 clusters are tracked. Each
-          cluster's angular midpoint is then computed by averaging start and end indices and scaling to degrees.
-          Finally, the number of clusters determines how the final line direction is resolved:
-        </p>
-        <div class="prose-state-flow">
-          <div class="prose-state-card">
-            <span class="pstate-icon">①</span>
-            <div class="pstate-title">1 Cluster</div>
-            <p class="pstate-desc">Line direction = midpoint of the single detected cluster.</p>
-          </div>
-          <div class="prose-state-card">
-            <span class="pstate-icon">②</span>
-            <div class="pstate-title">2 Clusters</div>
-            <p class="pstate-desc">Average angle between both midpoints, with 360° wraparound compensation applied.</p>
-          </div>
-          <div class="prose-state-card">
-            <span class="pstate-icon">③</span>
-            <div class="pstate-title">3 Clusters</div>
-            <p class="pstate-desc">Outermost two clusters are averaged — the central cluster is discarded.</p>
-          </div>
-          <div class="prose-state-card">
-            <span class="pstate-icon">⊘</span>
-            <div class="pstate-title">0 Clusters</div>
-            <p class="pstate-desc">No line detected. <code>lineDirection</code> is set to <code>-1</code> and the state
-              machine takes over.</p>
-          </div>
-        </div>
-        <p class="prose-body">A special wraparound correction handles the edge case where a cluster spans the boundary
-          between the last and first sensor in the ring — ensuring the midpoint is computed correctly across the
-          0/NUM_LS seam.</p>
+        <p class="prose-h3">Hardware — 48-Sensor Multiplexed Array</p>
+        <p class="prose-body">To effectively find boundary lines, the robot utilizes a specialized hardware array of 48
+          infrared light sensors arranged across the bottom plate.</p>
+        <ul class="prose-body" style="padding-left:40px;">
+          <li><strong>Inner Ring:</strong> 32 sensors optimized for high-resolution tracking.</li>
+          <li><strong>Outer Ring:</strong> 16 sensors configured to match the robot's physical geometric frame.</li>
+          <li><strong>Multiplexing:</strong> The sensors route through MUX506IPW multiplexers, using 4 control pins
+            (<code>inPin</code>) to rapidly cycle through 16 binary addresses. The robot simultaneously reads three
+            analog outputs (<code>LS_OUT_1</code>, <code>LS_OUT_2</code>, <code>LS_OUT_3</code>), gathering three sensor
+            readings at once while saving microcontroller pins.</li>
+          <li><strong>Mapping:</strong> A custom lookup table (<code>muxIndex</code>) maps the multiplexer readings back
+            to their exact schematic indices within the <code>sensorReadings</code> array to account for physical
+            wiring layouts.</li>
+        </ul>
 
-        <p class="prose-h3">State Machine — <code>calculate_line_state()</code></p>
-        <p class="prose-body">A four-state machine tracks the robot's relationship to the line across frames.
-          Transitions are driven by whether <code>lineDirection != -1</code> (line detected) and whether the measured
-          direction has shifted <strong>140° or more</strong> between cycles — indicating the robot has crossed fully
-          over the line rather than tracked along it.</p>
-        <table class="prose-table">
-          <tr>
-            <td>State 0 — Off</td>
-            <td>No line detected. Enters State 1 the moment any sensor cluster appears.</td>
-          </tr>
-          <tr>
-            <td>State 1 — On</td>
-            <td>Robot is tracking the line. Transitions to State 2 if direction flips ≥ 140°.</td>
-          </tr>
-          <tr>
-            <td>State 2 — Crossing</td>
-            <td>Robot has crossed over the line. Transitions to State 3 if line contact is lost.</td>
-          </tr>
-          <tr>
-            <td>State 3 — Exited</td>
-            <td>Line was crossed and then lost. Previous direction is restored via dead-reckoning.</td>
-          </tr>
-        </table>
-        <p class="prose-body">In <strong>State 3</strong>, the <code>update()</code> loop restores
-          <code>prevLineDirection</code> rather than using the current (lost) value. This keeps the avoidance vector
-          valid for the brief moment the robot is airborne over the boundary — preventing erratic direction searching
-          when contact is momentarily broken.
-        </p>
+        <p class="prose-h3">Dynamic Calibration &amp; Binarization</p>
+        <p class="prose-body">During initialization, the <code>calibrate()</code> function samples ambient light
+          readings and adds a safety margin of 100 to establish an individualized white-line threshold for every single
+          sensor. During runtime, raw analog data is converted into a simple boolean array (<code>onWhite</code>). If a
+          sensor's reading exceeds its calibrated threshold, it is flagged as a 1 (on the white line); otherwise, it
+          returns a 0 (safe on the green field).</p>
 
-        <p class="prose-h3">Avoidance Logic</p>
-        <p class="prose-body">When <code>ls.get_line_dir()</code> returns anything other than <code>-1</code>, the robot
-          is on the line. The avoidance direction is simply the <strong>exact opposite</strong> — computed as
-          <code>(line_dir + 180°) mod 360</code>. Speed is scaled by a PID controller fed from
-          <code>get_line_state()</code>, so the robot brakes harder the deeper into the line it has gone.
-        </p>
-        <div class="prose-code"><span class="cm">// STATE_LINE_AVOID — Full avoidance response</span>
-          _spd = -lineAvoid.<span class="fn">update</span>(ls.<span class="fn">get_line_state</span>(), <span
-            class="val">0.0</span>);
-          _dir = <span class="fn">fmod</span>(ls.<span class="fn">get_line_dir</span>() + <span
-            class="val">180.0</span>, <span class="val">360</span>);
+        <p class="prose-h3">Direction Algorithm — Center of Mass</p>
+        <p class="prose-body">The system replaces the previous cluster-detection algorithm with a precise Center of Mass
+          calculation. Every sensor is pre-assigned an x and y coordinate in a normalized space
+          (<code>lsCoords</code>). The inner 32 sensors are automatically mapped in a perfect circle using
+          trigonometry, while the outer 16 use hardcoded coordinates mapped to the physical frame.</p>
+        <p class="prose-body">The robot calculates a weighted average of the x and y positions of only the sensors
+          currently reading white. This outputs a single raw vector representing the line's position. To prevent jerky
+          adjustments from minor glares or noise, a hysteresis filter ignores vectors with a magnitude weaker than 0.4,
+          preserving the previous frame's vector (<code>line_prev</code>) instead.</p>
 
-          <span class="cm">// LWDEFEND_VECTOR — Soft wall pushback for Defender</span>
-          <span class="ty">float</span> vertVect = vert.<span class="fn">update</span>(ls.<span
-            class="fn">get_line_state</span>(), <span class="val">1.6</span>);
-        </div>
+        <p class="prose-h3">Field Transformation &amp; State Logic</p>
+        <p class="prose-body">To ensure the robot knows where the line is relative to the actual field rather than its
+          own spinning body, the raw vector's angle is processed through a compass correction algorithm. By factoring in
+          the current compass heading (<code>cDir</code>), the local vector is transformed into a field-relative
+          frame.</p>
+        <p class="prose-body">This corrected vector feeds into a dynamic line state machine that adapts to how deep the
+          robot crosses the boundary:</p>
+        <ul class="prose-body" style="padding-left:40px;">
+          <li><strong>Entering a Line:</strong> Registers the initial relative angle when transitioning from the green
+            field to a line.</li>
+          <li><strong>Deep on a Line:</strong> If the vector angle shifts over 90 degrees, the algorithm deduces the
+            robot has crossed the center of the line. It dynamically scales the vector magnitude to compensate for the
+            overshoot.</li>
+          <li><strong>Exiting/Lost Line:</strong> If the line suddenly disappears, the system retains the last known
+            angle but flags a maximum error magnitude of 3.0 to initiate an immediate recovery sequence.</li>
+        </ul>
 
-        <p class="prose-h3">Vertical Correction in Defend</p>
-        <p class="prose-body">Outside of full line avoidance mode, the light system feeds a secondary role in the
-          defender's <code>LWDEFEND_VECTOR</code> sub-state. The raw <code>get_line_state()</code> value drives a
-          vertical PID (<code>vert</code>) that gently pushes the defender away from the back wall — a soft, continuous
-          correction that keeps the robot out of the danger zone without triggering a hard avoidance manoeuvre.</p>
+        <p class="prose-h3">Avoidance Execution</p>
+        <p class="prose-body">The final processed line vector is sent directly to the main movement loop. The robot
+          commands its motors to move in the exact opposite direction of the line vector's angle (<code>line.arg</code>),
+          actively pushing it back into play.</p>
+        <p class="prose-body">The magnitude of the vector (<code>line.mag</code>), representing how deeply the robot
+          crossed the boundary, is used as the error input for a Proportional-Integral-Derivative (PID) controller. This
+          dynamically scales the recovery speed: minor boundary touches trigger gentle, calculated nudges, while major
+          overshoots trigger explosive, maximum-speed reversals.</p>
 
         <div class="prose-chips">
           <span class="prose-chip">Highest Priority</span>
-          <span class="prose-chip">4-bit Multiplexer</span>
-          <span class="prose-chip">Cluster Detection</span>
-          <span class="prose-chip">4-State Machine</span>
-          <span class="prose-chip">Reverse Direction</span>
-          <span class="prose-chip">PID Speed</span>
-          <span class="prose-chip">Dead Reckoning</span>
-          <span class="prose-chip">Defender Wall Guard</span>
+          <span class="prose-chip">48-Sensor Array</span>
+          <span class="prose-chip">MUX506IPW</span>
+          <span class="prose-chip">Center of Mass</span>
+          <span class="prose-chip">Dynamic Calibration</span>
+          <span class="prose-chip">Compass Correction</span>
+          <span class="prose-chip">PID Recovery</span>
+          <span class="prose-chip">Hysteresis Filter</span>
         </div>
       </div>
     </div>
@@ -1462,7 +1543,7 @@
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => { if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; } });
     }, { threshold: 0.05 });
-    document.querySelectorAll('.prose-wrap figure, .prose-diagram, .prose-sensor-grid, .prose-callout, .prose-table').forEach(el => {
+    document.querySelectorAll('.prose-wrap figure, .prose-diagram, .prose-sensor-grid, .prose-callout, .prose-table, .prose-math, .img-pair').forEach(el => {
       el.style.opacity = '0'; el.style.transform = 'translateY(14px)';
       el.style.transition = 'opacity 0.45s ease, transform 0.45s ease';
       observer.observe(el);
