@@ -1470,7 +1470,129 @@
           </svg>
           <div class="prose-diag-label">Orbit behind ball → align to opponent goal → shoot</div>
         </div>
-        <p class="prose-body">Coming Soon</p>
+          <section id="problem-definition">
+              <h2>Attacker Robot: Orbiting Strategy</h2>
+              <h3>The Problem</h3>
+              <p>To avoid constantly hitting the ball toward their own defending goal, an attacking robot needs an efficient movement strategy to successfully get behind the ball and drive it toward the opponent’s goal.</p>
+          </section>
+
+          <section id="background-research">
+              <h3>Background Research: Orbit Types</h3>
+              <p>We evaluated four potential movement strategies to find the optimal balance between performance and processing complexity:</p>
+              
+              <table>
+                  <thead>
+                      <tr>
+                          <th>Orbit Type</th>
+                          <th>How it Works</th>
+                          <th>Positives</th>
+                          <th>Negatives</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                          <td><span class="highlight">Cases Orbit</span></td>
+                          <td>A set movement angle triggered when the ball is within specific angle ranges.</td>
+                          <td>
+                              <ul>
+                                  <li>Easy to set up</li>
+                                  <li>Predictable movement</li>
+                                  <li>Low processing demand</li>
+                              </ul>
+                          </td>
+                          <td>
+                              <ul>
+                                  <li>Lengthy, tedious tuning</li>
+                                  <li>Jerky transitions</li>
+                                  <li>Poor adaptation to fast balls</li>
+                              </ul>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td><span class="highlight">Fixed Offset Orbit</span></td>
+                          <td>Adds or subtracts a constant value to the ball's direction.</td>
+                          <td>
+                              <ul>
+                                  <li>Easy to set up and tune</li>
+                                  <li>Consistent and simple</li>
+                                  <li>Low processing demand</li>
+                              </ul>
+                          </td>
+                          <td>
+                              <ul>
+                                  <li>Orbit can get too wide or narrow</li>
+                                  <li>Lacks overall flexibility</li>
+                                  <li>Struggles with unpredictable movement</li>
+                              </ul>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td><span class="highlight">Exponential / Polynomial Orbit</span></td>
+                          <td>A constantly changing offset value scaled dynamically to the ball's direction.</td>
+                          <td>
+                              <ul>
+                                  <li>Smooth, natural curvature</li>
+                                  <li>Tightens naturally near the ball</li>
+                                  <li>Handles varied speeds well</li>
+                              </ul>
+                          </td>
+                          <td>
+                              <ul>
+                                  <li>Complex initial setup</li>
+                                  <li>Harder to predict behavior</li>
+                                  <li>Medium processing demand</li>
+                              </ul>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td><span class="highlight">PID Orbit</span></td>
+                          <td>Uses vertical and horizontal vectors to wrap smoothly around the ball.</td>
+                          <td>
+                              <ul>
+                                  <li>Extremely smooth and adaptive</li>
+                                  <li>Continuously self-corrects</li>
+                                  <li>Adjustable, aggressive responsiveness</li>
+                              </ul>
+                          </td>
+                          <td>
+                              <ul>
+                                  <li>Very complex to set up and tune</li>
+                                  <li>Prone to oscillation/overcorrecting</li>
+                                  <li>High processing demand</li>
+                                  <li>Fails completely without accurate distance data</li>
+                              </ul>
+                          </td>
+                      </tr>
+                  </tbody>
+              </table>
+          </section>
+
+          <section id="requirements">
+              <h3>Strategy Requirements</h3>
+              <p>The chosen movement strategy must meet the following criteria:</p>
+              <ul>
+                  <li><strong>Efficiency:</strong> Positions the robot behind the ball smoothly with fast sensor reactions and minimal overshooting.</li>
+                  <li><strong>Safety:</strong> Prevents accidental contact with the ball from the sides or the rear.</li>
+                  <li><strong>Optimization:</strong> Maintains a low-to-medium processing demand to ensure fast code loop speeds.</li>
+                  <li><strong>Control:</strong> Remains stable, predictable, easy to tune, and scaleable for future upgrades.</li>
+              </ul>
+          </section>
+
+          <hr style="border: 0; border-top: 1px solid #ecf0f1; margin: 30px 0;">
+
+          <section id="solution">
+              <h2>Our Solution: The Exponential Orbit</h2>
+              <p>Based on our requirements, an <strong>Exponential Orbit</strong> strategy will be implemented. This method optimizes performance while relying on just a single constant to tune the overall behavior.</p>
+              
+              <h3>How It Works:</h3>
+              <ol>
+                  <li><strong>Symmetrical Tracking:</strong> Calculates a modified ball direction ranging from -180° to 180°. This mirrors both sides, ensuring symmetrical robot behavior.</li>
+                  <li><strong>Exponential Curve:</strong> Generates a movement scalar (between 0 and 1) based on ball position. The exponential curve creates smoother, faster responses as the ball gets closer.</li>
+                  <li><strong>Capped Offsets:</strong> Generates a smooth orbiting path by adding or subtracting an offset. This offset is capped at 90° to prevent the robot from turning completely sideways.</li>
+              </ol>
+              
+              <p><strong>Integration:</strong> This plan will be built into the TSSP library as a dedicated function named <code>orbit()</code>.</p>
+          </section>
       </div>
     </div>
 
@@ -1508,7 +1630,127 @@
           </svg>
           <div class="prose-diag-label">Vector defence — stay between ball and goal at all times</div>
         </div>
-        <p class="prose-body">Coming Soon</p>
+        <p class="prose-body"><section id="problem-definition">
+            <h2>Defender Robot: Positioning Strategy</h2>
+            <h3>The Problem</h3>
+            <p>If the attacking robot cannot transition back in time to stop an opponent's counterattack, the goal is left vulnerable. To prevent conceding goals, a dedicated defensive robot must hang back and guard the goal line. What algorithms should drive this defensive behavior?</p>
+        </section>
+
+        <section id="background-research">
+            <h3>Background Research: Defending Methods</h3>
+            <p>We analyzed four primary defensive strategies to determine the most effective method for goal protection and positioning:</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>What is it?</th>
+                        <th>Positives</th>
+                        <th>Negatives</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="highlight">Distance Constrained</span></td>
+                        <td>Orbits the ball normally but halts forward progression once a specific distance threshold from the goal is reached.</td>
+                        <td>
+                            <ul>
+                                <li>Unconventional approach that surprises opponents</li>
+                                <li>Higher scoring potential than deep-sitting styles</li>
+                                <li>Maintains alignment between ball and goal</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                <li>Struggles to orbit back fast enough against powerful kickers</li>
+                                <li>Leaves goal exposed if calibration is inaccurate</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">Reactive Zone Defence</span></td>
+                        <td>Sits between the goal and mid-field, moving or orbiting only when the ball actively crosses into its defensive sector.</td>
+                        <td>
+                            <ul>
+                                <li>Conserves battery/motor energy</li>
+                                <li>Reliable, predictable zone coverage</li>
+                                <li>Simpler to tune than continuous systems</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                <li>Delayed reaction times against fast breakaway plays</li>
+                                <li>Vulnerable to high-tempo opponent tactics</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">Floating Defender (Vectors)</span></td>
+                        <td>Continuously shifts to stay between the ball and the goal, dynamically managing distances to both objects.</td>
+                        <td>
+                            <ul>
+                                <li>Excellent balance of intercepting and goal-blocking</li>
+                                <li>Fast transitions between containment and clearing</li>
+                                <li>Keeps an optimal blocking angle at all times</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                <li>Requires highly precise vector maths and fine-tuning</li>
+                                <li>Risk of instability if the ball moves erratically</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">Standard Vector Defender</span></td>
+                        <td>Tracks the ball's lateral movement, shifting side-to-side while maintaining a completely fixed distance from the goal.</td>
+                        <td>
+                            <ul>
+                                <li>Simple, stable, and highly reliable approach</li>
+                                <li>Great at cutting off cross-field angle shots</li>
+                                <li>Easier to write, debug, and maintain</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                <li>Less responsive to rapid central charges</li>
+                                <li>Does not adjust depth relative to ball distance</li>
+                                <li>Can create open shooting lanes if poorly tuned</li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="requirements">
+            <h3>Strategy Requirements</h3>
+            <p>The defensive algorithm must fulfill the following technical benchmarks:</p>
+            <ul>
+                <li><strong>Coverage & Stability:</strong> Maintain absolute goal line protection with accurate distance control and stable positioning.</li>
+                <li><strong>Efficiency:</strong> Fast reaction times paired with dampened velocity to eliminate erratic, wasteful movements.</li>
+                <li><strong>Flexibility:</strong> Configurable code parameters that allow for quick calibration adjustments.</li>
+                <li><strong>Visual Differentiation:</strong> A distinct behavioral difference must be clearly visible when swapping roles between attacker and defender.</li>
+            </ul>
+        </section>
+
+        <hr style="border: 0; border-top: 1px solid #ecf0f1; margin: 30px 0;">
+
+        <section id="solution">
+            <h2>Our Solution: Floating Vector Defence</h2>
+            <p>We selected the <strong>Floating Defender using Vectors</strong> strategy. This ensures the robot stays strictly on the intercept path between the ball and the goal. Velocity limits and software dampening will be used to counteract any potential vector instability.</p>
+            
+            <h3>How It Works:</h3>
+            <ol>
+                <li><strong>Default Centering:</strong> When the ball is lost or out of bounds, the robot automatically returns to a tuned, minimum baseline distance centered directly in front of the goal.</li>
+                <li><strong>Horizontal Tracking:</strong> When the ball is active, the robot uses a calibrated horizontal vector to match the ball’s lateral trajectory and seal off angles.</li>
+                <li><strong>Orientation Lock:</strong> The robot actively faces away from its own goal. This ensures that as it presses toward the ball, it remains perfectly oriented between the target and the net.</li>
+                <li><strong>Boundary Hard-Caps:</strong> Strict maximum and minimum goal-distance values prevent the robot from wandering too far upfield or backing directly into its own net.</li>
+                <li><strong>Proportional Distance Scaling:</strong> A scaling constant matches the ball's signal strength to the goal distance, scaling down the smaller value to create smooth, smooth positioning.</li>
+            </ol>
+            
+            <p><strong>Integration:</strong> Due to dependencies on multiple system objects and cross-referencing sensors, this defensive logic will be implemented directly inside the <code>main</code> file.</p>
+        </section></p>
       </div>
     </div>
   </div>

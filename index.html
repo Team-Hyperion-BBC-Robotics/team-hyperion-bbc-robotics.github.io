@@ -1510,19 +1510,18 @@
        Pin x/y are % from top-left of the map image — tune as needed.
     ───────────────────────────────────────── */
     const MAIN_CITIES = [
-      { city: 'Brisbane', country: 'Queensland, Australia', desc: 'Our home base. Brisbane Boys\' College, Toowong — where Hyperion was designed, built, and launched into international competition.', badge: 'Base of Operations', x: 85, y: 78.2, upcoming: false, labelBelow: true },
+      { city: 'Brisbane', country: 'Queensland, Australia', desc: 'Our home base. Brisbane Boys\' College, Toowong — where Hyperion was designed, built, and launched into international competition.', badge: 'Base of Operations', x: 85.5, y: 78.65, upcoming: false, labelBelow: true },
       { city: 'Salvador', country: 'Bahia, Brazil', desc: '2025 RoboCup Junior Worlds. 14th individually. 1st in the Lightweight SuperTeam. A historic result for BBC robotics.', badge: '2025 · 1st SuperTeam', x: 36, y: 72.2, upcoming: false, labelBelow: true },
       { city: 'Incheon', country: 'South Korea', desc: 'The 2026 RoboCup Junior World Championship. We\'re going back stronger — upgraded hardware, refined strategy, a point to prove.', badge: '2026 · Upcoming ★', x: 79, y: 51.5, upcoming: true, labelBelow: false },
     ];
 
     const SECONDARY_LOCATIONS = [
-      { city: 'Auckland', country: 'New Zealand', desc: 'Visited as part of the Salvador Tour — exploring New Zealand on the way to and from Brazil.', badge: 'Salvador Tour', x: 93.5, y: 79.5, labelBelow: true },
-      { city: 'Santiago', country: 'Chile', desc: 'Visited as part of the Salvador Tour — a stop in Chile en route to the World Championship.', badge: 'Salvador Tour', x: 31.5, y: 76.5, labelBelow: true },
-      { city: 'São Paulo', country: 'Brazil', desc: 'Visited as part of the Salvador Tour — transiting through Brazil\'s largest city on the way to Salvador.', badge: 'Salvador Tour', x: 38.5, y: 67.5, labelBelow: false },
-      { city: 'Melbourne', country: 'Victoria, Australia', desc: 'Australian National Championship — 2022.', badge: 'Nationals · 2022', x: 84.2, y: 81.5, labelBelow: true },
-      { city: 'Canberra', country: 'ACT, Australia', desc: 'Australian National Championship — 2026.', badge: 'Nationals · 2026', x: 86.5, y: 76.8, labelBelow: false },
-      { city: 'Adelaide', country: 'South Australia', desc: 'Australian National Championship — 2023.', badge: 'Nationals · 2023', x: 81.5, y: 77.5, labelBelow: true },
-      { city: 'Queensland', country: 'Australia', desc: 'Australian National Championship — 2024 and 2025.', badge: 'Nationals · 2024 · 2025', x: 87.2, y: 74.5, labelBelow: false },
+      { city: 'Auckland', country: 'New Zealand', desc: 'Visited as part of the Salvador Tour — exploring New Zealand on the way to and from Brazil.', badge: 'Salvador Tour', x: 91.5, y: 83.5, labelBelow: true },
+      { city: 'Santiago', country: 'Chile', desc: 'Visited as part of the Salvador Tour — a stop in Chile en route to the World Championship.', badge: 'Salvador Tour', x: 28.0, y: 81.65, labelBelow: true },
+      { city: 'São Paulo', country: 'Brazil', desc: 'Visited as part of the Salvador Tour — transiting through Brazil\'s largest city on the way to Salvador.', badge: 'Salvador Tour', x: 34.2, y: 77.35, labelBelow: true },
+      { city: 'Melbourne', country: 'Victoria, Australia', desc: 'Australian National Championship — 2022.', badge: 'Nationals · 2022', x: 83.5, y: 83.65, labelBelow: true },
+      { city: 'Canberra', country: 'ACT, Australia', desc: 'Australian National Championship — 2026.', badge: 'Nationals · 2026', x: 84.5, y: 82.50, labelBelow: true },
+      { city: 'Adelaide', country: 'South Australia', desc: 'Australian National Championship — 2023.', badge: 'Nationals · 2023', x: 82.1, y: 82.3, labelBelow: true },
     ];
 
     const MAP_LOCATIONS = [...MAIN_CITIES, ...SECONDARY_LOCATIONS.map(loc => ({ ...loc, secondary: true }))];
