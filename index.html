@@ -103,6 +103,49 @@
       text-align: center;
       padding: 160px 24px 100px;
       z-index: 1;
+      overflow: hidden;
+      background-color: #050a05;
+    }
+
+    .hero-bg-blur,
+    .hero-bg-sharp,
+    .hero-bg-scrim {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .hero-bg-blur {
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .hero-bg-blur img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      filter: blur(32px) brightness(0.42) saturate(1.15);
+      transform: scale(1.12);
+    }
+
+    .hero-bg-sharp {
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-bg-sharp img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+    }
+
+    .hero-bg-scrim {
+      z-index: 2;
+      background: linear-gradient(to bottom, rgba(5, 10, 5, 0.2) 0%, rgba(5, 10, 5, 0.55) 100%);
     }
 
     #hero::after {
@@ -114,6 +157,7 @@
       background: radial-gradient(circle, rgba(0, 114, 63, 0.13) 0%, transparent 68%);
       animation: orb 8s ease-in-out infinite;
       pointer-events: none;
+      z-index: 2;
     }
 
     @keyframes orb {
@@ -1102,27 +1146,30 @@
   </div>
 
   <!-- HERO -->
-  <section id="hero"
-    style="background-image:url('assets/teamphoto.png');background-size:cover;background-position:center;background-repeat:no-repeat;">
-    <div
-      style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(5,10,5,0.25) 0%,rgba(5,10,5,0.55) 100%);z-index:0;">
+  <section id="hero">
+    <div class="hero-bg-blur" aria-hidden="true">
+      <img src="assets/teamphoto.png" alt="" />
     </div>
-    <div class="hero-school" style="position:relative;z-index:1;">
+    <div class="hero-bg-sharp" aria-hidden="true">
+      <img src="assets/teamphoto.png" alt="" />
+    </div>
+    <div class="hero-bg-scrim" aria-hidden="true"></div>
+    <div class="hero-school" style="position:relative;z-index:3;">
       <img src="assets/schoolLogo.png" alt="Brisbane Boys' College" class="hero-school-logo" />
       <div class="hero-school-text">
         <div class="hero-school-name">Brisbane Boys' College</div>
         <div class="hero-school-sub">Queensland, Australia</div>
       </div>
     </div>
-    <p class="hero-eyebrow" style="position:relative;z-index:1;">RoboCup Junior International Soccer Squad</p>
-    <h1 class="hero-title" style="position:relative;z-index:1;">
+    <p class="hero-eyebrow" style="position:relative;z-index:3;">RoboCup Junior International Soccer Squad</p>
+    <h1 class="hero-title" style="position:relative;z-index:3;">
       <span class="glitch" data-text="TEAM">TEAM</span><br />
       <span class="green">HYPERION</span>
     </h1>
-    <div class="hero-divider" style="position:relative;z-index:1;"></div>
-    <p class="hero-tagline" style="position:relative;z-index:1;">Green. White. Black. Representing Australia.</p>
-    <p class="hero-greeting" id="hero-greeting" style="position:relative;z-index:1;"></p>
-    <div class="hero-cta" style="position:relative;z-index:1;">
+    <div class="hero-divider" style="position:relative;z-index:3;"></div>
+    <p class="hero-tagline" style="position:relative;z-index:3;">Green. White. Black. Representing Australia.</p>
+    <p class="hero-greeting" id="hero-greeting" style="position:relative;z-index:3;"></p>
+    <div class="hero-cta" style="position:relative;z-index:3;">
       <a href="robot.html" class="btn-primary">Our Robot</a>
       <a href="team.html" class="btn-outline">The Team</a>
       <a href="achievements.html" class="btn-outline">Achievements</a>
