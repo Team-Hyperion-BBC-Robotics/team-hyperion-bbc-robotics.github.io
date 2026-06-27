@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Our Robot — Team Hyperion · Brisbane Boys' College</title>
-  <link rel="stylesheet" href="assets/shared.css" />
+  <link rel="stylesheet" href="../assets/shared.css" />
   <style>
     .page-hero {
       position: relative;
@@ -650,7 +650,7 @@
 <body>
 
   <div class="page-hero">
-    <img src="assets/schoolLogo.png" alt="Brisbane Boys' College" class="page-hero-logo fade-up delay-1" />
+    <img src="../assets/schoolLogo.png" alt="Brisbane Boys' College" class="page-hero-logo fade-up delay-1" />
     <p class="section-label fade-up delay-1">Brisbane Boys' College</p>
     <h1 class="section-title fade-up delay-2">THE <span class="accent">MACHINE</span></h1>
     <div class="green-line" style="margin:16px auto 24px;"></div>
@@ -684,7 +684,7 @@
         <h2 class="prose-h1">STRUCTURAL &amp; <span class="accent">DESIGN</span></h2>
         <div class="prose-rule"></div>
         <figure class="inline-img wide">
-          <img src="assets/robot.jpg" alt="Hyperion 2026" onerror="this.onerror=null;this.src='assets/robot.png'" />
+          <img src="../assets/robot.jpg" alt="Hyperion 2026" onerror="this.onerror=null;this.src='../assets/robot.png'" />
           <figcaption>Hyperion 2026 — Full Assembly</figcaption>
         </figure>
         <p class="prose-h3">Overview</p>
@@ -729,7 +729,7 @@
         <h2 class="prose-h1">ELECTRONICS &amp; <span class="accent">SENSORS</span></h2>
         <div class="prose-rule"></div>
         <figure class="inline-img">
-          <img src="assets/main-pcb.png" alt="Main Printed Circuit Board"
+          <img src="../assets/main-pcb.png" alt="Main Printed Circuit Board"
             onerror="this.style.display='none';this.parentElement.style.display='none'" />
           <figcaption>Main Printed Circuit Board (PCB)</figcaption>
         </figure>
@@ -745,7 +745,7 @@
           supplies the 24 infrared sensors (TSSP77038TR), the compass (BNO055), and a custom light ring PCB through a
           12-pin FFC cable.</p>
         <figure class="inline-img">
-          <img src="assets/lsb-pcb.png" alt="LS Printed Circuit Board"
+          <img src="../assets/lsb-pcb.png" alt="LS Printed Circuit Board"
             onerror="this.style.display='none';this.parentElement.style.display='none'" />
           <figcaption>Light Sensor Printed Circuit Board (PCB)</figcaption>
         </figure>
@@ -759,7 +759,7 @@
           a signal that is routed through three 16-bit multiplexers, which output four analog pins. Therefore, reducing
           the number of pins required on the main processor.</p>
         <figure class="inline-img">
-          <img src="assets/kicker-pcb.png" alt="Kicker Printed Circuit Board"
+          <img src="../assets/kicker-pcb.png" alt="Kicker Printed Circuit Board"
             onerror="this.style.display='none';this.parentElement.style.display='none'" />
           <figcaption>Kicker Printed Circuit Board (PCB)</figcaption>
         </figure>
@@ -788,7 +788,7 @@
         <h2 class="prose-h1">BNO055 <span class="accent">IMU System</span></h2>
         <div class="prose-rule"></div>
         <figure class="inline-img">
-          <img src="assets/bno055.jpg" alt="BNO055 Sensor"
+          <img src="../assets/bno055.jpg" alt="BNO055 Sensor"
             onerror="this.style.display='none';this.parentElement.style.display='none'" />
           <figcaption>BNO055 Absolute Orientation Sensor</figcaption>
         </figure>
@@ -856,7 +856,7 @@
         <h2 class="prose-h1">Advanced IR Ball <span class="accent">Detection</span></h2>
         <div class="prose-rule"></div>
         <figure class="inline-img">
-          <img src="assets/tssp.jpg" alt="TSSP IR Array"
+          <img src="../assets/tssp.jpg" alt="TSSP IR Array"
             onerror="this.style.display='none';this.parentElement.style.display='none'" />
           <figcaption>TSSP77038TR (SMD) IR Receiver</figcaption>
         </figure>
@@ -955,12 +955,12 @@
           trajectory.</p>
         <div class="img-pair">
           <figure class="inline-img">
-            <img src="assets/ball-dir-no-ema.png" alt="Ball direction over time without EMA filter"
+            <img src="../assets/ball-dir-no-ema.png" alt="Ball direction over time without EMA filter"
               onerror="this.style.display='none';this.parentElement.style.display='none'" />
             <figcaption>No Filter — erratic spikes between 345° and 353°</figcaption>
           </figure>
           <figure class="inline-img">
-            <img src="assets/ball-dir-ema.png" alt="Ball direction over time with EMA filter"
+            <img src="../assets/ball-dir-ema.png" alt="Ball direction over time with EMA filter"
               onerror="this.style.display='none';this.parentElement.style.display='none'" />
             <figcaption>With EMA — smooth tracking around 41°</figcaption>
           </figure>
@@ -972,12 +972,12 @@
           of how close the ball is.</p>
         <div class="img-pair">
           <figure class="inline-img">
-            <img src="assets/ball-str-no-ema.png" alt="Ball strength over time without EMA filter"
+            <img src="../assets/ball-str-no-ema.png" alt="Ball strength over time without EMA filter"
               onerror="this.style.display='none';this.parentElement.style.display='none'" />
             <figcaption>No Filter — jitter dropping as low as 60% intensity</figcaption>
           </figure>
           <figure class="inline-img">
-            <img src="assets/ball-str-ema.png" alt="Ball strength over time with EMA filter"
+            <img src="../assets/ball-str-ema.png" alt="Ball strength over time with EMA filter"
               onerror="this.style.display='none';this.parentElement.style.display='none'" />
             <figcaption>With EMA — stable tracking at 100% intensity</figcaption>
           </figure>
@@ -1126,7 +1126,7 @@
         <h2 class="prose-h1">LIGHT <span class="accent">SYSTEM</span></h2>
         <div class="prose-rule"></div>
         <figure class="inline-img">
-          <img src="assets/lightsensor.jpg" alt="Light Sensor"
+          <img src="../assets/lightsensor.jpg" alt="Light Sensor"
             onerror="this.style.display='none';this.parentElement.style.display='none'" />
           <figcaption>Underside Light Sensor Array</figcaption>
         </figure>
@@ -1212,7 +1212,7 @@
         <h2 class="prose-h1">OPENMV <span class="accent">CAMERA</span></h2>
         <div class="prose-rule"></div>
         <figure class="inline-img">
-          <img src="assets/camera.jpg" alt="OpenMV Camera"
+          <img src="../assets/camera.jpg" alt="OpenMV Camera"
             onerror="this.style.display='none';this.parentElement.style.display='none'" />
           <figcaption>OpenMV RT — Vision Module</figcaption>
         </figure>
@@ -1397,7 +1397,7 @@
         <h2 class="prose-h1">BLUETOOTH <span class="accent">COMMUNICATION</span></h2>
         <div class="prose-rule"></div>
         <figure class="inline-img">
-          <img src="assets/bluetooth.jpg" alt="Bluetooth Module"
+          <img src="../assets/bluetooth.jpg" alt="Bluetooth Module"
             onerror="this.style.display='none';this.parentElement.style.display='none'" />
           <figcaption>Bluetooth Communication Module</figcaption>
         </figure>
@@ -1470,83 +1470,129 @@
           </svg>
           <div class="prose-diag-label">Orbit behind ball → align to opponent goal → shoot</div>
         </div>
+          <section id="problem-definition">
+              <h2>Attacker Robot: Orbiting Strategy</h2>
+              <h3>The Problem</h3>
+              <p>To avoid constantly hitting the ball toward their own defending goal, an attacking robot needs an efficient movement strategy to successfully get behind the ball and drive it toward the opponent’s goal.</p>
+          </section>
 
-        <p class="prose-h3">An Overview</p>
-        <p class="prose-body">Only one Hyperion robot attacks at a time. Each cycle, both robots exchange sensor data
-          over Bluetooth and run the <code>roleWeighting()</code> score — the higher-scoring robot becomes the Attacker.
-          The Attacker's job is to win possession, orbit behind the ball, line up a shot on the opponent's goal, and
-          fire the kicker at the right moment. The teammate automatically switches to Defender (see the Bluetooth and
-          Defender Strategy panels).</p>
+          <section id="background-research">
+              <h3>Background Research: Orbit Types</h3>
+              <p>We evaluated four potential movement strategies to find the optimal balance between performance and processing complexity:</p>
+              
+              <table>
+                  <thead>
+                      <tr>
+                          <th>Orbit Type</th>
+                          <th>How it Works</th>
+                          <th>Positives</th>
+                          <th>Negatives</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                          <td><span class="highlight">Cases Orbit</span></td>
+                          <td>A set movement angle triggered when the ball is within specific angle ranges.</td>
+                          <td>
+                              <ul>
+                                  <li>Easy to set up</li>
+                                  <li>Predictable movement</li>
+                                  <li>Low processing demand</li>
+                              </ul>
+                          </td>
+                          <td>
+                              <ul>
+                                  <li>Lengthy, tedious tuning</li>
+                                  <li>Jerky transitions</li>
+                                  <li>Poor adaptation to fast balls</li>
+                              </ul>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td><span class="highlight">Fixed Offset Orbit</span></td>
+                          <td>Adds or subtracts a constant value to the ball's direction.</td>
+                          <td>
+                              <ul>
+                                  <li>Easy to set up and tune</li>
+                                  <li>Consistent and simple</li>
+                                  <li>Low processing demand</li>
+                              </ul>
+                          </td>
+                          <td>
+                              <ul>
+                                  <li>Orbit can get too wide or narrow</li>
+                                  <li>Lacks overall flexibility</li>
+                                  <li>Struggles with unpredictable movement</li>
+                              </ul>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td><span class="highlight">Exponential / Polynomial Orbit</span></td>
+                          <td>A constantly changing offset value scaled dynamically to the ball's direction.</td>
+                          <td>
+                              <ul>
+                                  <li>Smooth, natural curvature</li>
+                                  <li>Tightens naturally near the ball</li>
+                                  <li>Handles varied speeds well</li>
+                              </ul>
+                          </td>
+                          <td>
+                              <ul>
+                                  <li>Complex initial setup</li>
+                                  <li>Harder to predict behavior</li>
+                                  <li>Medium processing demand</li>
+                              </ul>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td><span class="highlight">PID Orbit</span></td>
+                          <td>Uses vertical and horizontal vectors to wrap smoothly around the ball.</td>
+                          <td>
+                              <ul>
+                                  <li>Extremely smooth and adaptive</li>
+                                  <li>Continuously self-corrects</li>
+                                  <li>Adjustable, aggressive responsiveness</li>
+                              </ul>
+                          </td>
+                          <td>
+                              <ul>
+                                  <li>Very complex to set up and tune</li>
+                                  <li>Prone to oscillation/overcorrecting</li>
+                                  <li>High processing demand</li>
+                                  <li>Fails completely without accurate distance data</li>
+                              </ul>
+                          </td>
+                      </tr>
+                  </tbody>
+              </table>
+          </section>
 
-        <p class="prose-h3">State Machine — <code>ATTACK</code> vs <code>ATTACK_OPEN</code></p>
-        <p class="prose-body">The Attacker runs in one of two states depending on whether the field is crowded or open.
-          In standard <code>ATTACK</code>, the robot prioritises the orbit approach before shooting. In
-          <code>ATTACK_OPEN</code>, it takes a more direct line to goal when there is clear space ahead.</p>
+          <section id="requirements">
+              <h3>Strategy Requirements</h3>
+              <p>The chosen movement strategy must meet the following criteria:</p>
+              <ul>
+                  <li><strong>Efficiency:</strong> Positions the robot behind the ball smoothly with fast sensor reactions and minimal overshooting.</li>
+                  <li><strong>Safety:</strong> Prevents accidental contact with the ball from the sides or the rear.</li>
+                  <li><strong>Optimization:</strong> Maintains a low-to-medium processing demand to ensure fast code loop speeds.</li>
+                  <li><strong>Control:</strong> Remains stable, predictable, easy to tune, and scaleable for future upgrades.</li>
+              </ul>
+          </section>
 
-        <p class="prose-h3">Step 1 — Orbit Behind the Ball</p>
-        <p class="prose-body">Charging straight at the ball pushes it sideways instead of into the goal. The Attacker
-          first drives to an <strong>orbit target</strong> — a point on the far side of the ball, away from the opponent
-          goal — so the robot can push through the ball in a straight line toward the net. The orbit radius and approach
-          speed are tuned so the robot wraps smoothly around the ball using the exponential orbit curves described in the
-          Ball Detection panel.</p>
-        <div class="prose-math">orbitTarget = ball + (ball − goal) / |ball − goal| · ORBIT_R</div>
+          <hr style="border: 0; border-top: 1px solid #ecf0f1; margin: 30px 0;">
 
-        <p class="prose-h3">Step 2 — Drive Through to Goal</p>
-        <p class="prose-body">Once the robot is within one robot radius of the orbit point, it stops circling and drives
-          directly through the ball toward the opponent goal. The BNO055 IMU keeps the chassis facing the attack goal
-          throughout, so the final approach stays aligned even after contact with other robots.</p>
-
-        <p class="prose-h3">Step 3 — Shooting &amp; the Kicker</p>
-        <p class="prose-body">The solenoid kicker fires only when two conditions are met simultaneously: the ball is
-          detected close by the IR ring (<code>ballStr &gt; 0</code>) and the OpenMV camera reports the attack goal within
-          <strong>8°</strong> of centre. Because the orbit approach already positions the robot behind the ball, no
-          additional heading check is needed at kick time — possession triggers an immediate shot.</p>
-        <p class="prose-body">After firing, the robot backs off briefly (<code>kickT</code> cooldown) before
-          re-engaging, preventing it from immediately re-possessing its own cleared ball.</p>
-
-        <p class="prose-h3">Wall Pass — Beating a Blocked Lane</p>
-        <p class="prose-body">If an opponent sits in the corridor between the Attacker and the goal, a direct shot will
-          be intercepted. The robot detects this blocked path and fires a <strong>wall pass</strong> instead — kicking
-          the ball off the side wall at a shallow angle so it rebounds into open space upfield, bypassing the blocker.
-          This is only attempted when the direct lane is genuinely obstructed, not on every possession.</p>
-
-        <p class="prose-h3">No Ball — Localisation</p>
-        <p class="prose-body">When the IR ring loses the ball entirely (<code>ballStr = 0</code>), the Attacker does not
-          wander randomly. It drives toward a fixed localisation point in the centre of the attacking half of the field,
-          keeping itself in a useful position to re-acquire the ball as soon as a teammate or the camera reports it
-          again.</p>
-
-        <table class="prose-table">
-          <tr>
-            <td>Orbit approach</td>
-            <td>Wrap behind the ball relative to the opponent goal before pushing through.</td>
-          </tr>
-          <tr>
-            <td>Drive through</td>
-            <td>Once aligned, charge straight at the attack goal at full speed.</td>
-          </tr>
-          <tr>
-            <td>Kick trigger</td>
-            <td>Ball close (IR) + goal within 8° (camera) → fire solenoid.</td>
-          </tr>
-          <tr>
-            <td>Wall pass</td>
-            <td>Direct path blocked by an enemy → ricochet off side wall upfield.</td>
-          </tr>
-          <tr>
-            <td>Localise</td>
-            <td>No ball signal → hold position in attacking half.</td>
-          </tr>
-        </table>
-
-        <div class="prose-chips">
-          <span class="prose-chip">Role Election</span>
-          <span class="prose-chip">Exponential Orbit</span>
-          <span class="prose-chip">Drive Through</span>
-          <span class="prose-chip">8° Goal Gate</span>
-          <span class="prose-chip">Wall Pass</span>
-          <span class="prose-chip">Kick Cooldown</span>
-        </div>
+          <section id="solution">
+              <h2>Our Solution: The Exponential Orbit</h2>
+              <p>Based on our requirements, an <strong>Exponential Orbit</strong> strategy will be implemented. This method optimizes performance while relying on just a single constant to tune the overall behavior.</p>
+              
+              <h3>How It Works:</h3>
+              <ol>
+                  <li><strong>Symmetrical Tracking:</strong> Calculates a modified ball direction ranging from -180° to 180°. This mirrors both sides, ensuring symmetrical robot behavior.</li>
+                  <li><strong>Exponential Curve:</strong> Generates a movement scalar (between 0 and 1) based on ball position. The exponential curve creates smoother, faster responses as the ball gets closer.</li>
+                  <li><strong>Capped Offsets:</strong> Generates a smooth orbiting path by adding or subtracting an offset. This offset is capped at 90° to prevent the robot from turning completely sideways.</li>
+              </ol>
+              
+              <p><strong>Integration:</strong> This plan will be built into the TSSP library as a dedicated function named <code>orbit()</code>.</p>
+          </section>
       </div>
     </div>
 
@@ -1557,7 +1603,7 @@
         <h2 class="prose-h1">DEFENDER <span class="accent">STRATEGY</span></h2>
         <div class="prose-rule"></div>
         <div class="prose-diagram">
-          <svg viewBox="0 0 360 260" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 360 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;">
             <rect x="10" y="10" width="340" height="240" rx="4" fill="none" stroke="rgba(0,114,63,0.4)"
               stroke-width="1.5" />
             <line x1="10" y1="130" x2="350" y2="130" stroke="rgba(0,114,63,0.2)" stroke-width="1"
@@ -1565,102 +1611,146 @@
             <circle cx="180" cy="130" r="35" fill="none" stroke="rgba(0,114,63,0.2)" stroke-width="1" />
             <rect x="10" y="100" width="18" height="60" rx="2" fill="rgba(255,215,0,0.15)" stroke="#ffd700"
               stroke-width="1.5" />
-            <text x="6" y="95" font-family="Share Tech Mono,monospace" font-size="7" fill="#ffd700">OUR</text>
+            <text x="6" y="95" font-family="monospace" font-size="7" fill="#ffd700">OUR</text>
             <rect x="332" y="100" width="18" height="60" rx="2" fill="rgba(80,120,255,0.08)"
               stroke="rgba(80,120,255,0.3)" stroke-width="1" />
             <circle cx="260" cy="105" r="9" fill="rgba(255,180,0,0.25)" stroke="#ffb400" stroke-width="1.5" />
-            <text x="252" y="93" font-family="Share Tech Mono,monospace" font-size="7" fill="#ffb400">BALL</text>
+            <text x="252" y="93" font-family="monospace" font-size="7" fill="#ffb400">BALL</text>
             <rect x="40" y="119" width="22" height="22" rx="3" fill="rgba(0,114,63,0.2)" stroke="#00c85a"
               stroke-width="1.5" />
-            <text x="33" y="156" font-family="Share Tech Mono,monospace" font-size="7" fill="#00c85a">DEFENDER</text>
+            <text x="33" y="156" font-family="monospace" font-size="7" fill="#00c85a">DEFENDER</text>
             <path d="M 28 100 Q 55 130 28 160" fill="none" stroke="rgba(0,200,90,0.3)" stroke-width="1.5"
               stroke-dasharray="4,3" />
             <line x1="251" y1="105" x2="72" y2="125" stroke="#ff6b6b" stroke-width="1" stroke-dasharray="3,2"
               opacity="0.5" />
             <polygon points="72,125 80,118 78,128" fill="#ff6b6b" opacity="0.5" />
-            <text x="130" y="108" font-family="Share Tech Mono,monospace" font-size="7" fill="#ff6b6b" opacity="0.7">THREAT</text>
+            <text x="130" y="108" font-family="monospace" font-size="7" fill="#ff6b6b" opacity="0.7">THREAT</text>
             <line x1="51" y1="119" x2="51" y2="92" stroke="#00c85a" stroke-width="1" stroke-dasharray="2,2" />
             <polygon points="51,92 46,99 56,99" fill="#00c85a" />
           </svg>
           <div class="prose-diag-label">Vector defence — stay between ball and goal at all times</div>
         </div>
+        <p class="prose-body"><section id="problem-definition">
+            <h2>Defender Robot: Positioning Strategy</h2>
+            <h3>The Problem</h3>
+            <p>If the attacking robot cannot transition back in time to stop an opponent's counterattack, the goal is left vulnerable. To prevent conceding goals, a dedicated defensive robot must hang back and guard the goal line. What algorithms should drive this defensive behavior?</p>
+        </section>
 
-        <p class="prose-h3">An Overview</p>
-        <p class="prose-body">The Defender is the goalkeeper of the pair. While the Attacker chases the ball upfield,
-          the Defender holds the home half — staying between the ball and our own goal at all times, blocking shots, and
-          clearing the ball upfield if it accidentally gains possession. The role is assigned automatically each cycle by
-          the Bluetooth <code>roleWeighting()</code> algorithm; whichever robot scores lower becomes the Defender.</p>
+        <section id="background-research">
+            <h3>Background Research: Defending Methods</h3>
+            <p>We analyzed four primary defensive strategies to determine the most effective method for goal protection and positioning:</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>What is it?</th>
+                        <th>Positives</th>
+                        <th>Negatives</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="highlight">Distance Constrained</span></td>
+                        <td>Orbits the ball normally but halts forward progression once a specific distance threshold from the goal is reached.</td>
+                        <td>
+                            <ul>
+                                <li>Unconventional approach that surprises opponents</li>
+                                <li>Higher scoring potential than deep-sitting styles</li>
+                                <li>Maintains alignment between ball and goal</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                <li>Struggles to orbit back fast enough against powerful kickers</li>
+                                <li>Leaves goal exposed if calibration is inaccurate</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">Reactive Zone Defence</span></td>
+                        <td>Sits between the goal and mid-field, moving or orbiting only when the ball actively crosses into its defensive sector.</td>
+                        <td>
+                            <ul>
+                                <li>Conserves battery/motor energy</li>
+                                <li>Reliable, predictable zone coverage</li>
+                                <li>Simpler to tune than continuous systems</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                <li>Delayed reaction times against fast breakaway plays</li>
+                                <li>Vulnerable to high-tempo opponent tactics</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">Floating Defender (Vectors)</span></td>
+                        <td>Continuously shifts to stay between the ball and the goal, dynamically managing distances to both objects.</td>
+                        <td>
+                            <ul>
+                                <li>Excellent balance of intercepting and goal-blocking</li>
+                                <li>Fast transitions between containment and clearing</li>
+                                <li>Keeps an optimal blocking angle at all times</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                <li>Requires highly precise vector maths and fine-tuning</li>
+                                <li>Risk of instability if the ball moves erratically</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">Standard Vector Defender</span></td>
+                        <td>Tracks the ball's lateral movement, shifting side-to-side while maintaining a completely fixed distance from the goal.</td>
+                        <td>
+                            <ul>
+                                <li>Simple, stable, and highly reliable approach</li>
+                                <li>Great at cutting off cross-field angle shots</li>
+                                <li>Easier to write, debug, and maintain</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                <li>Less responsive to rapid central charges</li>
+                                <li>Does not adjust depth relative to ball distance</li>
+                                <li>Can create open shooting lanes if poorly tuned</li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
 
-        <p class="prose-h3">State Machine — <code>DEFEND</code> vs <code>DEFEND_OPEN</code></p>
-        <p class="prose-body">Like the Attacker, the Defender has two modes. In standard <code>DEFEND</code>, it tracks
-          the ball's horizontal position and holds a fixed depth in front of the goal mouth. In
-          <code>DEFEND_OPEN</code>, it can push slightly further out when the field is clear, closing down space without
-          leaving the goal exposed.</p>
+        <section id="requirements">
+            <h3>Strategy Requirements</h3>
+            <p>The defensive algorithm must fulfill the following technical benchmarks:</p>
+            <ul>
+                <li><strong>Coverage & Stability:</strong> Maintain absolute goal line protection with accurate distance control and stable positioning.</li>
+                <li><strong>Efficiency:</strong> Fast reaction times paired with dampened velocity to eliminate erratic, wasteful movements.</li>
+                <li><strong>Flexibility:</strong> Configurable code parameters that allow for quick calibration adjustments.</li>
+                <li><strong>Visual Differentiation:</strong> A distinct behavioral difference must be clearly visible when swapping roles between attacker and defender.</li>
+            </ul>
+        </section>
 
-        <p class="prose-h3">Vector Defence — Core Positioning</p>
-        <p class="prose-body">The heart of the Defender strategy is <strong>vector defence</strong>. Every cycle with a
-          valid ball signal, the robot calculates an ideal position: matching the ball's X coordinate (clamped to the
-          field width) while holding a fixed Y offset in front of the defend goal. It then drives toward that point at a
-          speed proportional to how far it currently is — fast corrections when out of position, gentle adjustments when
-          already on the line.</p>
-        <div class="prose-math">idealX = clamp(ballX, fieldMin, fieldMax)<br>idealY = defendGoalY − DEFEND_OFFSET</div>
-        <p class="prose-body">The dashed red <strong>THREAT</strong> vector in the diagram above represents the
-          opponent's likely shot line from the ball to our goal. By sitting on the green arc in front of the goal mouth,
-          the Defender intercepts that line regardless of where the ball moves along the field.</p>
+        <hr style="border: 0; border-top: 1px solid #ecf0f1; margin: 30px 0;">
 
-        <p class="prose-h3">Clearing — When the Defender Gets the Ball</p>
-        <p class="prose-body">If the ball rolls into the Defender's IR range, the robot does not dribble it toward our
-          own goal. It immediately fires the kicker <strong>upfield</strong> — sending the ball toward the opponent's
-          half — then backs away during the kick cooldown before resuming its defensive position. This prevents the
-          Defender from accidentally scoring an own goal under pressure.</p>
-
-        <p class="prose-h3">No Ball — Localisation</p>
-        <p class="prose-body">When the IR ring loses the ball, the Defender drives to a fixed localisation point in the
-          centre of the defending half, just in front of the goal. It holds there until ball data returns, ensuring the
-          goal is never left completely unguarded even during a sensor dropout.</p>
-
-        <p class="prose-h3">Automatic Fail-Safes</p>
-        <p class="prose-body">Several conditions force a robot into Defender mode regardless of its score:</p>
-        <ul class="prose-body" style="padding-left:40px;">
-          <li><strong>Bluetooth disconnect:</strong> if the radio link drops, the robot immediately defaults to Defender —
-            safer to guard the goal alone than attack without coordination.</li>
-          <li><strong>Low battery:</strong> if voltage falls below the critical threshold, the robot is forced into
-            Defender to conserve energy and avoid overextending in attack.</li>
-          <li><strong>Blind spot:</strong> if neither robot can see the ball, role switching is paused to prevent
-            both robots oscillating between roles with no useful sensor data.</li>
-        </ul>
-
-        <table class="prose-table">
-          <tr>
-            <td>Vector defence</td>
-            <td>Track ball X, hold fixed depth in front of defend goal.</td>
-          </tr>
-          <tr>
-            <td>Clear upfield</td>
-            <td>Ball in IR range → kick away from own goal immediately.</td>
-          </tr>
-          <tr>
-            <td>Localise</td>
-            <td>No ball signal → hold centre of defending half.</td>
-          </tr>
-          <tr>
-            <td>BT disconnect</td>
-            <td>Radio lost → forced Defender regardless of score.</td>
-          </tr>
-          <tr>
-            <td>Low battery</td>
-            <td>Voltage critical → forced Defender to conserve power.</td>
-          </tr>
-        </table>
-
-        <div class="prose-chips">
-          <span class="prose-chip">Vector Defence</span>
-          <span class="prose-chip">Goal Guarding</span>
-          <span class="prose-chip">Upfield Clear</span>
-          <span class="prose-chip">Fail-Safe Default</span>
-          <span class="prose-chip">Low Battery Rule</span>
-          <span class="prose-chip">Blind Spot Hold</span>
-        </div>
+        <section id="solution">
+            <h2>Our Solution: Floating Vector Defence</h2>
+            <p>We selected the <strong>Floating Defender using Vectors</strong> strategy. This ensures the robot stays strictly on the intercept path between the ball and the goal. Velocity limits and software dampening will be used to counteract any potential vector instability.</p>
+            
+            <h3>How It Works:</h3>
+            <ol>
+                <li><strong>Default Centering:</strong> When the ball is lost or out of bounds, the robot automatically returns to a tuned, minimum baseline distance centered directly in front of the goal.</li>
+                <li><strong>Horizontal Tracking:</strong> When the ball is active, the robot uses a calibrated horizontal vector to match the ball’s lateral trajectory and seal off angles.</li>
+                <li><strong>Orientation Lock:</strong> The robot actively faces away from its own goal. This ensures that as it presses toward the ball, it remains perfectly oriented between the target and the net.</li>
+                <li><strong>Boundary Hard-Caps:</strong> Strict maximum and minimum goal-distance values prevent the robot from wandering too far upfield or backing directly into its own net.</li>
+                <li><strong>Proportional Distance Scaling:</strong> A scaling constant matches the ball's signal strength to the goal distance, scaling down the smaller value to create smooth, smooth positioning.</li>
+            </ol>
+            
+            <p><strong>Integration:</strong> Due to dependencies on multiple system objects and cross-referencing sensors, this defensive logic will be implemented directly inside the <code>main</code> file.</p>
+        </section></p>
       </div>
     </div>
   </div>
@@ -1702,7 +1792,7 @@
     });
   </script>
 
-  <script src="assets/nav-component.js"></script>
+  <script src="../assets/nav-component.js"></script>
 </body>
 
 </html>

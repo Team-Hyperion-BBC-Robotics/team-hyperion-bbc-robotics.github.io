@@ -1,50 +1,60 @@
 /**
  * Team Hyperion — Shared Nav & Footer Component
  * ─────────────────────────────────────────────
- * Include this script in every page (except emulator.html):
- *   <script src="assets/nav-component.js"></script>
+ * Include from site root:   <script src="assets/nav-component.js"></script>
+ * Include from subfolders:  <script src="../assets/nav-component.js"></script>
  *
- * The script auto-detects the current page and marks the correct nav item active.
- * To update nav or footer across ALL pages, edit only this file.
+ * Paths are resolved relative to the script tag so CSS/assets work locally and on GitHub Pages.
  */
 
 (function () {
   'use strict';
 
+  /* ── PATH PREFIX (from script src) ─────────────────────────── */
+  function getPrefixes() {
+    const src = (document.currentScript && document.currentScript.getAttribute('src')) || 'assets/nav-component.js';
+    if (src.startsWith('../')) {
+      return { root: '../', assets: '../assets/' };
+    }
+    return { root: '', assets: 'assets/' };
+  }
+
+  const { root, assets } = getPrefixes();
+  const home = root || './';
+  const page = (name) => root + name + '/';
+
   /* ── NAV HTML ─────────────────────────────────────────────── */
   const NAV_HTML = `
 <nav>
-  <a href="index.html" class="nav-logo">
-    <img src="assets/schoolLogo.png" alt="Brisbane Boys' College" class="nav-logo-img"/>
+  <a href="${home}" class="nav-logo">
+    <img src="${assets}schoolLogo.png" alt="Brisbane Boys' College" class="nav-logo-img"/>
     <div class="nav-logo-text">TEAM <span>HYPERION</span></div>
   </a>
 
   <ul class="nav-links">
-    <li><a href="index.html"        data-page="index">Home</a></li>
-    <li><a href="team.html"         data-page="team">Team</a></li>
-    <li><a href="robot.html"        data-page="robot">Robot</a></li>
-    <li><a href="achievements.html" data-page="achievements">Achievements</a></li>
-    <li><a href="logbook.html"      data-page="logbook" style="color:var(--green-bright,#00c85a);">Logbook</a></li>
+    <li><a href="${home}"              data-page="index">Home</a></li>
+    <li><a href="${page('team')}"      data-page="team">Team</a></li>
+    <li><a href="${page('robot')}"     data-page="robot">Robot</a></li>
+    <li><a href="${page('achievements')}" data-page="achievements">Achievements</a></li>
+    <li><a href="${page('logbook')}"   data-page="logbook" style="color:var(--green-bright,#00c85a);">Logbook</a></li>
 
-    <!-- Campaigns dropdown -->
     <li>
       <button class="nav-dropdown-trigger" onclick="HyperionNav.toggleDropdown('dd-campaigns', this)">
         Campaigns <span class="nav-chevron"></span>
       </button>
       <div class="nav-dropdown" id="dd-campaigns">
-        <a href="campaign2025.html" data-page="campaign2025">📃 2025 Campaign — Salvador</a>
-        <a href="campaign2026.html" data-page="campaign2026">📃 2026 Campaign — Incheon</a>
+        <a href="${page('campaign2025')}" data-page="campaign2025">📃 2025 Campaign — Salvador</a>
+        <a href="${page('campaign2026')}" data-page="campaign2026">📃 2026 Campaign — Incheon</a>
       </div>
     </li>
 
-    <!-- Explore dropdown -->
     <li>
       <button class="nav-dropdown-trigger" onclick="HyperionNav.toggleDropdown('dd-explore', this)">
         Explore <span class="nav-chevron"></span>
       </button>
       <div class="nav-dropdown" id="dd-explore">
-        <a href="resources.html" data-page="resources">📰 Resources</a>
-        <a href="emulator.html"  data-page="emulator">📱 Robot Emulator</a>
+        <a href="${page('resources')}" data-page="resources">📰 Resources</a>
+        <a href="${page('emulator')}"  data-page="emulator">📱 Robot Emulator</a>
       </div>
     </li>
   </ul>
@@ -53,34 +63,31 @@
     <div class="nav-badge">RoboCup Junior 🇦🇺</div>
   </a>
 
-  <!-- Hamburger -->
   <button class="nav-hamburger" id="hyperion-hamburger" onclick="HyperionNav.toggleSidebar()" aria-label="Open menu">
     <span></span><span></span><span></span>
   </button>
 </nav>
 
-<!-- Mobile overlay -->
 <div class="nav-mobile-overlay" id="hyperion-nav-overlay" onclick="HyperionNav.toggleSidebar()"></div>
 
-<!-- Mobile sidebar -->
 <div class="nav-sidebar" id="hyperion-nav-sidebar">
   <div class="nav-sidebar-section">
     <span class="nav-sidebar-label">Navigation</span>
-    <a href="index.html"        data-page="index">Home</a>
-    <a href="team.html"         data-page="team">Team</a>
-    <a href="robot.html"        data-page="robot">Our Robot</a>
-    <a href="achievements.html" data-page="achievements">Achievements</a>
-    <a href="logbook.html"      data-page="logbook" style="color:var(--green-bright,#00c85a);">📋 Engineering Logbook</a>
+    <a href="${home}"              data-page="index">Home</a>
+    <a href="${page('team')}"      data-page="team">Team</a>
+    <a href="${page('robot')}"     data-page="robot">Our Robot</a>
+    <a href="${page('achievements')}" data-page="achievements">Achievements</a>
+    <a href="${page('logbook')}"   data-page="logbook" style="color:var(--green-bright,#00c85a);">📋 Engineering Logbook</a>
   </div>
   <div class="nav-sidebar-section">
     <span class="nav-sidebar-label">Campaigns</span>
-    <a href="campaign2025.html" data-page="campaign2025">📃 2025 — Salvador, Brazil</a>
-    <a href="campaign2026.html" data-page="campaign2026">📃 2026 — Incheon, South Korea</a>
+    <a href="${page('campaign2025')}" data-page="campaign2025">📃 2025 — Salvador, Brazil</a>
+    <a href="${page('campaign2026')}" data-page="campaign2026">📃 2026 — Incheon, South Korea</a>
   </div>
   <div class="nav-sidebar-section">
     <span class="nav-sidebar-label">Explore</span>
-    <a href="resources.html" data-page="resources">📰 Resources</a>
-    <a href="emulator.html"  data-page="emulator">📱 Robot Emulator</a>
+    <a href="${page('resources')}" data-page="resources">📰 Resources</a>
+    <a href="${page('emulator')}"  data-page="emulator">📱 Robot Emulator</a>
   </div>
   <div style="padding:20px 28px;">
     <a href="https://www.robocupjunior.org.au/" target="_blank" rel="noopener"
@@ -112,7 +119,7 @@
   </div>
   <div class="footer-main">
     <div class="footer-left">
-      <img src="assets/schoolLogo.png" alt="BBC" class="footer-logo-img"/>
+      <img src="${assets}schoolLogo.png" alt="BBC" class="footer-logo-img"/>
       <div class="footer-wordmark">TEAM HYPERION</div>
     </div>
     <div class="footer-center">
@@ -120,10 +127,10 @@
       RoboCup Junior Australia · Lightweight Soccer Division
     </div>
     <div class="footer-right">
-      <a href="achievements.html">Achievements</a> ·
-      <a href="team.html">Team</a> ·
-      <a href="robot.html">Robot</a> ·
-      <a href="logbook.html">Logbook</a><br/>
+      <a href="${page('achievements')}">Achievements</a> ·
+      <a href="${page('team')}">Team</a> ·
+      <a href="${page('robot')}">Robot</a> ·
+      <a href="${page('logbook')}">Logbook</a><br/>
       🇦🇺 Queensland, Australia
     </div>
   </div>
@@ -131,10 +138,6 @@
 
   /* ── NAV CSS ───────────────────────────────────────────────── */
   const NAV_CSS = `
-/* ═══════════════════════════════════════
-   HYPERION SHARED NAV — injected by nav-component.js
-   Edit nav-component.js to change nav/footer across all pages.
-═══════════════════════════════════════ */
 nav {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -159,8 +162,6 @@ nav {
   color: rgba(240,255,244,0.85);
 }
 .nav-logo-text span { color: var(--green-bright, #00c85a); }
-
-/* Desktop links */
 .nav-links {
   display: flex; align-items: center;
   gap: 4px; list-style: none; margin: 0; padding: 0;
@@ -179,7 +180,6 @@ nav {
 .nav-links > li > a:hover,
 .nav-dropdown-trigger:hover,
 .nav-links > li > a.active { color: var(--green-bright, #00c85a); }
-
 .nav-chevron {
   width: 8px; height: 8px;
   border-right: 1.5px solid currentColor;
@@ -190,8 +190,6 @@ nav {
 .nav-dropdown-trigger.open .nav-chevron {
   transform: rotate(-135deg) translateY(-2px);
 }
-
-/* Dropdown panel */
 .nav-dropdown {
   position: absolute;
   top: calc(100% + 8px); left: 50%;
@@ -227,16 +225,12 @@ nav {
   border-left-color: var(--green-bright, #00c85a);
   background: rgba(0,114,63,0.08); padding-left: 22px;
 }
-
-/* Nav badge */
 .nav-badge {
   font-family: 'Share Tech Mono', monospace;
   font-size: 0.62rem; letter-spacing: 0.1em;
   padding: 5px 10px; border: 1px solid rgba(0,114,63,0.35);
   color: var(--green-bright, #00c85a); white-space: nowrap; flex-shrink: 0;
 }
-
-/* Hamburger */
 .nav-hamburger {
   display: none; flex-direction: column; justify-content: center;
   gap: 5px; width: 36px; height: 36px;
@@ -249,16 +243,12 @@ nav {
 .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
 .nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
 .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-/* Mobile overlay */
 .nav-mobile-overlay {
   display: none; position: fixed; inset: 0;
   background: rgba(0,0,0,0.6); z-index: 998;
   opacity: 0; transition: opacity 0.3s;
 }
 .nav-mobile-overlay.open { opacity: 1; }
-
-/* Mobile sidebar */
 .nav-sidebar {
   display: none; position: fixed; top: 0; right: 0;
   width: min(320px, 85vw); height: 100vh;
@@ -287,14 +277,12 @@ nav {
 .nav-sidebar a.active {
   color: #00c85a; border-left-color: #00c85a; background: rgba(0,114,63,0.07);
 }
-
 @media (max-width: 960px) {
   .nav-links, .nav-badge { display: none; }
   .nav-hamburger { display: flex; }
   .nav-mobile-overlay, .nav-sidebar { display: block; }
 }`;
 
-  /* ── INJECT CSS ────────────────────────────────────────────── */
   function injectStyles() {
     const style = document.createElement('style');
     style.id = 'hyperion-nav-styles';
@@ -302,20 +290,27 @@ nav {
     document.head.appendChild(style);
   }
 
-  /* ── MARK ACTIVE PAGE ──────────────────────────────────────── */
   function markActivePage() {
-    const path = window.location.pathname;
-    const file = path.split('/').pop().replace('.html', '') || 'index';
+    const path = window.location.pathname.replace(/\/$/, '') || '/';
+    const segments = path.split('/').filter(Boolean);
+    const knownPages = new Set([
+      'team', 'robot', 'achievements', 'logbook',
+      'campaign2025', 'campaign2026', 'resources', 'emulator', 'hyperionai'
+    ]);
+    let page = 'index';
+    for (let i = segments.length - 1; i >= 0; i--) {
+      const seg = segments[i].replace('.html', '');
+      if (seg === 'index') continue;
+      if (knownPages.has(seg)) { page = seg; break; }
+    }
     document.querySelectorAll('[data-page]').forEach(el => {
-      el.classList.toggle('active', el.dataset.page === file);
+      el.classList.toggle('active', el.dataset.page === page);
     });
   }
 
-  /* ── INJECT NAV ────────────────────────────────────────────── */
   function injectNav() {
     const existing = document.querySelector('nav');
     if (existing) existing.remove();
-
     const wrapper = document.createElement('div');
     wrapper.innerHTML = NAV_HTML.trim();
     const body = document.body;
@@ -324,17 +319,14 @@ nav {
     });
   }
 
-  /* ── INJECT FOOTER ─────────────────────────────────────────── */
   function injectFooter() {
     const existing = document.querySelector('footer');
     if (existing) existing.remove();
-
     const wrapper = document.createElement('div');
     wrapper.innerHTML = FOOTER_HTML.trim();
     document.body.appendChild(wrapper.firstElementChild);
   }
 
-  /* ── DROPDOWN LOGIC ────────────────────────────────────────── */
   window.HyperionNav = {
     toggleDropdown(id, btn) {
       const dd = document.getElementById(id);
@@ -348,17 +340,16 @@ nav {
       btn.classList.toggle('open');
     },
     toggleSidebar() {
-      const sidebar  = document.getElementById('hyperion-nav-sidebar');
-      const overlay  = document.getElementById('hyperion-nav-overlay');
-      const burger   = document.getElementById('hyperion-hamburger');
-      const open     = sidebar.classList.toggle('open');
+      const sidebar = document.getElementById('hyperion-nav-sidebar');
+      const overlay = document.getElementById('hyperion-nav-overlay');
+      const burger = document.getElementById('hyperion-hamburger');
+      const open = sidebar.classList.toggle('open');
       overlay.classList.toggle('open', open);
       burger.classList.toggle('open', open);
       document.body.style.overflow = open ? 'hidden' : '';
     }
   };
 
-  /* ── CLOSE DROPDOWNS ON OUTSIDE CLICK ─────────────────────── */
   function bindCloseDropdowns() {
     document.addEventListener('click', e => {
       if (!e.target.closest('.nav-links > li')) {
@@ -368,7 +359,6 @@ nav {
     });
   }
 
-  /* ── INIT ──────────────────────────────────────────────────── */
   function init() {
     injectStyles();
     injectNav();

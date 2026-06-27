@@ -103,49 +103,6 @@
       text-align: center;
       padding: 160px 24px 100px;
       z-index: 1;
-      overflow: hidden;
-      background-color: #050a05;
-    }
-
-    .hero-bg-blur,
-    .hero-bg-sharp,
-    .hero-bg-scrim {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-    }
-
-    .hero-bg-blur {
-      z-index: 0;
-      overflow: hidden;
-    }
-
-    .hero-bg-blur img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-      filter: blur(32px) brightness(0.42) saturate(1.15);
-      transform: scale(1.12);
-    }
-
-    .hero-bg-sharp {
-      z-index: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .hero-bg-sharp img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      object-position: center;
-    }
-
-    .hero-bg-scrim {
-      z-index: 2;
-      background: linear-gradient(to bottom, rgba(5, 10, 5, 0.2) 0%, rgba(5, 10, 5, 0.55) 100%);
     }
 
     #hero::after {
@@ -157,7 +114,6 @@
       background: radial-gradient(circle, rgba(0, 114, 63, 0.13) 0%, transparent 68%);
       animation: orb 8s ease-in-out infinite;
       pointer-events: none;
-      z-index: 2;
     }
 
     @keyframes orb {
@@ -1032,6 +988,68 @@
       box-shadow: 0 0 6px var(--green-bright);
     }
 
+    .intro-team {
+      max-width: 1200px;
+      margin: 72px auto 0;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .intro-team-photo {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      aspect-ratio: 16 / 10;
+    }
+
+    .intro-team-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      filter: contrast(1.05) saturate(1.05);
+      transition: transform 0.4s ease;
+    }
+
+    .intro-team-photo:hover img { transform: scale(1.02); }
+
+    .intro-team-photo::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0, 114, 63, 0.14) 0%, transparent 55%);
+      pointer-events: none;
+    }
+
+    .intro-team-copy p {
+      color: rgba(240, 255, 244, 0.72);
+      font-size: 1.05rem;
+      line-height: 1.85;
+      margin-bottom: 18px;
+    }
+
+    .intro-team-eyebrow {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      color: var(--green-bright);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .intro-team-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      letter-spacing: 0.08em;
+      color: var(--white);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
     /* ══════════════════════════════════════════
        NAV TILES
     ══════════════════════════════════════════ */
@@ -1113,6 +1131,101 @@
       padding: 80px 48px 0;
     }
 
+    .watch-feature {
+      margin-top: 32px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      align-items: start;
+    }
+
+    .watch-feature.reverse .watch-copy { order: 1; padding: 8px 32px 0 0; }
+    .watch-feature.reverse .watch-video { order: 2; }
+
+    .watch-video {
+      position: relative;
+      overflow: hidden;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      aspect-ratio: 16/9;
+    }
+
+    .watch-video iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .watch-corner {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .watch-corner.tl { top: 10px; left: 10px; border-top: 2px solid var(--green-bright); border-left: 2px solid var(--green-bright); }
+    .watch-corner.tr { top: 10px; right: 10px; border-top: 2px solid var(--green-bright); border-right: 2px solid var(--green-bright); }
+    .watch-corner.bl { bottom: 10px; left: 10px; border-bottom: 2px solid var(--green-bright); border-left: 2px solid var(--green-bright); }
+    .watch-corner.br { bottom: 10px; right: 10px; border-bottom: 2px solid var(--green-bright); border-right: 2px solid var(--green-bright); }
+
+    .watch-copy {
+      padding: 8px 0 0 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .watch-eyebrow {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--green-bright);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .watch-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.2rem;
+      letter-spacing: 0.06em;
+      color: var(--white);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
+    .watch-desc {
+      font-size: 0.95rem;
+      color: rgba(240, 255, 244, 0.65);
+      line-height: 1.75;
+      margin-bottom: 20px;
+    }
+
+    .watch-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .watch-tag {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      color: var(--green-bright);
+      border: 1px solid rgba(0, 114, 63, 0.35);
+      padding: 4px 10px;
+      text-transform: uppercase;
+    }
+
+    .watch-divider {
+      max-width: 1200px;
+      margin: 48px auto 0;
+      height: 1px;
+      background: var(--border);
+    }
+
     /* ══════════════════════════════════════════
        SHARED ANIMATIONS
     ══════════════════════════════════════════ */
@@ -1123,10 +1236,13 @@
 
     @media(max-width:1000px) {
       .intro-grid { grid-template-columns: 1fr; gap: 40px; }
+      .intro-team { grid-template-columns: 1fr; gap: 32px; margin-top: 48px; }
       .pages-grid { grid-template-columns: 1fr; }
       .journey-cards { grid-template-columns: 1fr; }
       .journey-card { border-right: none; border-bottom: 1px solid var(--border); }
-      .emu-preview-stats { grid-template-columns: 1fr; }
+      .watch-feature { grid-template-columns: 1fr; }
+      .watch-feature.reverse .watch-copy { order: 2; padding: 24px 0 0; }
+      .watch-copy { padding: 24px 0 0; }
     }
 
     @media(max-width:600px) {
@@ -1146,34 +1262,31 @@
   </div>
 
   <!-- HERO -->
-  <section id="hero">
-    <div class="hero-bg-blur" aria-hidden="true">
-      <img src="assets/teamphoto.png" alt="" />
+  <section id="hero"
+    style="background-image:url('assets/teamphoto.png');background-size:cover;background-position:center;background-repeat:no-repeat;">
+    <div
+      style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(5,10,5,0.25) 0%,rgba(5,10,5,0.55) 100%);z-index:0;">
     </div>
-    <div class="hero-bg-sharp" aria-hidden="true">
-      <img src="assets/teamphoto.png" alt="" />
-    </div>
-    <div class="hero-bg-scrim" aria-hidden="true"></div>
-    <div class="hero-school" style="position:relative;z-index:3;">
+    <div class="hero-school" style="position:relative;z-index:1;">
       <img src="assets/schoolLogo.png" alt="Brisbane Boys' College" class="hero-school-logo" />
       <div class="hero-school-text">
         <div class="hero-school-name">Brisbane Boys' College</div>
         <div class="hero-school-sub">Queensland, Australia</div>
       </div>
     </div>
-    <p class="hero-eyebrow" style="position:relative;z-index:3;">RoboCup Junior International Soccer Squad</p>
-    <h1 class="hero-title" style="position:relative;z-index:3;">
+    <p class="hero-eyebrow" style="position:relative;z-index:1;">RoboCup Junior International Soccer Squad</p>
+    <h1 class="hero-title" style="position:relative;z-index:1;">
       <span class="glitch" data-text="TEAM">TEAM</span><br />
       <span class="green">HYPERION</span>
     </h1>
-    <div class="hero-divider" style="position:relative;z-index:3;"></div>
-    <p class="hero-tagline" style="position:relative;z-index:3;">Green. White. Black. Representing Australia.</p>
-    <p class="hero-greeting" id="hero-greeting" style="position:relative;z-index:3;"></p>
-    <div class="hero-cta" style="position:relative;z-index:3;">
-      <a href="robot.html" class="btn-primary">Our Robot</a>
-      <a href="team.html" class="btn-outline">The Team</a>
-      <a href="achievements.html" class="btn-outline">Achievements</a>
-      <a href="logbook.html" class="btn-outline">Logbook</a>
+    <div class="hero-divider" style="position:relative;z-index:1;"></div>
+    <p class="hero-tagline" style="position:relative;z-index:1;">Green. White. Black. Representing Australia.</p>
+    <p class="hero-greeting" id="hero-greeting" style="position:relative;z-index:1;"></p>
+    <div class="hero-cta" style="position:relative;z-index:1;">
+      <a href="robot/" class="btn-primary">Our Robot</a>
+      <a href="team/" class="btn-outline">The Team</a>
+      <a href="achievements/" class="btn-outline">Achievements</a>
+      <a href="logbook/" class="btn-outline">Logbook</a>
     </div>
   </section>
 
@@ -1195,7 +1308,7 @@
           spot for 2026.</p>
         <p>We are now preparing to represent our school, our community, and our country at the <strong>2026 RoboCup
             Junior International Competition in Incheon, South Korea</strong> — our most ambitious challenge yet.</p>
-        <a href="achievements.html" class="intro-link">→ See our full achievements &amp; history</a>
+        <a href="achievements/" class="intro-link">→ See our full achievements &amp; history</a>
       </div>
       <div class="bbc-panel">
         <img src="assets/schoolLogo.png" alt="Brisbane Boys' College" class="bbc-logo-large" />
@@ -1220,6 +1333,23 @@
               qualifiers</span>
           </div>
         </div>
+      </div>
+    </div>
+
+    <div class="intro-team">
+      <div class="intro-team-photo">
+        <img src="assets/teamphoto.png" alt="Team Hyperion squad photo at competition" />
+        <div class="watch-corner tl"></div>
+        <div class="watch-corner tr"></div>
+        <div class="watch-corner bl"></div>
+        <div class="watch-corner br"></div>
+      </div>
+      <div class="intro-team-copy">
+        <div class="intro-team-eyebrow">The Squad</div>
+        <h3 class="intro-team-title">MEET <span class="accent">HYPERION</span></h3>
+        <div class="green-line"></div>
+        <p>Four students. One robot. Representing Brisbane Boys' College and Australia on the world stage — from Salvador to Incheon and every match in between.</p>
+        <a href="team/" class="intro-link">→ Meet the full team</a>
       </div>
     </div>
   </section>
@@ -1254,53 +1384,64 @@
     <div style="max-width:1200px;margin:0 auto;">
       <p class="section-label">In Action</p>
       <h2 class="section-title">WATCH US <span class="accent">COMPETE</span></h2>
-      <div style="margin-top:32px;display:grid;grid-template-columns:1fr 1fr;gap:2px;align-items:start;">
-        <div
-          style="position:relative;overflow:hidden;background:var(--card-bg);border:1px solid var(--border);aspect-ratio:16/9;">
+
+      <div class="watch-feature">
+        <div class="watch-video">
           <iframe src="https://www.youtube.com/embed/ycFrGBrWPew?si=heSMPku8nT6jJXTU"
             title="Team Hyperion — 2025 Nationals Gameplay"
-            style="position:absolute;inset:0;width:100%;height:100%;border:none;"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen></iframe>
-          <div
-            style="position:absolute;top:10px;left:10px;width:18px;height:18px;border-top:2px solid var(--green-bright);border-left:2px solid var(--green-bright);z-index:1;pointer-events:none;">
-          </div>
-          <div
-            style="position:absolute;top:10px;right:10px;width:18px;height:18px;border-top:2px solid var(--green-bright);border-right:2px solid var(--green-bright);z-index:1;pointer-events:none;">
-          </div>
-          <div
-            style="position:absolute;bottom:10px;left:10px;width:18px;height:18px;border-bottom:2px solid var(--green-bright);border-left:2px solid var(--green-bright);z-index:1;pointer-events:none;">
-          </div>
-          <div
-            style="position:absolute;bottom:10px;right:10px;width:18px;height:18px;border-bottom:2px solid var(--green-bright);border-right:2px solid var(--green-bright);z-index:1;pointer-events:none;">
+          <div class="watch-corner tl"></div>
+          <div class="watch-corner tr"></div>
+          <div class="watch-corner bl"></div>
+          <div class="watch-corner br"></div>
+        </div>
+        <div class="watch-copy">
+          <div class="watch-eyebrow">2025 Australian Nationals</div>
+          <div class="watch-title">Hyperion in the Field</div>
+          <p class="watch-desc">Watch Team Hyperion compete at the 2025 RoboCup Junior Australian National Championship — the tournament where we went undefeated and secured Australia's qualification spot for the 2026 World Championship in Incheon, South Korea.</p>
+          <div class="watch-tags">
+            <span class="watch-tag">Undefeated</span>
+            <span class="watch-tag">1st Nationally</span>
+            <span class="watch-tag">Lightweight Soccer</span>
           </div>
         </div>
-        <div style="padding:8px 0 0 32px;display:flex;flex-direction:column;justify-content:center;">
-          <div
-            style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;color:var(--green-bright);text-transform:uppercase;margin-bottom:12px;">
-            2025 Australian Nationals</div>
-          <div
-            style="font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:0.06em;color:var(--white);line-height:1;margin-bottom:16px;">
-            Hyperion in the Field</div>
-          <p style="font-size:0.95rem;color:rgba(240,255,244,0.65);line-height:1.75;margin-bottom:20px;">Watch Team
-            Hyperion compete at the 2025 RoboCup Junior Australian National Championship — the tournament where we went
-            undefeated and secured Australia's qualification spot for the 2026 World Championship in Incheon, South
-            Korea.</p>
-          <div style="display:flex;flex-wrap:wrap;gap:8px;">
-            <span
-              style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;color:var(--green-bright);border:1px solid rgba(0,114,63,0.35);padding:4px 10px;text-transform:uppercase;">Undefeated</span>
-            <span
-              style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;color:var(--green-bright);border:1px solid rgba(0,114,63,0.35);padding:4px 10px;text-transform:uppercase;">1st
-              Nationally</span>
-            <span
-              style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;color:var(--green-bright);border:1px solid rgba(0,114,63,0.35);padding:4px 10px;text-transform:uppercase;">Lightweight
-              Soccer</span>
+      </div>
+
+      <div class="watch-divider"></div>
+
+      <div class="watch-feature reverse" style="margin-top:48px;">
+        <div class="watch-copy">
+          <div class="watch-eyebrow">2026 RCJ Internationals · Incheon, South Korea</div>
+          <div class="watch-title">How Do We Detect the New IR Ball?</div>
+          <p class="watch-desc">With the 2026 RoboCup Junior rule change introducing a new infrared ball, Team Hyperion breaks down how our TSSP77038 sensor ring detects ball direction and strength — the engineering behind reliable tracking on the world stage.</p>
+          <div class="watch-tags">
+            <span class="watch-tag">IR Ball Detection</span>
+            <span class="watch-tag">TSSP77038 Ring</span>
+            <span class="watch-tag">2026 Internationals</span>
           </div>
-          <a href="https://www.youtube.com/@hyperion-bbcrobotics" target="_blank" rel="noopener"
+          <a href="https://www.youtube.com/watch?v=wTyDXwai4Vw" target="_blank" rel="noopener"
             style="display:inline-block;margin-top:24px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.88rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--black);background:var(--green-bright);padding:12px 24px;text-decoration:none;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));transition:all 0.2s;">
-            → More on YouTube
+            → Watch on YouTube
           </a>
         </div>
+        <div class="watch-video">
+          <iframe src="https://www.youtube.com/embed/wTyDXwai4Vw"
+            title="Team Hyperion - How do we detect the new IR Ball? - 2026 RCJ Internationals (Incheon, South Korea)"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+          <div class="watch-corner tl"></div>
+          <div class="watch-corner tr"></div>
+          <div class="watch-corner bl"></div>
+          <div class="watch-corner br"></div>
+        </div>
+      </div>
+
+      <div style="margin-top:40px;text-align:center;">
+        <a href="https://www.youtube.com/@hyperion-bbcrobotics" target="_blank" rel="noopener"
+          style="display:inline-block;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.88rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--black);background:var(--green-bright);padding:12px 24px;text-decoration:none;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));transition:all 0.2s;">
+          → More on YouTube
+        </a>
       </div>
     </div><br><br>
   </section>
@@ -1400,7 +1541,7 @@
             style="font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;color:rgba(0,200,90,0.4);margin-top:8px;">
             Click to activate · Scroll to resize</div>
         </div>
-        <iframe id="emu-iframe" src="emulator.html" title="Robot Emulator" scrolling="no" loading="lazy"></iframe>
+        <iframe id="emu-iframe" src="emulator/" title="Robot Emulator" scrolling="no" loading="lazy"></iframe>
       </div>
     </div>
   </section> -->
@@ -1412,37 +1553,37 @@
       <h2 class="section-title">DIVE <span class="accent">DEEPER</span></h2>
     </div>
     <div class="pages-grid">
-      <a href="team.html" class="page-tile"><span class="tile-icon"></span>
+      <a href="team/" class="page-tile"><span class="tile-icon"></span>
         <div class="tile-title">The Team</div>
         <p class="tile-desc">Meet Sam, Matthew, Luke, and Thomas — the four prodigies behind Team Hyperion.</p><span
           class="tile-arrow">→ MEET THE SQUAD</span>
       </a>
-      <a href="robot.html" class="page-tile"><span class="tile-icon"></span>
+      <a href="robot/" class="page-tile"><span class="tile-icon"></span>
         <div class="tile-title">Our Robot</div>
         <p class="tile-desc">Explore the electronics, software, and mechanical engineering behind our competition robot.
         </p><span class="tile-arrow">→ SEE THE MACHINE</span>
       </a>
-      <a href="achievements.html" class="page-tile"><span class="tile-icon"></span>
+      <a href="achievements/" class="page-tile"><span class="tile-icon"></span>
         <div class="tile-title">Achievements</div>
         <p class="tile-desc">Our full competition history — from local qualifiers to Brazil and beyond to South Korea.
         </p><span class="tile-arrow">→ VIEW ACHIEVEMENTS</span>
       </a>
-      <a href="campaign2025.html" class="page-tile"><span class="tile-icon"></span>
+      <a href="campaign2025/" class="page-tile"><span class="tile-icon"></span>
         <div class="tile-title">2025 Campaign</div>
         <p class="tile-desc">Read our 2025 International Experience at the RoboCup Junior Competition in Salvador.</p>
         <span class="tile-arrow">→ VIEW 25' CAMPAIGN</span>
       </a>
-      <a href="campaign2026.html" class="page-tile"><span class="tile-icon"></span>
+      <a href="campaign2026/" class="page-tile"><span class="tile-icon"></span>
         <div class="tile-title">2026 Campaign</div>
         <p class="tile-desc">Join us in our 2026 journey to Incheon, South Korea.</p><span class="tile-arrow">→ VIEW 26'
           CAMPAIGN</span>
       </a>
-      <a href="resources.html" class="page-tile"><span class="tile-icon"></span>
+      <a href="resources/" class="page-tile"><span class="tile-icon"></span>
         <div class="tile-title">Resources</div>
         <p class="tile-desc">Have a look at some of the resources that we use to design our robot!</p><span
           class="tile-arrow">→ VIEW RESOURCES</span>
       </a>
-      <a href="logbook.html" class="page-tile"><span class="tile-icon"></span>
+      <a href="logbook/" class="page-tile"><span class="tile-icon"></span>
         <div class="tile-title">LOGBOOK</div>
         <p class="tile-desc">See our dedicated logbook diary that we use each session to log our progress!</p><span
           class="tile-arrow">→ VIEW THE LOGBOOK</span>
@@ -1658,7 +1799,7 @@
       });
     }, { threshold: 0.08 });
 
-    document.querySelectorAll('.page-tile, .bbc-panel, .journey-card, .journey-map-wrap, .tl-card, .emu-frame-wrap, .emu-stat').forEach(el => {
+    document.querySelectorAll('.page-tile, .bbc-panel, .intro-team, .journey-card, .journey-map-wrap, .tl-card, .emu-frame-wrap, .emu-stat').forEach(el => {
       el.style.opacity = '0';
       el.style.transform = 'translateY(18px)';
       el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
@@ -2063,7 +2204,7 @@
         <div class="hai-header-sub">Team knowledge assistant</div>
       </div>
       <div class="hai-status-dot"></div>
-      <a href="hyperionai.html" class="hai-fullscreen-btn" title="Open full chat">⤢ EXPAND</a>
+      <a href="hyperionai/" class="hai-fullscreen-btn" title="Open full chat">⤢ EXPAND</a>
     </div>
     <div class="hai-messages" id="hai-messages"></div>
     <div class="hai-input-row">
@@ -2121,7 +2262,7 @@
         }
         if (score > best) { best = score; match = entry; }
       }
-      if (!match || best < 1) return `I'm not sure about that! Try asking about our <strong>robot</strong>, <strong>team members</strong>, <strong>competition results</strong>, or specific components like the <strong>Teensy</strong>, <strong>kicker</strong>, or <strong>camera</strong>. Or <a href="hyperionai.html" style="color:var(--green-bright,#00c85a);">open the full AI →</a>`;
+      if (!match || best < 1) return `I'm not sure about that! Try asking about our <strong>robot</strong>, <strong>team members</strong>, <strong>competition results</strong>, or specific components like the <strong>Teensy</strong>, <strong>kicker</strong>, or <strong>camera</strong>. Or <a href="hyperionai/" style="color:var(--green-bright,#00c85a);">open the full AI →</a>`;
       return match.r();
     }
 
