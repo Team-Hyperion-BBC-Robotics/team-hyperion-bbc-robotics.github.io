@@ -1637,7 +1637,7 @@ const TEAM_MEMBERS = ['Sam','Matthew','Luke','Thomas'];
 const TEAM_SET = new Set(TEAM_MEMBERS);
 const COMPETITIONS = [
   {id:'incheon',   label:'intl',     title:'RCJ Incheon International',    date:'2026-06-30', location:'Incheon, Korea'},
-  {id:'qld-state', label:'state',    title:'RCJA Queensland State',         date:'2026-08-01', dateTBC:true, location:'QLD'},
+  {id:'qld-state', label:'state',    title:'RCJA Queensland State',         date:'2026-08-14', location:'QLD'},
   {id:'national',  label:'national', title:'RCJA National Championships',   date:'2026-10-02', location:'Canberra'},
 ];
 
@@ -3424,7 +3424,7 @@ window.exportPDF = async () => {
     setFont([0,200,90]);
     doc.text('HYPERION LOG', ML, 6.5);
     setFont(C.grey);
-    doc.text('Brisbane Boys\' College  ·  RoboCup Junior Lightweight Soccer', ML + 30, 6.5);
+    doc.text('Brisbane Boys\' College  ·  RoboCup Junior Soccer Vision League', ML + 30, 6.5);
     // Page number right
     setFont([0,200,90]);
     doc.text(`PAGE ${pageNum}`, PW - MR, 6.5, {align:'right'});
@@ -3557,7 +3557,7 @@ window.exportPDF = async () => {
   doc.rect(0, 16, PW, 0.8, 'F');
   setStyle(6,'normal');
   setFont([0,200,90]);
-  doc.text('BRISBANE BOYS\' COLLEGE  //  ROBOCUP JUNIOR  //  LIGHTWEIGHT SOCCER', ML+4, 9.5);
+  doc.text('BRISBANE BOYS\' COLLEGE  //  ROBOCUP JUNIOR  //  SOCCER VISION LEAGUE', ML+4, 9.5);
   setFont(C.grey);
   doc.text(`Generated ${new Date().toLocaleDateString('en-AU',{day:'numeric',month:'long',year:'numeric'})}`, PW-MR, 9.5, {align:'right'});
 
@@ -3629,7 +3629,7 @@ window.exportPDF = async () => {
   doc.setLineWidth(0.1);
   setStyle(7,'normal');
   setFont(C.white);
-  doc.text('Target: RoboCup Junior World Championship  //  Incheon, South Korea  //  2026', ML+7, compY+8);
+  doc.text('Result: Incheon Worlds 2026  //  12th Individual  //  4th SuperTeam', ML+7, compY+8);
 
   // Date range
   const sortedByDate = [...entries].filter(e=>e.date).sort((a,b)=>a.date.localeCompare(b.date));
@@ -4148,7 +4148,7 @@ window.exportPDF = async () => {
   doc.text('HYPERION', PW/2, PH*0.48, {align:'center'});
   setStyle(7,'normal');
   setFont(C.grey);
-  doc.text('Brisbane Boys\' College  ·  RoboCup Junior  ·  Lightweight Soccer', PW/2, PH*0.56, {align:'center'});
+  doc.text('Brisbane Boys\' College  ·  RoboCup Junior  ·  Soccer Vision League', PW/2, PH*0.56, {align:'center'});
   setFill(C.green);
   doc.rect(PW/2-30, PH*0.59, 60, 0.5, 'F');
   setStyle(6,'normal');

@@ -36,7 +36,6 @@
     <li><a href="${page('team')}"      data-page="team">Team</a></li>
     <li><a href="${page('robot')}"     data-page="robot">Robot</a></li>
     <li><a href="${page('achievements')}" data-page="achievements">Achievements</a></li>
-    <li><a href="${page('logbook')}"   data-page="logbook" style="color:var(--green-bright,#00c85a);">Logbook</a></li>
 
     <li>
       <button class="nav-dropdown-trigger" onclick="HyperionNav.toggleDropdown('dd-campaigns', this)">
@@ -55,6 +54,15 @@
       <div class="nav-dropdown" id="dd-explore">
         <a href="${page('resources')}" data-page="resources">📰 Resources</a>
         <a href="${page('emulator')}"  data-page="emulator">📱 Robot Emulator</a>
+      </div>
+    </li>
+
+    <li>
+      <button class="nav-dropdown-trigger" onclick="HyperionNav.toggleDropdown('dd-archive', this)">
+        Archive <span class="nav-chevron"></span>
+      </button>
+      <div class="nav-dropdown" id="dd-archive">
+        <a href="${page('logbook')}" data-page="logbook">📋 Engineering Logbook</a>
       </div>
     </li>
   </ul>
@@ -77,7 +85,6 @@
     <a href="${page('team')}"      data-page="team">Team</a>
     <a href="${page('robot')}"     data-page="robot">Our Robot</a>
     <a href="${page('achievements')}" data-page="achievements">Achievements</a>
-    <a href="${page('logbook')}"   data-page="logbook" style="color:var(--green-bright,#00c85a);">📋 Engineering Logbook</a>
   </div>
   <div class="nav-sidebar-section">
     <span class="nav-sidebar-label">Campaigns</span>
@@ -88,6 +95,10 @@
     <span class="nav-sidebar-label">Explore</span>
     <a href="${page('resources')}" data-page="resources">📰 Resources</a>
     <a href="${page('emulator')}"  data-page="emulator">📱 Robot Emulator</a>
+  </div>
+  <div class="nav-sidebar-section">
+    <span class="nav-sidebar-label">Archive</span>
+    <a href="${page('logbook')}" data-page="logbook">📋 Engineering Logbook</a>
   </div>
   <div style="padding:20px 28px;">
     <a href="https://www.robocupjunior.org.au/" target="_blank" rel="noopener"
@@ -124,13 +135,12 @@
     </div>
     <div class="footer-center">
       © 2026 Team Hyperion · Brisbane Boys' College<br/>
-      RoboCup Junior Australia · Lightweight Soccer Division
+      RoboCup Junior Australia · Soccer Vision League
     </div>
     <div class="footer-right">
       <a href="${page('achievements')}">Achievements</a> ·
       <a href="${page('team')}">Team</a> ·
-      <a href="${page('robot')}">Robot</a> ·
-      <a href="${page('logbook')}">Logbook</a><br/>
+      <a href="${page('robot')}">Robot</a><br/>
       🇦🇺 Queensland, Australia
     </div>
   </div>

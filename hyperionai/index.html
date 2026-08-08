@@ -341,7 +341,7 @@
     <div class="sidebar-section">
       <div class="sidebar-section-label">Achievements</div>
       <button class="quick-btn" onclick="quickAsk('What are your best competition results?')"><span class="qb-arrow">›</span>Best results?</button>
-      <button class="quick-btn" onclick="quickAsk('Where is the 2026 competition?')"><span class="qb-arrow">›</span>Where is 2026 Worlds?</button>
+      <button class="quick-btn" onclick="quickAsk('How did Hyperion go at 2026 Worlds?')"><span class="qb-arrow">›</span>2026 Worlds results?</button>
       <button class="quick-btn" onclick="quickAsk('What happened at the 2025 World Championship?')"><span class="qb-arrow">›</span>2025 Worlds recap?</button>
     </div>
     <div class="sidebar-divider"></div>
@@ -384,13 +384,13 @@ const KB = [
     tags: ['team','hyperion','who','name','squad','group','us','we','our'],
     facts: [
       'Team Hyperion is a high school robotics team from Brisbane Boys\' College (BBC), located in Toowong, Queensland, Australia.',
-      'The team competes in the RoboCup Junior Lightweight Soccer division.',
+      'The team currently competes in the RoboCup Junior Soccer Vision League.',
       'The team name is Hyperion — representing Brisbane Boys\' College on the world stage.',
       'The team colours are Green, White, and Black.',
       'Hyperion competes under the Australian flag at international competitions.',
     ],
     respond(q) {
-      return `<strong>Team Hyperion</strong> is a competitive robotics squad from <strong>Brisbane Boys' College</strong> (BBC), Toowong, Queensland, Australia. We compete in the <strong>RoboCup Junior Lightweight Soccer</strong> division — green, white, and black, representing Australia internationally.`;
+      return `<strong>Team Hyperion</strong> is a competitive robotics squad from <strong>Brisbane Boys' College</strong> (BBC), Toowong, Queensland, Australia. We compete in the <strong>RoboCup Junior Soccer Vision League</strong> — green, white, and black, representing Australia internationally.`;
     }
   },
   {
@@ -421,14 +421,13 @@ const KB = [
     id: 'achievements',
     tags: ['achievements','results','won','win','place','podium','history','record','best','success','ranked','ranking'],
     facts: [
+      '2026 RoboCup Junior World Championship: 12th place individually, 4th place in SuperTeam in Incheon, South Korea.',
       '2025 RoboCup Junior World Championship: 14th place individually, 1st place in the Lightweight SuperTeam division.',
       '2025 Australian National Championship: Undefeated, reclaimed Australia\'s qualification spot for 2026.',
-      'The team has 8 total podium finishes across their competition history.',
-      'They have competed for 5+ years across multiple divisions.',
-      'They have made 2 national competition appearances.',
+      'The team has competed for 5+ years across multiple divisions.',
     ],
     respond(q) {
-      return `Hyperion's standout achievements:<ul><li><strong class="highlight">1st Place</strong> — Lightweight SuperTeam, 2025 RoboCup Junior Worlds (Salvador, Brazil)</li><li><strong>14th Place</strong> — Individual, 2025 Worlds</li><li><strong class="highlight">Undefeated</strong> — 2025 Australian National Championship</li><li><strong>8×</strong> total podium finishes across our history</li><li><strong>2×</strong> National competition appearances</li></ul>We reclaimed Australia's 2026 World Championship qualification spot at Nationals.`;
+      return `Hyperion's standout achievements:<ul><li><strong>12th Individually / 4th SuperTeam</strong> — 2026 Worlds (Incheon, South Korea)</li><li><strong class="highlight">1st Place</strong> — Lightweight SuperTeam, 2025 Worlds (Salvador, Brazil)</li><li><strong>14th Place</strong> — Individual, 2025 Worlds</li><li><strong class="highlight">Undefeated</strong> — 2025 Australian National Championship</li></ul>Next up: Queensland State Competition · Soccer Vision League · 14 August 2026.`;
     }
   },
   {
@@ -446,17 +445,29 @@ const KB = [
   },
   {
     id: 'worlds_2026',
-    tags: ['2026','worlds','world','championship','international','incheon','korea','south','upcoming','next','future'],
+    tags: ['2026','worlds','world','championship','international','incheon','korea','south','recap','result','results'],
     facts: [
-      'The 2026 RoboCup Junior World Championship will be held in Incheon, South Korea.',
+      'The 2026 RoboCup Junior World Championship was held in Incheon, South Korea.',
+      'Hyperion placed 12th individually and 4th in SuperTeam at the 2026 Worlds.',
       'Hyperion qualified for the 2026 Worlds by going undefeated at the 2025 Australian Nationals.',
-      'They are preparing with upgraded hardware and refined strategy for 2026.',
-      'Their goal for 2026 is to improve their individual ranking and defend the SuperTeam title.',
+      'This was Team Hyperion\'s second international appearance.',
     ],
     respond(q) {
-      return `The <strong>2026 RoboCup Junior World Championship</strong> will be held in <strong class="highlight">Incheon, South Korea</strong>. We qualified by going <strong>undefeated</strong> at the 2025 Australian Nationals. For 2026, we're heading there with:<ul><li>Upgraded hardware systems</li><li>Refined autonomous strategy</li><li>Experience from Brazil</li></ul>The goal: improve our individual ranking and defend the SuperTeam title.`;
+      return `At the <strong>2026 RoboCup Junior World Championship</strong> in <strong class="highlight">Incheon, South Korea</strong>:<ul><li><strong>12th Place</strong> — Individually</li><li><strong>4th Place</strong> — SuperTeam</li></ul>Our second Worlds appearance — improving on our individual ranking from Salvador 2025. Next up: Queensland State (Soccer Vision League) on 14 August 2026.`;
     }
   },
+  {
+    id: 'qld_state_2026',
+    tags: ['state','queensland','qld','vision','league','august','upcoming','next'],
+    facts: [
+      'Hyperion competes at the Queensland State Competition on 14 August 2026.',
+      'They currently compete in the Soccer Vision League domestically.',
+    ],
+    respond(q) {
+      return `Next up is the <strong>Queensland State Competition</strong> on <strong class="highlight">14 August 2026</strong>. We compete in the <strong>Soccer Vision League</strong> — representing Brisbane Boys' College on home soil after returning from Incheon.`;
+    }
+  },
+
   {
     id: 'nationals_2025',
     tags: ['nationals','national','australia','australian','2025','undefeated','qualification','qualify'],
@@ -602,23 +613,24 @@ const KB = [
       '2023: State and National Qualifiers — rising through Standard Soccer competition.',
       '2024: Australian National Championship — first year of custom robotics, multiple podium finishes.',
       '2025: RoboCup Junior World Championship in Salvador, Brazil — 1st SuperTeam, 14th individual. Undefeated at Nationals.',
-      '2026: Heading to Incheon, South Korea for the next World Championship.',
+      '2026: RoboCup Junior World Championship in Incheon — 12th individually, 4th SuperTeam. Next: Queensland State in Soccer Vision League.',
     ],
     respond(q) {
-      return `Hyperion's competitive journey:<ul><li><strong>2021–22:</strong> Learning fundamentals — QLD & National competitions in multiple RCJ divisions</li><li><strong>2023:</strong> Rising through Standard Soccer — State & National Qualifiers</li><li><strong>2024:</strong> First year of custom robotics — Australian Nationals, multiple podiums</li><li><strong class="highlight">2025:</strong> 🌍 World Championship (Salvador) — 1st SuperTeam + Undefeated Nationals</li><li><strong>2026:</strong> ⭐ Incheon, South Korea — next mission</li></ul>`;
+      return `Hyperion's competitive journey:<ul><li><strong>2021–22:</strong> Learning fundamentals — QLD & National competitions in multiple RCJ divisions</li><li><strong>2023:</strong> Rising through Standard Soccer — State & National Qualifiers</li><li><strong>2024:</strong> First year of custom robotics — Australian Nationals, multiple podiums</li><li><strong class="highlight">2025:</strong> 🌍 World Championship (Salvador) — 1st SuperTeam + Undefeated Nationals</li><li><strong>2026:</strong> 🇰🇷 Incheon — 12th individually, 4th SuperTeam · next: QLD State (Soccer Vision)</li></ul>`;
     }
   },
   {
     id: 'division',
-    tags: ['division','lightweight','soccer','rcj','robocup','rules','weight','category','competition'],
+    tags: ['division','lightweight','soccer','vision','league','rcj','robocup','rules','weight','category','competition'],
     facts: [
-      'Hyperion competes in the RoboCup Junior Lightweight Soccer division.',
+      'Hyperion currently competes in the RoboCup Junior Soccer Vision League domestically.',
+      'At internationals they have competed in Lightweight Soccer.',
       'This involves two autonomous robots per team playing a soccer-style game.',
       'Robots must operate fully autonomously — no remote control is allowed.',
       'The competition ball emits infrared pulses for sensor detection.',
     ],
     respond(q) {
-      return `We compete in <strong>RoboCup Junior Lightweight Soccer</strong>:<ul><li>Two fully <strong>autonomous robots</strong> per team (no remote control)</li><li>Soccer-style competition on a bounded field</li><li>Competition ball emits <strong>infrared pulses</strong> for detection</li><li>Part of the global <strong>RoboCup Junior</strong> organisation</li></ul>Every decision — movement, kicking, defence — is made by the robot's own code in real time.`;
+      return `We currently compete in <strong>RoboCup Junior Soccer Vision League</strong> (Australia):<ul><li>Two fully <strong>autonomous robots</strong> per team (no remote control)</li><li>Soccer-style competition on a bounded field</li><li>Competition ball emits <strong>infrared pulses</strong> for detection</li><li>Part of the global <strong>RoboCup Junior</strong> organisation</li></ul>At Worlds we have competed in Lightweight Soccer. Every decision — movement, kicking, defence — is made by the robot's own code in real time.`;
     }
   },
   {
@@ -626,7 +638,7 @@ const KB = [
     tags: [],
     facts: [],
     respond(q) {
-      return `I'm not sure I have a precise answer for that, but I can tell you about:<ul><li>The <strong>team</strong> — members, school, and background</li><li>Our <strong>robot</strong> — sensors, motors, and AI strategy</li><li>Our <strong>competition history</strong> — 2025 Worlds, 2026 goals</li><li>Specific components — Teensy, BNO055, kicker, camera, Bluetooth</li></ul>Try rephrasing or click one of the quick questions on the left!`;
+      return `I'm not sure I have a precise answer for that, but I can tell you about:<ul><li>The <strong>team</strong> — members, school, and background</li><li>Our <strong>robot</strong> — sensors, motors, and AI strategy</li><li>Our <strong>competition history</strong> — Incheon 2026, Salvador 2025</li><li>Specific components — Teensy, BNO055, kicker, camera, Bluetooth</li></ul>Try rephrasing or click one of the quick questions on the left!`;
     }
   }
 ];
@@ -800,7 +812,7 @@ window.addEventListener('load', () => {
         <div class="welcome-chip" onclick="quickAsk('Who is Team Hyperion?')">Who are you?</div>
         <div class="welcome-chip" onclick="quickAsk('What are your best achievements?')">Best results?</div>
         <div class="welcome-chip" onclick="quickAsk('How does the robot detect the ball?')">Ball detection?</div>
-        <div class="welcome-chip" onclick="quickAsk('Where is the 2026 World Championship?')">2026 Worlds?</div>
+        <div class="welcome-chip" onclick="quickAsk('How did Hyperion go at 2026 Worlds?')">2026 Worlds results?</div>
       </div>`;
     appendMsg('ai', welcomeHtml, null);
     inputEl.focus();
